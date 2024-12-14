@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export HF_HOME=/ppio/huggingface
+export HF_HOME=/ppio_net0/huggingface
 
 deepspeed llava/train/train_mem.py \
     --deepspeed ./scripts/zero2.json \
