@@ -698,7 +698,26 @@ class LazySupervisedDataset(Dataset):
             image_file = self.list_data_dict[i]['image']
             image_folder = self.data_args.image_folder
             processor = self.data_args.image_processor
-            image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+            # image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+            # Try loading the original file
+            image_path = os.path.join(image_folder, image_file)
+            try:
+                image = Image.open(image_path).convert('RGB')
+            except Exception as e:
+                possible_extensions = ['.jpg', '.png', '.gif']
+                print(f"Failed to load {image_file}: {e}")
+
+                # If loading fails, try different extensions
+                base_filename, _ = os.path.splitext(image_file)
+                for ext in possible_extensions:
+                    image_path = os.path.join(image_folder, base_filename + ext)
+                    try:
+                        image = Image.open(image_path).convert('RGB')
+                        print(f"Successfully loaded image: {image_path}")
+                        break
+                    except Exception as e:
+                        print(f"Failed to load {base_filename + ext}: {e}")
+
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
                     width, height = pil_img.size
@@ -912,7 +931,7 @@ def train(attn_implementation=None):
             model_args=model_args,
             fsdp=training_args.fsdp
         )
-        
+
         vision_tower = model.get_vision_tower()
         vision_tower.to(dtype=torch.bfloat16 if training_args.bf16 else torch.float16, device=training_args.device)
 
