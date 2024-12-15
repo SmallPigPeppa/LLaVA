@@ -39,4 +39,4 @@ deepspeed llava/train/train_mem.py \
     --lazy_preprocess True \
     --report_to wandb
 
-#/ppio_net0/code/openapi.sh stop 7dc5983214728bd5
+/ppio_net0/code/openapi.sh stop 7dc5983214728bd5
