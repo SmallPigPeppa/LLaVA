@@ -700,6 +700,7 @@ class LazySupervisedDataset(Dataset):
             processor = self.data_args.image_processor
             # image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
             # Try loading the original file
+            image = None  # initial None
             image_path = os.path.join(image_folder, image_file)
             try:
                 image = Image.open(image_path).convert('RGB')
@@ -717,6 +718,9 @@ class LazySupervisedDataset(Dataset):
                         break
                     except Exception as e:
                         print(f"Failed to load {base_filename + ext}: {e}")
+            if image is None:
+                raise ValueError(f"Failed to load any valid image for {image_file}")
+
 
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
