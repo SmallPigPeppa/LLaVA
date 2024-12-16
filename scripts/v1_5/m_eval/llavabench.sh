@@ -1,6 +1,6 @@
 #!/bin/bash
 export HF_HOME=/ppio_net0/huggingface
-export OPENAI_API_KEY="dcf59e46-a998-4a69-adfd-31aeabac1760"
+export OPENAI_API_KEY="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"
 # Set model as a variable
 MODEL="llava-v1.5-7b-lora"
 MODEL_BASE="lmsys/vicuna-7b-v1.5"
