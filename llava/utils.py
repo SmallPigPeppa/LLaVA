@@ -61,6 +61,7 @@ class StreamToLogger(object):
     """
     Fake file-like stream object that redirects writes to a logger instance.
     """
+
     def __init__(self, logger, log_level=logging.INFO):
         self.terminal = sys.stdout
         self.logger = logger
@@ -103,7 +104,8 @@ def violates_moderation(text):
     """
     Check whether the text violates OpenAI moderation API.
     """
-    url = "https://api.openai.com/v1/moderations"
+    # url = "https://api.openai.com/v1/moderations"
+    url = "https://api.ppinfra.com/v3/openai"
     headers = {"Content-Type": "application/json",
                "Authorization": "Bearer " + os.environ["OPENAI_API_KEY"]}
     text = text.replace("\n", "")
