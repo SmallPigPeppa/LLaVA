@@ -2,10 +2,11 @@
 
 # Set model as a variable
 MODEL="llava-v1.5-7b-lora"
-
+MODEL_BASE="lmsys/vicuna-7b-v1.5"
 # Evaluate the model
 python -m llava.eval.model_vqa \
     --model-path "checkpoints/$MODEL" \
+    --model-base $MODEL_BASE \
     --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
     --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
     --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL.jsonl \
