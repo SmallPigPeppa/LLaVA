@@ -5,14 +5,14 @@ export OPENAI_API_KEY="1jBqtjpMAw9MVm556Rsgvi1ZAhOqb7uq"
 MODEL="llava-v1.5-7b-lora"
 MODEL_BASE="lmsys/vicuna-7b-v1.5"
 # Evaluate the model
-python -m llava.eval.model_vqa \
-    --model-path "checkpoints/$MODEL" \
-    --model-base $MODEL_BASE \
-    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
-    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL.jsonl \
-    --temperature 0 \
-    --conv-mode vicuna_v1
+#python -m llava.eval.model_vqa \
+#    --model-path "checkpoints/$MODEL" \
+#    --model-base $MODEL_BASE \
+#    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
+#    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
+#    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL.jsonl \
+#    --temperature 0 \
+#    --conv-mode vicuna_v1
 
 # Create the reviews directory
 mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
