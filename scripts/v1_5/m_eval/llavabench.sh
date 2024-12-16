@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export HF_HOME=/ppio_net0/huggingface
 # Set model as a variable
 MODEL="llava-v1.5-7b-lora"
 MODEL_BASE="lmsys/vicuna-7b-v1.5"
