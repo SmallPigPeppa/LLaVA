@@ -6,7 +6,7 @@ deepspeed llava/train/train_mem.py \
     --previous_task_model ./checkpoints/llava-v1.5-7b-lora\
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --deepspeed ./scripts/zero3.json \
-    --model_name_or_path ./checkpoints/llava-v1.5-7b-lora-debug \
+    --model_name_or_path lmsys/vicuna-7b-v1.5 \
     --version v1 \
     --data_path ./playground/data/debug/llava_v1_5_mix665k-random-100.json \
     --image_folder ./playground/data \

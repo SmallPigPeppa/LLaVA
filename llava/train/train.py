@@ -849,9 +849,9 @@ def train(attn_implementation=None):
         model_base=model_args.model_name_or_path
         device_map = "auto"
         device = "cuda"
-        kwargs = {"device_map": device_map}
-        if device != "cuda":
-            kwargs['device_map'] = {"": device}
+        kwargs = {}
+        # if device != "cuda":
+        #     kwargs['device_map'] = {"": device}
         kwargs['torch_dtype'] = torch.float16
         kwargs['attn_implementation'] = 'flash_attention_2'
 
@@ -859,8 +859,7 @@ def train(attn_implementation=None):
         from llava.model.language_model.llava_llama import LlavaConfig
         lora_cfg_pretrained = LlavaConfig.from_pretrained(model_path)
         print('Loading LLaVA from base model...')
-        model = LlavaLlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True,
-                                                      config=lora_cfg_pretrained, **kwargs)
+        model = LlavaLlamaForCausalLM.from_pretrained(model_base,config=lora_cfg_pretrained, **kwargs)
         token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
         if model.lm_head.weight.shape[0] != token_num:
             model.lm_head.weight = torch.nn.Parameter(
