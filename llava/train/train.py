@@ -872,9 +872,10 @@ def train(attn_implementation=None):
                     load_4bit = False
                     device_map = "auto"
                     device = "cuda"
-                    kwargs = {"device_map": device_map}
-                    if device != "cuda":
-                        kwargs['device_map'] = {"": device}
+                    # kwargs = {"device_map": device_map}
+                    kwargs={}
+                    # if device != "cuda":
+                    #     kwargs['device_map'] = {"": device}
                     if load_8bit:
                         kwargs['load_in_8bit'] = True
                     elif load_4bit:
@@ -892,7 +893,7 @@ def train(attn_implementation=None):
                     from llava.model.language_model.llava_llama import LlavaConfig
                     lora_cfg_pretrained = LlavaConfig.from_pretrained(previous_task_model)
                     print('Loading LLaVA from base model...')
-                    model = LlavaLlamaForCausalLM.from_pretrained(model_args.model_name_or_path, low_cpu_mem_usage=True,
+                    model = LlavaLlamaForCausalLM.from_pretrained(model_args.model_name_or_path,
                                                                   config=lora_cfg_pretrained, **kwargs)
                     token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
                     if model.lm_head.weight.shape[0] != token_num:
