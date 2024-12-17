@@ -978,17 +978,6 @@ def train(attn_implementation=None):
             fsdp=training_args.fsdp
         )
 
-        # if continual training
-        if model_args.previous_task_model is not None and 'lora' in model_args.previous_task_model.lower():
-            llava_weight = torch.load(os.path.join(model_args.previous_task_model, 'llava_weights.pth'),map_location='cpu')
-            # model.load_state_dict(llava_weight, strict=True)
-            # Modify the keys: add 'base_model.' prefix
-            modified_weights = {}
-            for key, value in llava_weight.items():
-                modified_weights['base_model.model.' + key] = value
-
-            # Load the modified weights into the model
-            model.load_state_dict(modified_weights, strict=True)
 
 
 
@@ -1037,6 +1026,20 @@ def train(attn_implementation=None):
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
+
+    # if continual training
+    if model_args.previous_task_model is not None and 'lora' in model_args.previous_task_model.lower():
+        llava_weight = torch.load(os.path.join(model_args.previous_task_model, 'llava_weights.pth'), map_location='cpu')
+        # model.load_state_dict(llava_weight, strict=True)
+        # Modify the keys: add 'base_model.' prefix
+        modified_weights = {}
+        for key, value in llava_weight.items():
+            modified_weights['base_model.model.' + key] = value
+
+        # Load the modified weights into the model
+        model.load_state_dict(modified_weights, strict=True)
+
+
     trainer = LLaVATrainer(
         model=model,
         tokenizer=tokenizer,
