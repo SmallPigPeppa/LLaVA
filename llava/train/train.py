@@ -843,8 +843,52 @@ def train(attn_implementation=None):
             )
         ))
 
+    # if continual training
+    if model_args.previous_task_model is not None and 'lora' in model_args.previous_task_model.lower():
+        model_path=model_args.previous_task_model
+        model_base=model_args.model_name_or_path
+        device_map = "auto"
+        device = "cuda"
+        kwargs = {"device_map": device_map, **kwargs}
+        if device != "cuda":
+            kwargs['device_map'] = {"": device}
+        kwargs['torch_dtype'] = torch.float16
+        kwargs['attn_implementation'] = 'flash_attention_2'
 
-    if model_args.vision_tower is not None:
+
+        from llava.model.language_model.llava_llama import LlavaConfig
+        lora_cfg_pretrained = LlavaConfig.from_pretrained(model_path)
+        print('Loading LLaVA from base model...')
+        model = LlavaLlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True,
+                                                      config=lora_cfg_pretrained, **kwargs)
+        token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
+        if model.lm_head.weight.shape[0] != token_num:
+            model.lm_head.weight = torch.nn.Parameter(
+                torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
+            model.model.embed_tokens.weight = torch.nn.Parameter(
+                torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
+
+        print('Loading additional LLaVA weights...')
+        if os.path.exists(os.path.join(model_path, 'non_lora_trainables.bin')):
+            non_lora_trainables = torch.load(os.path.join(model_path, 'non_lora_trainables.bin'),
+                                             map_location='cpu')
+        else:
+            pass
+        non_lora_trainables = {(k[11:] if k.startswith('base_model.') else k): v for k, v in
+                               non_lora_trainables.items()}
+        if any(k.startswith('model.model.') for k in non_lora_trainables):
+            non_lora_trainables = {(k[6:] if k.startswith('model.') else k): v for k, v in
+                                   non_lora_trainables.items()}
+        model.load_state_dict(non_lora_trainables, strict=False)
+
+        from peft import PeftModel
+        print('Loading LoRA weights...')
+        model = PeftModel.from_pretrained(model, model_path)
+        print('Merging LoRA weights...')
+        model = model.merge_and_unload()
+        print('Model is loaded...')
+
+    elif model_args.vision_tower is not None:
         if 'mpt' in model_args.model_name_or_path:
             config = transformers.AutoConfig.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
             config.attn_config['attn_impl'] = training_args.mpt_attn_impl
@@ -862,6 +906,7 @@ def train(attn_implementation=None):
                 torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
                 **bnb_model_from_pretrained_args
             )
+
     else:
         model = transformers.LlamaForCausalLM.from_pretrained(
             model_args.model_name_or_path,
@@ -993,18 +1038,6 @@ def train(attn_implementation=None):
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
 
-    # if continual training
-    if model_args.previous_task_model is not None and 'lora' in model_args.previous_task_model.lower():
-        llava_weight = torch.load(os.path.join(model_args.previous_task_model, 'llava_weights.pth'), map_location='cpu')
-        # model.load_state_dict(llava_weight, strict=True)
-        # Modify the keys: add 'base_model.' prefix
-        modified_weights = {}
-        for key, value in llava_weight.items():
-            modified_weights['base_model.model.' + key] = value
-
-        # Load the modified weights into the model
-        model.load_state_dict(modified_weights, strict=True)
-
     trainer = LLaVATrainer(
         model=model,
         tokenizer=tokenizer,
@@ -1017,59 +1050,24 @@ def train(attn_implementation=None):
     else:
         trainer.train()
 
-    if training_args.lora_enable:
-        import pdb;
-        pdb.set_trace()
-        trainer.model.merge_and_unload()
-        trainer.model = trainer.model.base_model.model
-
-        # safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
-
     trainer.save_state()
     model.config.use_cache = True
 
     if training_args.lora_enable:
-        # # state_dict = get_peft_state_maybe_zero_3(
-        # #     model.named_parameters(), training_args.lora_bias
-        # # )
-        # # non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(
-        # #     model.named_parameters()
-        # # )
-        # # if training_args.local_rank == 0 or training_args.local_rank == -1:
-        # #     model.config.save_pretrained(training_args.output_dir)
-        # #     model.save_pretrained(training_args.output_dir, state_dict=state_dict)
-        # #     torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
-        #
-        #
-        # # import pdb; pdb.set_trace()
-        # # if training_args.local_rank == 0 or training_args.local_rank == -1:
-        #     # import pdb;pdb.set_trace()
-        # trainer.model.merge_and_unload()
-        # trainer.model = trainer.model.base_model.model
-        # import pdb; pdb.set_trace()
-        safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
+        state_dict = get_peft_state_maybe_zero_3(
+            model.named_parameters(), training_args.lora_bias
+        )
+        non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(
+            model.named_parameters()
+        )
+        if training_args.local_rank == 0 or training_args.local_rank == -1:
+            model.config.save_pretrained(training_args.output_dir)
+            model.save_pretrained(training_args.output_dir, state_dict=state_dict)
+            torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
     else:
-        # if training_args.local_rank == 0 or training_args.local_rank == -1:
-        #     import pdb;pdb.set_trace()
         safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
 
-    # save_model_variables_and_shapes(model, training_args.output_dir)
 
-
-
-def save_model_variables_and_shapes(model, output_dir):
-    # Create a dictionary to store variable names and shapes
-    model_vars = {}
-
-    # Iterate over model parameters
-    for name, param in model.named_parameters():
-        # Store parameter name and shape
-        model_vars[name] = list(param.shape)
-
-    # Save the dictionary to a JSON file
-    output_file = os.path.join(output_dir, "model_variables_and_shapes.json")
-    with open(output_file, "w") as f:
-        json.dump(model_vars, f, indent=4)
 
 
 
