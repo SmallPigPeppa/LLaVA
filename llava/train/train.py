@@ -1034,11 +1034,11 @@ def train(attn_implementation=None):
 
 
         # import pdb; pdb.set_trace()
-        if training_args.local_rank == 0 or training_args.local_rank == -1:
+        # if training_args.local_rank == 0 or training_args.local_rank == -1:
             # import pdb;pdb.set_trace()
-            trainer.model.merge_and_unload()
-            trainer.model = trainer.model.base_model.model
-            safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
+        trainer.model.merge_and_unload()
+        trainer.model = trainer.model.base_model.model
+        safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
     else:
         # if training_args.local_rank == 0 or training_args.local_rank == -1:
         #     import pdb;pdb.set_trace()
