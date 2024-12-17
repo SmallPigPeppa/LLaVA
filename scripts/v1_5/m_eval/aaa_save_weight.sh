@@ -8,5 +8,4 @@ MODEL_BASE="lmsys/vicuna-7b-v1.5"
 python -m llava.eval.model_vqa_save_weight \
     --model-path "checkpoints/$MODEL" \
     --model-base $MODEL_BASE \
-    ---save-path "checkpoints/$MODEL/llava_weights.pth
-"
+    --save-path "checkpoints/$MODEL/llava_weights.pth"
