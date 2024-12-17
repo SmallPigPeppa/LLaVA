@@ -1038,7 +1038,7 @@ def train(attn_implementation=None):
         trainer.model = trainer.model.base_model.model
         safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
     else:
-        # import pdb;pdb.set_trace()
+        import pdb;pdb.set_trace()
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
 
