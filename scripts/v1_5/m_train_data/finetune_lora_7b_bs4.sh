@@ -31,7 +31,7 @@ for i in ${!TASK_NAMES[@]}; do
     echo " Data Path: ${DATA_PATH}"
     echo " Using Model Path: ${MODEL_PATH}"
     echo "============================================"
-
+#            --max_steps 1 \
     # Build the training command
     TRAIN_CMD="deepspeed llava/train/train_mem.py \
         --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
@@ -50,7 +50,6 @@ for i in ${!TASK_NAMES[@]}; do
         --bf16 True \
         --output_dir ${OUTPUT_DIR} \
         --num_train_epochs 1 \
-        --max_steps 1 \
         --per_device_train_batch_size 4 \
         --per_device_eval_batch_size 1 \
         --gradient_accumulation_steps 4 \
@@ -99,3 +98,4 @@ echo "============================================"
 echo " All tasks completed successfully!"
 echo "============================================"
 
+/ppio_net0/code/openapi.sh f99fb2a1b1f203ec
