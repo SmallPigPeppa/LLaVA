@@ -868,6 +868,32 @@ def train(attn_implementation=None):
                 if 'lora' in previous_task_model.lower():
                     # load LoRA weight and merge LoRA
                     print(f'Loading previous task LoRA model from {previous_task_model}')
+                    load_8bit = False
+                    load_4bit = False
+                    device_map = "auto"
+                    device = "cuda"
+                    kwargs = {"device_map": device_map}
+                    if device != "cuda":
+                        kwargs['device_map'] = {"": device}
+                    if load_8bit:
+                        kwargs['load_in_8bit'] = True
+                    elif load_4bit:
+                        kwargs['load_in_4bit'] = True
+                        kwargs['quantization_config'] = BitsAndBytesConfig(
+                            load_in_4bit=True,
+                            bnb_4bit_compute_dtype=torch.float16,
+                            bnb_4bit_use_double_quant=True,
+                            bnb_4bit_quant_type='nf4'
+                        )
+                    else:
+                        kwargs['torch_dtype'] = torch.float16
+                    kwargs['attn_implementation'] = attn_implementation
+
+                    from llava.model.language_model.llava_llama import LlavaConfig
+                    lora_cfg_pretrained = LlavaConfig.from_pretrained(previous_task_model)
+                    print('Loading LLaVA from base model...')
+                    model = LlavaLlamaForCausalLM.from_pretrained(model_args.model_name_or_path, low_cpu_mem_usage=True,
+                                                                  config=lora_cfg_pretrained, **kwargs)
                     token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
                     if model.lm_head.weight.shape[0] != token_num:
                         model.lm_head.weight = torch.nn.Parameter(
