@@ -1035,10 +1035,10 @@ def train(attn_implementation=None):
 
         import pdb; pdb.set_trace()
         trainer.model.merge_and_unload()
-        trainer.model = trainer.model.base_model.model
+        trainer.model = trainer.model.base_model.model.model
         safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
     else:
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
 
