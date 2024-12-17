@@ -30,6 +30,8 @@ def save_model_with_trainer(args):
         tokenizer=tokenizer  # Include the tokenizer to save it with the model
     )
 
+
+    trainer.model.generation_config.do_sample=True
     # Save the model and tokenizer
     trainer.save_model()
     print(f"Model and tokenizer saved to {os.path.expanduser(args.save_path)}")
