@@ -17,6 +17,7 @@ OUTPUT_DIR_ROOT="./continual-ckpt/domain"
 
 # Initialize model path with the base model
 MODEL_PATH=$MODEL_BASE
+MERGE_BASE=$MODEL_BASE  # Initialize merging base as the base model
 
 # Loop through all tasks
 for i in ${!TASK_NAMES[@]}; do
@@ -86,11 +87,12 @@ for i in ${!TASK_NAMES[@]}; do
 
     python -m llava.eval.model_vqa_save_weight_hf \
         --model-path ${OUTPUT_DIR} \
-        --model-base ${MODEL_BASE} \
+        --model-base ${MERGE_BASE} \
         --save-path ${MERGED_DIR}
 
-    # Update model path for the next task
+    # Update model path and merge base for the next task
     MODEL_PATH=${MERGED_DIR}
+    MERGE_BASE=${MERGED_DIR}  # Use the merged model as the new base for merging
 done
 
 echo "============================================"
