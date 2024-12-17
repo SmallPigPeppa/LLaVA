@@ -978,9 +978,6 @@ def train(attn_implementation=None):
             fsdp=training_args.fsdp
         )
 
-
-
-
         vision_tower = model.get_vision_tower()
         vision_tower.to(dtype=torch.bfloat16 if training_args.bf16 else torch.float16, device=training_args.device)
 
@@ -1039,7 +1036,6 @@ def train(attn_implementation=None):
         # Load the modified weights into the model
         model.load_state_dict(modified_weights, strict=True)
 
-
     trainer = LLaVATrainer(
         model=model,
         tokenizer=tokenizer,
@@ -1066,6 +1062,10 @@ def train(attn_implementation=None):
             model.config.save_pretrained(training_args.output_dir)
             model.save_pretrained(training_args.output_dir, state_dict=state_dict)
             torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
+
+        trainer.model = trainer.model.merge_and_unload()
+        safe_save_model_for_hf_trainer(trainer=trainer,
+                                       output_dir=training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
