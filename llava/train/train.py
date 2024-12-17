@@ -1020,7 +1020,7 @@ def train(attn_implementation=None):
     if training_args.lora_enable:
         trainer.model.merge_and_unload()
         trainer.model = trainer.model.base_model.model
-        safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
+        # safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
 
     trainer.save_state()
     model.config.use_cache = True
@@ -1048,8 +1048,7 @@ def train(attn_implementation=None):
     else:
         # if training_args.local_rank == 0 or training_args.local_rank == -1:
         #     import pdb;pdb.set_trace()
-        safe_save_model_for_hf_trainer(trainer=trainer,
-                                       output_dir=training_args.output_dir)
+        safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
 
     # save_model_variables_and_shapes(model, training_args.output_dir)
 
