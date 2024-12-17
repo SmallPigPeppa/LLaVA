@@ -985,7 +985,7 @@ def train(attn_implementation=None):
             # Modify the keys: add 'base_model.' prefix
             modified_weights = {}
             for key, value in llava_weight.items():
-                modified_weights['base_model.' + key] = value
+                modified_weights['base_model.model.' + key] = value
 
             # Load the modified weights into the model
             model.load_state_dict(modified_weights, strict=True)
