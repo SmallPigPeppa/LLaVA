@@ -1020,7 +1020,7 @@ def train(attn_implementation=None):
         #     model.config.save_pretrained(training_args.output_dir)
         #     model.save_pretrained(training_args.output_dir, state_dict=state_dict)
         #     torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         trainer.model_wrapped = trainer.model.merge_and_unload()
         safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
     else:
