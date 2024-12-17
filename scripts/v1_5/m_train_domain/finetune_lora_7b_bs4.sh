@@ -12,7 +12,7 @@ PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
 TASK_NAMES=("others" "coco" "ocr_vqa" "textvqa" "gqa" "vg")
 
 # JSON files are dynamically generated based on task names
-DATA_ROOT="domain-incremental"
+DATA_ROOT="./playground/data/domain-incremental"
 OUTPUT_DIR_ROOT="./continual-ckpt/domain"
 
 # Initialize model path with the base model
