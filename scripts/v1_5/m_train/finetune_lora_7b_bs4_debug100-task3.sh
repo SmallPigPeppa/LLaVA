@@ -10,7 +10,6 @@ deepspeed llava/train/train_mem.py \
     --data_path ./playground/data/debug/llava_v1_5_mix665k-random-100.json \
     --image_folder ./playground/data \
     --vision_tower openai/clip-vit-large-patch14-336 \
-    --pretrain_mm_mlp_adapter ./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin \
     --mm_projector_type mlp2x_gelu \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end False \
