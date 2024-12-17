@@ -843,51 +843,8 @@ def train(attn_implementation=None):
             )
         ))
 
-    # if continual training
-    if model_args.previous_task_model is not None and 'lora' in model_args.previous_task_model.lower():
-        model_path=model_args.previous_task_model
-        model_base=model_args.model_name_or_path
-        device_map = "auto"
-        device = "cuda"
-        kwargs = {}
-        # if device != "cuda":
-        #     kwargs['device_map'] = {"": device}
-        kwargs['torch_dtype'] = torch.float16
-        kwargs['attn_implementation'] = 'flash_attention_2'
 
-
-        from llava.model.language_model.llava_llama import LlavaConfig
-        lora_cfg_pretrained = LlavaConfig.from_pretrained(model_path)
-        print('Loading LLaVA from base model...')
-        model = LlavaLlamaForCausalLM.from_pretrained(model_base,config=lora_cfg_pretrained, **kwargs)
-        token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
-        if model.lm_head.weight.shape[0] != token_num:
-            model.lm_head.weight = torch.nn.Parameter(
-                torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
-            model.model.embed_tokens.weight = torch.nn.Parameter(
-                torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
-
-        print('Loading additional LLaVA weights...')
-        if os.path.exists(os.path.join(model_path, 'non_lora_trainables.bin')):
-            non_lora_trainables = torch.load(os.path.join(model_path, 'non_lora_trainables.bin'),
-                                             map_location='cpu')
-        else:
-            pass
-        non_lora_trainables = {(k[11:] if k.startswith('base_model.') else k): v for k, v in
-                               non_lora_trainables.items()}
-        if any(k.startswith('model.model.') for k in non_lora_trainables):
-            non_lora_trainables = {(k[6:] if k.startswith('model.') else k): v for k, v in
-                                   non_lora_trainables.items()}
-        model.load_state_dict(non_lora_trainables, strict=False)
-
-        from peft import PeftModel
-        print('Loading LoRA weights...')
-        model = PeftModel.from_pretrained(model, model_path)
-        print('Merging LoRA weights...')
-        model = model.merge_and_unload()
-        print('Model is loaded...')
-
-    elif model_args.vision_tower is not None:
+    if model_args.vision_tower is not None:
         if 'mpt' in model_args.model_name_or_path:
             config = transformers.AutoConfig.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
             config.attn_config['attn_impl'] = training_args.mpt_attn_impl
@@ -1053,16 +1010,18 @@ def train(attn_implementation=None):
     model.config.use_cache = True
 
     if training_args.lora_enable:
-        state_dict = get_peft_state_maybe_zero_3(
-            model.named_parameters(), training_args.lora_bias
-        )
-        non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(
-            model.named_parameters()
-        )
-        if training_args.local_rank == 0 or training_args.local_rank == -1:
-            model.config.save_pretrained(training_args.output_dir)
-            model.save_pretrained(training_args.output_dir, state_dict=state_dict)
-            torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
+        # state_dict = get_peft_state_maybe_zero_3(
+        #     model.named_parameters(), training_args.lora_bias
+        # )
+        # non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(
+        #     model.named_parameters()
+        # )
+        # if training_args.local_rank == 0 or training_args.local_rank == -1:
+        #     model.config.save_pretrained(training_args.output_dir)
+        #     model.save_pretrained(training_args.output_dir, state_dict=state_dict)
+        #     torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
+        import pdb; pdb.set_trace()
+        # self.model_wrapped
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
 
