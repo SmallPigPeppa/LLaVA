@@ -1033,10 +1033,10 @@ def train(attn_implementation=None):
             torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
 
 
-        import pdb; pdb.set_trace()
-        trainer.model = trainer.model.merge_and_unload()
-        safe_save_model_for_hf_trainer(trainer=trainer,
-                                       output_dir=training_args.output_dir)
+        # import pdb; pdb.set_trace()
+        trainer.model.merge_and_unload()
+        trainer.model = trainer.model.base_model.model
+        safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
