@@ -842,28 +842,7 @@ def train(attn_implementation=None):
                 bnb_4bit_quant_type=training_args.quant_type  # {'fp4', 'nf4'}
             )
         ))
-    # # load continual training weight
-    # if model_args.previous_task_model is not None and 'lora' in model_args.previous_task_model.lower():
-    #     previous_task_model = model_args.previous_task_model
-    #     if os.path.exists(os.path.join(previous_task_model, 'non_lora_trainables.bin')):
-    #         non_lora_trainables = torch.load(os.path.join(previous_task_model, 'non_lora_trainables.bin'),
-    #                                          map_location='cpu')
-    #         non_lora_trainables = {(k[11:] if k.startswith('base_model.') else k): v for k, v in
-    #                                non_lora_trainables.items()}
-    #         if any(k.startswith('model.model.') for k in non_lora_trainables):
-    #             non_lora_trainables = {(k[6:] if k.startswith('model.') else k): v for k, v in
-    #                                    non_lora_trainables.items()}
-    #         model.load_state_dict(non_lora_trainables, strict=False)
-    #         from peft import PeftModel
-    #         print('Loading LoRA weights...')
-    #         model = PeftModel.from_pretrained(model, previous_task_model)
-    #         print('Merging LoRA weights...')
-    #         model = model.merge_and_unload()
-    #         print('Model is loaded...')
-    #     else:
-    #         import warnings
-    #         warnings.warn(
-    #             'You are loading a LoRA model but no \'non_lora_trainables.bin\' in \'previous_task_model_path\'')
+
 
     if model_args.vision_tower is not None:
         if 'mpt' in model_args.model_name_or_path:
@@ -876,16 +855,6 @@ def train(attn_implementation=None):
                 **bnb_model_from_pretrained_args
             )
         else:
-            # if model_args.previous_task_model is not None and 'lora' not in model_args.previous_task_model.lower():
-            #     print(f'Loading previous task Fine-tune model from {model_args.previous_task_model}')
-            #     model = LlavaLlamaForCausalLM.from_pretrained(
-            #         model_args.previous_task_model,
-            #         cache_dir=training_args.cache_dir,
-            #         attn_implementation=attn_implementation,
-            #         torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-            #         **bnb_model_from_pretrained_args
-            #     )
-            # else:
             model = LlavaLlamaForCausalLM.from_pretrained(
                 model_args.model_name_or_path,
                 cache_dir=training_args.cache_dir,
