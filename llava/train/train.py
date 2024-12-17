@@ -868,6 +868,12 @@ def train(attn_implementation=None):
                 if 'lora' in previous_task_model.lower():
                     # load LoRA weight and merge LoRA
                     print(f'Loading previous task LoRA model from {previous_task_model}')
+                    token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
+                    if model.lm_head.weight.shape[0] != token_num:
+                        model.lm_head.weight = torch.nn.Parameter(
+                            torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
+                        model.model.embed_tokens.weight = torch.nn.Parameter(
+                            torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
                     if os.path.exists(os.path.join(previous_task_model, 'non_lora_trainables.bin')):
                         non_lora_trainables = torch.load(os.path.join(previous_task_model, 'non_lora_trainables.bin'),
                                                          map_location='cpu')
