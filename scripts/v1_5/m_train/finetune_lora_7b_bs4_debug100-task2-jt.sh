@@ -5,7 +5,7 @@ export HF_HOME=/ppio_net0/huggingface
 deepspeed llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --deepspeed ./scripts/zero3.json \
-    --model_name_or_path ./checkpoints/llava-v1.5-7b-lora-jt \
+    --model_name_or_path ./checkpoints/llava-v1.5-7b-lora-x \
     --version v1 \
     --data_path ./playground/data/debug/llava_v1_5_mix665k-random-100.json \
     --image_folder ./playground/data \
