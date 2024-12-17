@@ -1063,12 +1063,31 @@ def train(attn_implementation=None):
             model.save_pretrained(training_args.output_dir, state_dict=state_dict)
             torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
 
-        trainer.model = trainer.model.merge_and_unload()
-        safe_save_model_for_hf_trainer(trainer=trainer,
-                                       output_dir=training_args.output_dir)
+        # trainer.model = trainer.model.merge_and_unload()
+        # safe_save_model_for_hf_trainer(trainer=trainer,
+        #                                output_dir=training_args.output_dir)
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
+
+    save_model_variables_and_shapes(model, training_args.output_dir)
+
+
+
+def save_model_variables_and_shapes(model, output_dir):
+    # Create a dictionary to store variable names and shapes
+    model_vars = {}
+
+    # Iterate over model parameters
+    for name, param in model.named_parameters():
+        # Store parameter name and shape
+        model_vars[name] = list(param.shape)
+
+    # Save the dictionary to a JSON file
+    output_file = os.path.join(output_dir, "model_variables_and_shapes.json")
+    with open(output_file, "w") as f:
+        json.dump(model_vars, f, indent=4)
+
 
 
 if __name__ == "__main__":
