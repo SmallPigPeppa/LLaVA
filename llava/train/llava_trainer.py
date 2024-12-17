@@ -14,6 +14,78 @@ from transformers.trainer import (
 )
 from typing import List, Optional
 
+# #####
+# from transformers.utils import (
+#     ADAPTER_CONFIG_NAME,
+#     ADAPTER_SAFE_WEIGHTS_NAME,
+#     ADAPTER_WEIGHTS_NAME,
+#     CONFIG_NAME,
+#     SAFE_WEIGHTS_INDEX_NAME,
+#     SAFE_WEIGHTS_NAME,
+#     WEIGHTS_INDEX_NAME,
+#     WEIGHTS_NAME,
+#     XLA_FSDPV2_MIN_VERSION,
+#     PushInProgress,
+#     PushToHubMixin,
+#     can_return_loss,
+#     find_labels,
+#     is_accelerate_available,
+#     is_apex_available,
+#     is_bitsandbytes_available,
+#     is_datasets_available,
+#     is_galore_torch_available,
+#     is_in_notebook,
+#     is_ipex_available,
+#     is_peft_available,
+#     is_safetensors_available,
+#     is_sagemaker_dp_enabled,
+#     is_sagemaker_mp_enabled,
+#     is_torch_compile_available,
+#     is_torch_mlu_available,
+#     is_torch_neuroncore_available,
+#     is_torch_npu_available,
+#     is_torch_xla_available,
+#     logging,
+#     strtobool,
+# )
+#
+# if is_sagemaker_mp_enabled():
+#     import smdistributed.modelparallel.torch as smp
+#     from smdistributed.modelparallel import __version__ as SMP_VERSION
+#
+#     IS_SAGEMAKER_MP_POST_1_10 = version.parse(SMP_VERSION) >= version.parse("1.10")
+#
+#     from transformers.trainer_pt_utils import smp_forward_backward, smp_forward_only, smp_gather, smp_nested_concat
+# else:
+#     IS_SAGEMAKER_MP_POST_1_10 = False
+#
+# from packaging import version
+#
+# if is_accelerate_available():
+#     from accelerate import Accelerator, skip_first_batches
+#     from accelerate import __version__ as accelerate_version
+#     from accelerate.utils import (
+#         DistributedDataParallelKwargs,
+#         DistributedType,
+#         GradientAccumulationPlugin,
+#         load_fsdp_model,
+#         load_fsdp_optimizer,
+#         save_fsdp_model,
+#         save_fsdp_optimizer,
+#     )
+#
+#     DATA_SAMPLERS = [RandomSampler]
+#     if version.parse(accelerate_version) > version.parse("0.23.0"):
+#         from accelerate.data_loader import SeedableRandomSampler
+#
+#         DATA_SAMPLERS += [SeedableRandomSampler]
+#
+#     if is_deepspeed_available():
+#         from accelerate.utils import DeepSpeedSchedulerWrapper
+#
+# ######
+from transformers.trainer import  *
+
 
 def maybe_zero_3(param, ignore_status=False, name=None):
     from deepspeed import zero
@@ -256,53 +328,68 @@ class LLaVATrainer(Trainer):
             self.model.generation_config.do_sample = True  # <------------------------------------- Here, too
             super(LLaVATrainer, self)._save(output_dir, state_dict)
 
-    # def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
-    #     """
-    #     Will save the model, so you can reload it using `from_pretrained()`.
-    #
-    #     Will only save from the main process.
-    #     """
-    #
-    #     if output_dir is None:
-    #         output_dir = self.args.output_dir
-    #
-    #     if is_torch_xla_available():
-    #         self._save_tpu(output_dir)
-    #     elif is_sagemaker_mp_enabled():
-    #         # Calling the state_dict needs to be done on the wrapped model and on all processes.
-    #         os.makedirs(output_dir, exist_ok=True)
-    #         state_dict = self.model_wrapped.state_dict()
-    #         if self.args.should_save:
-    #             self._save(output_dir, state_dict=state_dict)
-    #         if IS_SAGEMAKER_MP_POST_1_10:
-    #             # 'user_content.pt' indicates model state_dict saved with smp >= 1.10
-    #             Path(os.path.join(output_dir, "user_content.pt")).touch()
-    #     elif self.is_fsdp_enabled:
-    #         if ("FULL_STATE_DICT" in str(self.accelerator.state.fsdp_plugin.state_dict_type)) and (
-    #             version.parse(accelerate_version) > version.parse("0.24.1")
-    #         ):
-    #             state_dict = self.accelerator.get_state_dict(self.model)
-    #             if self.args.should_save:
-    #                 self._save(output_dir, state_dict=state_dict)
-    #     elif self.is_deepspeed_enabled:
-    #         try:
-    #             state_dict = self.accelerator.get_state_dict(self.deepspeed)
-    #             if self.args.should_save:
-    #                 self._save(output_dir, state_dict=state_dict)
-    #         except ValueError:
-    #             logger.warning(
-    #                 " stage3_gather_16bit_weights_on_model_save=false. Saving the full checkpoint instead, use"
-    #                 " zero_to_fp32.py to recover weights"
-    #             )
-    #             if self.args.should_save:
-    #                 self._save(output_dir, state_dict={})
-    #             # remove the dummy state_dict
-    #             remove_dummy_checkpoint(self.args.should_save, output_dir, [WEIGHTS_NAME, SAFE_WEIGHTS_NAME])
-    #             self.model_wrapped.save_checkpoint(output_dir)
-    #
-    #     elif self.args.should_save:
-    #         self._save(output_dir)
-    #
-    #     # Push to the Hub when `save_model` is called by the user.
-    #     if self.args.push_to_hub and not _internal_call:
-    #         self.push_to_hub(commit_message="Model save")
+    def save_model(self, output_dir: Optional[str] = None, _internal_call: bool = False):
+        """
+        Will save the model, so you can reload it using `from_pretrained()`.
+
+        Will only save from the main process.
+        """
+
+        if output_dir is None:
+            output_dir = self.args.output_dir
+
+        if is_torch_xla_available():
+            self._save_tpu(output_dir)
+        elif is_sagemaker_mp_enabled():
+            # Calling the state_dict needs to be done on the wrapped model and on all processes.
+            os.makedirs(output_dir, exist_ok=True)
+            state_dict = self.model_wrapped.state_dict()
+            if self.args.should_save:
+                self._save(output_dir, state_dict=state_dict)
+            if IS_SAGEMAKER_MP_POST_1_10:
+                # 'user_content.pt' indicates model state_dict saved with smp >= 1.10
+                Path(os.path.join(output_dir, "user_content.pt")).touch()
+        elif self.is_fsdp_enabled:
+            if ("FULL_STATE_DICT" in str(self.accelerator.state.fsdp_plugin.state_dict_type)) and (
+                version.parse(accelerate_version) > version.parse("0.24.1")
+            ):
+                state_dict = self.accelerator.get_state_dict(self.model)
+                if self.args.should_save:
+                    self._save(output_dir, state_dict=state_dict)
+        elif self.is_deepspeed_enabled:
+            try:
+                state_dict = self.accelerator.get_state_dict(self.deepspeed)
+                # if self.args.should_save:
+                #     self._save(output_dir, state_dict=state_dict)
+
+                # 创建一个新的 state_dict 用于存储修改后的参数
+                new_state_dict = {}
+
+                # 遍历原始 state_dict 中的每个参数
+                for name, param in state_dict.items():
+                    # 如果参数名称中包含 'base_model.model.'，则去掉
+                    new_name = name.replace("base_model.model.", "")
+                    # 将修改后的名称和值存入新的 state_dict
+                    new_state_dict[new_name] = param
+
+                # 如果需要保存修改后的 state_dict
+                if self.args.should_save:
+                    self._save(output_dir, state_dict=new_state_dict)
+
+            except ValueError:
+                logger.warning(
+                    " stage3_gather_16bit_weights_on_model_save=false. Saving the full checkpoint instead, use"
+                    " zero_to_fp32.py to recover weights"
+                )
+                if self.args.should_save:
+                    self._save(output_dir, state_dict={})
+                # remove the dummy state_dict
+                remove_dummy_checkpoint(self.args.should_save, output_dir, [WEIGHTS_NAME, SAFE_WEIGHTS_NAME])
+                self.model_wrapped.save_checkpoint(output_dir)
+
+        elif self.args.should_save:
+            self._save(output_dir)
+
+        # Push to the Hub when `save_model` is called by the user.
+        if self.args.push_to_hub and not _internal_call:
+            self.push_to_hub(commit_message="Model save")
