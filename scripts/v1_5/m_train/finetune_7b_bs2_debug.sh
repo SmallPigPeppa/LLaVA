@@ -38,3 +38,4 @@ deepspeed llava/train/train_mem.py \
     --report_to wandb
 
 #/ppio_net0/code/openapi.sh stop 64959422368c38ac
+
