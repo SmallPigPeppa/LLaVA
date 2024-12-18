@@ -1,25 +1,30 @@
 #!/bin/bash
 export HF_HOME=/ppio_net0/huggingface
 
-# Set model base variable
+# Set model base variable for the first task
 MODEL_BASE="lmsys/vicuna-7b-v1.5"
-#MODEL_BASE="continual-ckpt/data-incremental/llava-v1.5-7b-lora-task-task1-merged/"
 
 # Define task suffixes in a list
-#TASKS=("task-task1" "task-task2" "task-task3" "task-task4" "task-task5")
-TASKS=("task-task1")
-#TASKS=("task-task3" "task-task4" "task-task5")
+TASKS=("task-task1" "task-task2" "task-task3" "task-task4" "task-task5")
 
 # Create the reviews directory if it doesn't exist
 mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
 
 # Loop through each task in the list
-for TASK in "${TASKS[@]}"; do
+for ((i = 0; i < ${#TASKS[@]}; i++)); do
+    TASK="${TASKS[$i]}"
+
     # Set the model for the current task
     MODEL="llava-v1.5-7b-lora-$TASK"
 
+    # If it's not the first task, set the base model to the previous task's merged model
+    if [ $i -gt 0 ]; then
+        PREVIOUS_TASK="${TASKS[$i-1]}"
+        MODEL_BASE="continual-ckpt/data-incremental/llava-v1.5-7b-lora-${PREVIOUS_TASK}-merged"
+    fi
+
     # Evaluate the model
-    echo "Evaluating $MODEL..."
+    echo "Evaluating $MODEL with base model $MODEL_BASE..."
     python -m llava.eval.model_vqa \
         --model-path "continual-ckpt/data-incremental/$MODEL" \
         --model-base $MODEL_BASE \
