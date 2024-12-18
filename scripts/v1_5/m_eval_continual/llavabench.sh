@@ -7,12 +7,21 @@ MODEL_BASE="lmsys/vicuna-7b-v1.5"
 # Define task suffixes in a list
 TASKS=("task-task1" "task-task2" "task-task3" "task-task4" "task-task5")
 
+# Define tasks to skip
+SKIP_TASKS=("task-task1" )  # Add tasks you want to skip
+
 # Create the reviews directory if it doesn't exist
 mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
 
 # Loop through each task in the list
 for ((i = 0; i < ${#TASKS[@]}; i++)); do
     TASK="${TASKS[$i]}"
+
+    # Check if the task should be skipped
+    if [[ " ${SKIP_TASKS[@]} " =~ " $TASK " ]]; then
+        echo "Skipping $TASK..."
+        continue  # Skip this task and go to the next iteration
+    fi
 
     # Set the model for the current task
     MODEL="llava-v1.5-7b-lora-$TASK"
