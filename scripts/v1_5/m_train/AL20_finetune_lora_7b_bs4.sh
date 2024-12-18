@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#export HF_HOME=/ppio_net0/huggingface
+export HF_HOME=/mnt/disk3/wzliu/huggingface
 
 deepspeed llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
