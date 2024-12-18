@@ -3,7 +3,7 @@ export HF_HOME=/ppio_net0/huggingface
 
 # Set model as a variable
 #MODEL="llava-v1.5-7b-lora"
-MODEL="llava-v1.5-7b-lora-task-task1"
+MODEL="llava-v1.5-7b-lora-task-task2"
 MODEL_BASE="lmsys/vicuna-7b-v1.5"
 # Evaluate the model
 python -m llava.eval.model_vqa \
