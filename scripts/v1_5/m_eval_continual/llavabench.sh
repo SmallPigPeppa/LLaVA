@@ -6,7 +6,7 @@ MODEL_BASE="lmsys/vicuna-7b-v1.5"
 
 # Define task suffixes in a list
 #TASKS=("task-task1" "task-task2" "task-task3" "task-task4" "task-task5")
-TASKS=("task-task2" "task-task3" "task-task4" "task-task5")
+TASKS=("task-task3" "task-task4" "task-task5")
 
 # Create the reviews directory if it doesn't exist
 mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
