@@ -3,10 +3,12 @@ export HF_HOME=/ppio_net0/huggingface
 
 # Set model base variable
 MODEL_BASE="lmsys/vicuna-7b-v1.5"
+MODEL_BASE="continual-ckpt/data-incremental/llava-v1.5-7b-lora-task-task1-merged/"
 
 # Define task suffixes in a list
 #TASKS=("task-task1" "task-task2" "task-task3" "task-task4" "task-task5")
-TASKS=("task-task3" "task-task4" "task-task5")
+TASKS=("task-task2")
+#TASKS=("task-task3" "task-task4" "task-task5")
 
 # Create the reviews directory if it doesn't exist
 mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
