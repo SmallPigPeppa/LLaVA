@@ -99,4 +99,4 @@ echo " All tasks completed successfully!"
 echo "============================================"
 
 
-/ppio_net0/code/openapi.sh f2197cf31dc63437
+/ppio_net0/code/openapi.sh stop f2197cf31dc63437
