@@ -26,7 +26,7 @@ echo "Generate A-old from $MODEL"
 #    --temperature 0 \
 #    --conv-mode vicuna_v1
 
-torchrun --nproc_per_node=2 llava/eval/model_vqa_generate_Aoldv2_debug.py \
+python -m llava.eval.model_vqa_generate_Aoldv2 \
     --model-path "continual-ckpt/domain/$MODEL" \
     --image-folder ./playground/data \
     --dataset-file ./playground/data/debug/llava_v1_5_mix665k-random-8.json \
@@ -34,6 +34,5 @@ torchrun --nproc_per_node=2 llava/eval/model_vqa_generate_Aoldv2_debug.py \
     --conv-mode llava_v1 \
     --temperature 0.2 \
     --top_p 0.9 \
-    --num_beams 5 \
-    --local_rank 0
+    --num_beams 5
 
