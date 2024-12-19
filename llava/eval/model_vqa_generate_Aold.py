@@ -80,10 +80,16 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
     return updated_conversations
 
 
+# def save_updated_dataset(conversations, output_file):
+#     with open(output_file, 'w') as f:
+#         for conv in conversations:
+#             f.write(json.dumps(conv) + "\n")
+
 def save_updated_dataset(conversations, output_file):
-    with open(output_file, 'w') as f:
-        for conv in conversations:
-            f.write(json.dumps(conv) + "\n")
+    with open(output_file, 'w', encoding='utf-8') as f:
+        # Write the entire list as a JSON array in one go
+        json.dump(conversations, f, ensure_ascii=False, indent=2)
+
 
 
 def eval_model(args):
