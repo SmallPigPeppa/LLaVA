@@ -94,7 +94,7 @@ def update_dataset(args):
 
                 # 生成回答
                 with torch.inference_mode():
-                    # import pdb; pdb.set_trace()
+                    import pdb; pdb.set_trace()
                     output_ids = model.generate(
                         input_ids,
                         images=image_tensor,
