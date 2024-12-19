@@ -13,87 +13,61 @@ from llava.mm_utils import tokenizer_image_token, process_images, get_model_name
 
 from PIL import Image
 import math
-from torch.nn import DataParallel
 
 
-def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args, device):
+def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
+    device = model.device_ids[0] if isinstance(model, torch.nn.DataParallel) else model.device
     updated_conversations = []
 
-    # 确定实际的模型引用
-    actual_model = model.module if isinstance(model, torch.nn.DataParallel) else model
+    for conv in tqdm(conversations):
+        gpt_index = -1
+        conversation_history = []
 
-    # 获取模型配置
-    model_config = actual_model.config
+        for i, dialogue in enumerate(conv['conversations']):
+            if dialogue['from'] == 'human':
+                human_question = dialogue['value']
+                conversation_history.append(f"Human: {human_question}")
+                cur_prompt = "\n".join(conversation_history)
 
-    # 准备批量处理
-    batch_size = args.batch_size
-    num_batches = math.ceil(len(conversations) / batch_size)
+                conv_ = conv_templates[args.conv_mode].copy()
+                conv_.append_message(conv_.roles[0], cur_prompt)
+                conv_.append_message(conv_.roles[1], None)
+                prompt = conv_.get_prompt()
 
-    for batch_idx in tqdm(range(num_batches), desc="Processing Batches"):
-        batch_convs = conversations[batch_idx * batch_size : (batch_idx + 1) * batch_size]
-        batch_prompts = []
-        batch_images = []
-        batch_conv_indices = []
-        batch_image_sizes = []
+                input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').to(device)
 
-        # 收集批量中的所有提示和图像
-        for conv_idx, conv in enumerate(batch_convs):
-            conversation_history = []
-            for dialogue in conv['conversations']:
-                if dialogue['from'] == 'human':
-                    human_question = dialogue['value']
-                    conversation_history.append(f"Human: {human_question}")
-                    cur_prompt = "\n".join(conversation_history)
+                image_file = conv["image"]
+                image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+                image_tensor = process_images([image], image_processor, model.module.config if isinstance(model,
+                                                                                                          torch.nn.DataParallel) else model.config)[
+                    0]
+                image_tensor = image_tensor.to(device).half()
 
-                    conv_ = conv_templates[args.conv_mode].copy()
-                    conv_.append_message(conv_.roles[0], cur_prompt)
-                    conv_.append_message(conv_.roles[1], None)
-                    prompt = conv_.get_prompt()
+                with torch.inference_mode():
+                    output_ids = model.module.generate(
+                        input_ids,
+                        images=image_tensor.unsqueeze(0),
+                        image_sizes=[image.size],
+                        do_sample=True if args.temperature > 0 else False,
+                        temperature=args.temperature,
+                        top_p=args.top_p,
+                        num_beams=args.num_beams,
+                        max_new_tokens=1024,
+                        use_cache=True
+                    )
 
-                    batch_prompts.append(prompt)
-                    image_file = conv["image"]
-                    image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
-                    image_tensor = process_images([image], image_processor, model_config)[0]
-                    batch_images.append(image_tensor)
-                    batch_conv_indices.append(conv_idx)
-                    batch_image_sizes.append((image.height, image.width))  # 注意PIL Image的size是 (width, height)
+                generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
-        if not batch_prompts:
-            # 当前批次没有需要处理的对话
-            for conv in batch_convs:
-                updated_conversations.append(conv)
-            continue
+                gpt_index = i + 1
+                if gpt_index < len(conv['conversations']) and conv['conversations'][gpt_index]['from'] == 'gpt':
+                    conv['conversations'].insert(gpt_index + 1, {
+                        "from": "old-model",
+                        "value": generated_answer
+                    })
 
-        # 准备输入张量
-        input_ids = tokenizer_image_token(batch_prompts, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').to(device)
-        images = torch.stack(batch_images).to(device).half()
+                conversation_history.append(f"GPT: {generated_answer}")
 
-        # 生成回答
-        with torch.inference_mode():
-            output_ids = actual_model.generate(
-                input_ids=input_ids,
-                images=images,
-                image_sizes=batch_image_sizes,
-                do_sample=True if args.temperature > 0 else False,
-                temperature=args.temperature,
-                top_p=args.top_p,
-                num_beams=args.num_beams,
-                max_new_tokens=1024,
-                use_cache=True
-            )
-
-        # 解码生成的答案
-        generated_answers = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
-
-        # 将生成的答案插入到相应的对话中
-        for i, answer in enumerate(generated_answers):
-            conv = batch_convs[i]
-            # 根据您的逻辑找到正确的插入位置，这里假设插入到最后
-            conv['conversations'].append({
-                "from": "old-model",
-                "value": answer.strip()
-            })
-            updated_conversations.append(conv)
+        updated_conversations.append(conv)
 
     return updated_conversations
 
@@ -104,31 +78,27 @@ def save_updated_dataset(conversations, output_file):
 
 
 def eval_model(args):
-    # 模型设置
+    # Model setup
     disable_torch_init()
     model_path = os.path.expanduser(args.model_path)
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
 
-    # 检查是否有多个 GPU
+    # Move model to GPUs and wrap with DataParallel
     if torch.cuda.device_count() > 1:
         print(f"Using {torch.cuda.device_count()} GPUs")
-        model = DataParallel(model)
-    else:
-        print("Using a single GPU or CPU")
+        model = torch.nn.DataParallel(model)
+    model = model.cuda()
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
-
-    # 加载数据集
+    # Load the dataset
     with open(os.path.expanduser(args.dataset_file), "r", encoding="utf-8") as f:
         dataset = json.load(f)
 
-    # 生成答案
+    # Generate answers using the model
     updated_dataset = generate_answers_from_model(model, tokenizer, image_processor, dataset, args.image_folder,
-                                                  model_name, args, device)
+                                                  model_name, args)
 
-    # 保存更新后的数据集
+    # Save the updated dataset to a new file
     save_updated_dataset(updated_dataset, args.output_file)
 
 
@@ -140,12 +110,9 @@ if __name__ == "__main__":
     parser.add_argument("--dataset-file", type=str, required=True, help="Path to the dataset file (JSONL)")
     parser.add_argument("--output-file", type=str, required=True, help="Path to save the updated dataset")
     parser.add_argument("--conv-mode", type=str, default="llava_v1", help="Conversation template mode")
-    parser.add_argument("--num-chunks", type=int, default=1, help="Number of chunks to split the dataset into")
-    parser.add_argument("--chunk-idx", type=int, default=0, help="Index of the chunk to process")
     parser.add_argument("--temperature", type=float, default=0.2, help="Temperature for sampling")
     parser.add_argument("--top_p", type=float, default=None, help="Top-p sampling for diversity")
     parser.add_argument("--num_beams", type=int, default=1, help="Number of beams for beam search")
-    parser.add_argument("--batch_size", type=int, default=2, help="Batch size for processing")
 
     args = parser.parse_args()
 

@@ -36,3 +36,4 @@ python -m llava.eval.model_vqa_generate_Aoldv3 \
     --top_p 0.9 \
     --num_beams 5
 
+#python your_script.py --model-path /path/to/model --image-folder /path/to/images --dataset-file /path/to/dataset.jsonl --output-file /path/to/output.jsonl
