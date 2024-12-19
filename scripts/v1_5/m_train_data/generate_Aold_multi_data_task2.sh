@@ -62,3 +62,4 @@ rm -rf $tmp_dir
 
 echo "Processing complete. Final results saved to $output_file."
 
+/ppio_net0/code/openapi.sh stop 492b3212ceef968b
