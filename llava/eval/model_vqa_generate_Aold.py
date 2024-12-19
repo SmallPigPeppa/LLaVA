@@ -86,31 +86,92 @@ def get_chunk(lst, n, k):
 #             f.write(json.dumps(conv) + "\n")
 
 
+# def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
+#     updated_conversations = []
+#
+#     for conv in tqdm(conversations):
+#         # We will collect pairs of "gpt" and "human" indices
+#         gpt_index = -1  # Initialize to an invalid index
+#         for i, dialogue in enumerate(conv['conversations']):
+#             if dialogue['from'] == 'human':
+#                 # Extract the question (from human)
+#                 human_question = dialogue['value']
+#
+#                 # Create the prompt for the model
+#                 image_file = conv["image"]
+#                 cur_prompt = human_question
+#
+#                 conv_ = conv_templates[args.conv_mode].copy()
+#                 conv_.append_message(conv_.roles[0], cur_prompt)
+#                 conv_.append_message(conv_.roles[1], None)
+#                 prompt = conv_.get_prompt()
+#
+#                 input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(
+#                     0).cuda()
+#
+#                 image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+#                 image_tensor = process_images([image], image_processor, model.config)[0]
+#                 with torch.inference_mode():
+#                     output_ids = model.generate(
+#                         input_ids,
+#                         images=image_tensor.unsqueeze(0).half().cuda(),
+#                         image_sizes=[image.size],
+#                         do_sample=True if args.temperature > 0 else False,
+#                         temperature=args.temperature,
+#                         top_p=args.top_p,
+#                         num_beams=args.num_beams,
+#                         max_new_tokens=1024,
+#                         use_cache=True
+#                     )
+#
+#                 generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
+#
+#                 # Now find the "gpt" index that corresponds to this human question
+#                 gpt_index = i + 1  # The next index is the gpt response
+#                 if gpt_index < len(conv['conversations']) and conv['conversations'][gpt_index]['from'] == 'gpt':
+#                     # Insert the "old-model" response after the "gpt" message
+#                     conv['conversations'].insert(gpt_index + 1, {
+#                         "from": "old-model",
+#                         "value": generated_answer
+#                     })
+#
+#         updated_conversations.append(conv)
+#
+#     return updated_conversations
+
 def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
     updated_conversations = []
 
     for conv in tqdm(conversations):
         # We will collect pairs of "gpt" and "human" indices
         gpt_index = -1  # Initialize to an invalid index
+        conversation_history = []  # This will hold the entire conversation history
+
         for i, dialogue in enumerate(conv['conversations']):
             if dialogue['from'] == 'human':
                 # Extract the question (from human)
                 human_question = dialogue['value']
 
-                # Create the prompt for the model
-                image_file = conv["image"]
-                cur_prompt = human_question
+                # Create the prompt for the model with conversation history
+                conversation_history.append(f"Human: {human_question}")
 
+                # Concatenate previous conversation history with the current human question
+                cur_prompt = "\n".join(conversation_history)
+
+                # Adding the corresponding GPT response
                 conv_ = conv_templates[args.conv_mode].copy()
-                conv_.append_message(conv_.roles[0], cur_prompt)
+                conv_.append_message(conv_.roles[0], cur_prompt)  # Append the concatenated history
                 conv_.append_message(conv_.roles[1], None)
                 prompt = conv_.get_prompt()
 
-                input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(
-                    0).cuda()
+                input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda()
 
+                # Load and process the image
+                image_file = conv["image"]
                 image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
                 image_tensor = process_images([image], image_processor, model.config)[0]
+
+                # Generate answer from model
                 with torch.inference_mode():
                     output_ids = model.generate(
                         input_ids,
@@ -124,6 +185,7 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
                         use_cache=True
                     )
 
+                # Decode and clean up the generated answer
                 generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
                 # Now find the "gpt" index that corresponds to this human question
@@ -135,10 +197,12 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
                         "value": generated_answer
                     })
 
+                # Add the GPT's answer to the conversation history
+                conversation_history.append(f"GPT: {generated_answer}")
+
         updated_conversations.append(conv)
 
     return updated_conversations
-
 
 
 def save_updated_dataset(conversations, output_file):
