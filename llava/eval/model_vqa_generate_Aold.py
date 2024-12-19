@@ -95,7 +95,7 @@ def eval_model(args):
 
     # Load the dataset
     # dataset = [json.loads(line) for line in open(os.path.expanduser(args.dataset_file), "r")]
-    with open(os.path.expanduser(args.input_file), "r", encoding="utf-8") as f:
+    with open(os.path.expanduser(args.dataset_file), "r", encoding="utf-8") as f:
         dataset = json.load(f)
 
     # Split dataset into chunks (for parallelization)
