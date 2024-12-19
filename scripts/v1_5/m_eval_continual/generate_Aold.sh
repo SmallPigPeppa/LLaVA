@@ -17,7 +17,7 @@ mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
 MODEL="llava-v1.5-7b-lora-$TASK"
 
 # Evaluate the model
-echo "Evaluating $MODEL"
+echo "Generate $MODEL A-old"
 #python -m llava.eval.model_vqa \
 #    --model-path "continual-ckpt/domain/$MODEL" \
 #    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
