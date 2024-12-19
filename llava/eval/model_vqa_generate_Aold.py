@@ -15,6 +15,17 @@ from PIL import Image
 import math
 
 
+def split_list(lst, n):
+    """Split a list into n (roughly) equal-sized chunks"""
+    chunk_size = math.ceil(len(lst) / n)  # integer division
+    return [lst[i:i + chunk_size] for i in range(0, len(lst), chunk_size)]
+
+
+def get_chunk(lst, n, k):
+    chunks = split_list(lst, n)
+    return chunks[k]
+
+
 
 """
 只支持单轮QA
@@ -80,10 +91,6 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
     updated_conversations = []
 
     for conv in tqdm(conversations):
-        # Skip this conversation if it doesn't contain the 'image' key
-        if 'image' not in conv:
-            continue
-
         # We will collect pairs of "gpt" and "human" indices
         gpt_index = -1  # Initialize to an invalid index
         conversation_history = []  # This will hold the entire conversation history
@@ -165,6 +172,8 @@ def eval_model(args):
     with open(os.path.expanduser(args.dataset_file), "r", encoding="utf-8") as f:
         dataset = json.load(f)
 
+    # Split dataset into chunks (for parallelization)
+    dataset = get_chunk(dataset, args.num_chunks, args.chunk_idx)
 
     # Generate answers using the model
     updated_dataset = generate_answers_from_model(model, tokenizer, image_processor, dataset, args.image_folder,
@@ -182,6 +191,8 @@ if __name__ == "__main__":
     parser.add_argument("--dataset-file", type=str, required=True, help="Path to the dataset file (JSONL)")
     parser.add_argument("--output-file", type=str, required=True, help="Path to save the updated dataset")
     parser.add_argument("--conv-mode", type=str, default="llava_v1", help="Conversation template mode")
+    parser.add_argument("--num-chunks", type=int, default=1, help="Number of chunks to split the dataset into")
+    parser.add_argument("--chunk-idx", type=int, default=0, help="Index of the chunk to process")
     parser.add_argument("--temperature", type=float, default=0.2, help="Temperature for sampling")
     parser.add_argument("--top_p", type=float, default=None, help="Top-p sampling for diversity")
     parser.add_argument("--num_beams", type=int, default=1, help="Number of beams for beam search")
