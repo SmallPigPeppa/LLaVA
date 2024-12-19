@@ -3,7 +3,7 @@ export HF_HOME=/ppio_net0/huggingface
 
 
 # Define task suffixes in a list
-TASKS="task-coco-merged"
+TASK="task-coco-merged"
 
 
 
