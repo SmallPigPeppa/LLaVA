@@ -89,6 +89,9 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
     updated_conversations = []
 
     for conv in tqdm(conversations):
+        # Temporary list to store the modified conversation
+        modified_conversation = []
+
         for i, dialogue in enumerate(conv['conversations']):
             if dialogue['from'] == 'human':
                 # Extract the question (from human)
@@ -97,7 +100,6 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
                 # Create the prompt for the model
                 image_file = conv["image"]
                 cur_prompt = human_question
-
                 conv_ = conv_templates[args.conv_mode].copy()
                 conv_.append_message(conv_.roles[0], cur_prompt)
                 conv_.append_message(conv_.roles[1], None)
@@ -124,22 +126,19 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
                 generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
-                # Append the GPT answer to the conversation
-                conv['conversations'].append({
-                    "from": "gpt",
-                    "value": generated_answer
-                })
+                # Add human question and generated answer to the conversation
+                modified_conversation.append({"from": "human", "value": human_question})
+                modified_conversation.append({"from": "gpt", "value": generated_answer})
 
-                # Append the old model's answer directly after the GPT answer
+                # Add the "old-model" response directly below the "gpt" response
                 conv['conversations'].append({
                     "from": "old-model",
-                    "value": generated_answer  # Assuming you have the old model's answer here
+                    "value": generated_answer  # Or use the previous model's output here
                 })
 
-        updated_conversations.append(conv)
+        updated_conversations.append(modified_conversation)
 
     return updated_conversations
-
 
 
 def save_updated_dataset(conversations, output_file):
