@@ -59,26 +59,24 @@ def update_dataset(args):
 
         image_tensor = process_images([image], image_processor, model.config)[0].unsqueeze(0).half().cuda()
 
-        # 获取对话列表
+        # 假设每个条目中的conversations按顺序成对出现
         conversations = entry.get("conversations", [])
+        if len(conversations) % 2 != 0:
+            print(f"条目 {entry['id']} 的对话数量不匹配. 跳过此条目.")
+            continue
 
-        # 遍历对话，寻找human-gpt对
         for i in range(0, len(conversations), 2):
-            if i + 1 >= len(conversations):
-                print(f"条目 {entry['id']} 中的对话不成对. 跳过此条目.")
-                break
+            gpt_msg = conversations[i]
+            human_msg = conversations[i + 1]
 
-            human_msg = conversations[i]
-            gpt_msg = conversations[i + 1]
-
-            if human_msg["from"] != "human" or gpt_msg["from"] != "gpt":
+            if gpt_msg["from"] != "gpt" or human_msg["from"] != "human":
                 print(f"条目 {entry['id']} 中的对话格式不符合预期. 跳过此对话.")
                 continue
 
-            human_question = human_msg["value"]
+            gpt_question = gpt_msg["value"]
 
             # 准备提示语
-            qs = human_question
+            qs = gpt_question
             if model.config.mm_use_im_start_end:
                 qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + qs
             else:
@@ -108,8 +106,8 @@ def update_dataset(args):
 
             generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
-            # 更新gpt的回答
-            gpt_msg["value"] = generated_answer
+            # 更新human的回答
+            human_msg["value"] = generated_answer
 
     # 保存更新后的数据集
     with open(os.path.expanduser(args.output_file), "w", encoding="utf-8") as f:
@@ -119,7 +117,7 @@ def update_dataset(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="使用模型更新数据集中gpt的回答")
+    parser = argparse.ArgumentParser(description="使用模型更新数据集中human的回答")
     parser.add_argument("--model-path", type=str, required=True, help="模型路径")
     parser.add_argument("--model-base", type=str, default=None, help="模型基准")
     parser.add_argument("--image-folder", type=str, required=True, help="图片文件夹路径")
