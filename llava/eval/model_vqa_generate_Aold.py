@@ -85,13 +85,13 @@ def get_chunk(lst, n, k):
 #         for conv in conversations:
 #             f.write(json.dumps(conv) + "\n")
 
+
 def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
     updated_conversations = []
 
     for conv in tqdm(conversations):
-        # Temporary list to store the modified conversation
-        modified_conversation = []
-
+        # We will collect pairs of "gpt" and "human" indices
+        gpt_index = -1  # Initialize to an invalid index
         for i, dialogue in enumerate(conv['conversations']):
             if dialogue['from'] == 'human':
                 # Extract the question (from human)
@@ -100,6 +100,7 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
                 # Create the prompt for the model
                 image_file = conv["image"]
                 cur_prompt = human_question
+
                 conv_ = conv_templates[args.conv_mode].copy()
                 conv_.append_message(conv_.roles[0], cur_prompt)
                 conv_.append_message(conv_.roles[1], None)
@@ -110,7 +111,6 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
                 image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
                 image_tensor = process_images([image], image_processor, model.config)[0]
-
                 with torch.inference_mode():
                     output_ids = model.generate(
                         input_ids,
@@ -126,19 +126,19 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
                 generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
-                # Add human question and generated answer to the conversation
-                modified_conversation.append({"from": "human", "value": human_question})
-                modified_conversation.append({"from": "gpt", "value": generated_answer})
+                # Now find the "gpt" index that corresponds to this human question
+                gpt_index = i + 1  # The next index is the gpt response
+                if gpt_index < len(conv['conversations']) and conv['conversations'][gpt_index]['from'] == 'gpt':
+                    # Insert the "old-model" response after the "gpt" message
+                    conv['conversations'].insert(gpt_index + 1, {
+                        "from": "old-model",
+                        "value": generated_answer
+                    })
 
-                # Add the "old-model" response directly below the "gpt" response
-                conv['conversations'].append({
-                    "from": "old-model",
-                    "value": generated_answer  # Or use the previous model's output here
-                })
-
-        updated_conversations.append(modified_conversation)
+        updated_conversations.append(conv)
 
     return updated_conversations
+
 
 
 def save_updated_dataset(conversations, output_file):
