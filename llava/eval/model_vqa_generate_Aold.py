@@ -57,65 +57,77 @@ def update_dataset(args):
             print(f"无法打开图片 {image_path}: {e}. 跳过此条目.")
             continue
 
+        # 预处理图像
         image_tensor = process_images([image], image_processor, model.config)[0].unsqueeze(0).half().cuda()
-
-        import pdb; pdb.set_trace()
 
         # 获取对话列表
         conversations = entry.get("conversations", [])
 
-        # 遍历对话，寻找human-gpt对
-        for i in range(0, len(conversations), 2):
-            if i + 1 >= len(conversations):
-                print(f"条目 {entry['id']} 中的对话不成对. 跳过此条目.")
-                break
+        # 维护对话历史
+        conversation_history = []
 
-            human_msg = conversations[i]
-            gpt_msg = conversations[i + 1]
+        # 使用while循环以便在遍历过程中插入新消息
+        i = 0
+        while i < len(conversations):
+            msg = conversations[i]
+            conversation_history.append(msg)
 
-            if human_msg["from"] != "human" or gpt_msg["from"] != "gpt":
-                print(f"条目 {entry['id']} 中的对话格式不符合预期. 跳过此对话.")
-                continue
+            if msg["from"] == "gpt":
+                # 构建对话历史作为提示语
+                prompt = ""
+                for conv_msg in conversation_history:
+                    prompt += f"{conv_msg['from']}: {conv_msg['value']}\n"
 
-            human_question = human_msg["value"]
+                # 添加 <image> token 和相关标记
+                if model.config.mm_use_im_start_end:
+                    qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + prompt
+                else:
+                    qs = DEFAULT_IMAGE_TOKEN + '\n' + prompt
 
-            # 准备提示语
-            qs = human_question
-            if model.config.mm_use_im_start_end:
-                qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + qs
+                conv = conv_templates[args.conv_mode].copy()
+                conv.append_message(conv.roles[0], qs)
+                conv.append_message(conv.roles[1], None)
+                final_prompt = conv.get_prompt()
+
+                input_ids = tokenizer_image_token(final_prompt, tokenizer, IMAGE_TOKEN_INDEX,
+                                                  return_tensors='pt').unsqueeze(0).cuda()
+
+                # 生成回答
+                with torch.inference_mode():
+                    # import pdb; pdb.set_trace()
+                    output_ids = model.generate(
+                        input_ids,
+                        images=image_tensor,
+                        image_sizes=[image.size],
+                        do_sample=True if args.temperature > 0 else False,
+                        temperature=args.temperature,
+                        top_p=args.top_p,
+                        num_beams=args.num_beams,
+                        max_new_tokens=1024,
+                        use_cache=True
+                    )
+
+                generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
+
+                # 创建新的"old-model"回答
+                new_old_model_msg = {
+                    "from": "old-model",
+                    "value": generated_answer
+                }
+
+                # 将新的回答插入到当前"gpt"消息后面
+                conversations.insert(i + 1, new_old_model_msg)
+
+                # 将新的回答添加到对话历史
+                conversation_history.append(new_old_model_msg)
+
+                # 跳过新插入的消息
+                i += 2
             else:
-                qs = DEFAULT_IMAGE_TOKEN + '\n' + qs
+                i += 1
 
-            conv = conv_templates[args.conv_mode].copy()
-            conv.append_message(conv.roles[0], qs)
-            conv.append_message(conv.roles[1], None)
-            prompt = conv.get_prompt()
-
-            input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(
-                0).cuda()
-
-            # 生成回答
-            with torch.inference_mode():
-                output_ids = model.generate(
-                    input_ids,
-                    images=image_tensor,
-                    image_sizes=[image.size],
-                    do_sample=True if args.temperature > 0 else False,
-                    temperature=args.temperature,
-                    top_p=args.top_p,
-                    num_beams=args.num_beams,
-                    max_new_tokens=1024,
-                    use_cache=True
-                )
-
-            generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
-
-            # 添加新的回答作为 "from": "old-model"
-            new_conversation = {
-                "from": "old-model",
-                "value": generated_answer
-            }
-            conversations.append(new_conversation)
+        # 更新样本的对话列表
+        entry["conversations"] = conversations
 
     # 保存更新后的数据集
     with open(os.path.expanduser(args.output_file), "w", encoding="utf-8") as f:
