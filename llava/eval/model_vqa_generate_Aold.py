@@ -59,6 +59,8 @@ def update_dataset(args):
 
         image_tensor = process_images([image], image_processor, model.config)[0].unsqueeze(0).half().cuda()
 
+        import pdb; pdb.set_trace()
+
         # 获取对话列表
         conversations = entry.get("conversations", [])
 
