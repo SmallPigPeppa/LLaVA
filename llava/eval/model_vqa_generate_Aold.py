@@ -26,6 +26,65 @@ def get_chunk(lst, n, k):
     return chunks[k]
 
 
+# def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
+#     updated_conversations = []
+#
+#     for conv in tqdm(conversations):
+#         for i, dialogue in enumerate(conv['conversations']):
+#             if dialogue['from'] == 'human':
+#                 # Extract the question (from human)
+#                 human_question = dialogue['value']
+#
+#                 # Create the prompt for the model
+#                 image_file = conv["image"]
+#                 cur_prompt = human_question
+#                 # if model.config.mm_use_im_start_end:
+#                 #     cur_prompt = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + cur_prompt
+#                 # else:
+#                 #     cur_prompt = DEFAULT_IMAGE_TOKEN + '\n' + cur_prompt
+#
+#                 conv_ = conv_templates[args.conv_mode].copy()
+#                 conv_.append_message(conv_.roles[0], cur_prompt)
+#                 conv_.append_message(conv_.roles[1], None)
+#                 prompt = conv_.get_prompt()
+#
+#                 input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(
+#                     0).cuda()
+#
+#                 image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+#                 image_tensor = process_images([image], image_processor, model.config)[0]
+#                 # import pdb; pdb.set_trace()
+#                 with torch.inference_mode():
+#                     output_ids = model.generate(
+#                         input_ids,
+#                         images=image_tensor.unsqueeze(0).half().cuda(),
+#                         image_sizes=[image.size],
+#                         do_sample=True if args.temperature > 0 else False,
+#                         temperature=args.temperature,
+#                         top_p=args.top_p,
+#                         num_beams=args.num_beams,
+#                         max_new_tokens=1024,
+#                         use_cache=True
+#                     )
+#
+#                 generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
+#
+#                 # Append the old model's answer to the conversation
+#                 conv['conversations'].append({
+#                     "from": "old-model",
+#                     "value": generated_answer
+#                 })
+#
+#         updated_conversations.append(conv)
+#
+#     return updated_conversations
+
+
+# def save_updated_dataset(conversations, output_file):
+#     with open(output_file, 'w') as f:
+#         for conv in conversations:
+#             f.write(json.dumps(conv) + "\n")
+
 def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
     updated_conversations = []
 
@@ -38,10 +97,6 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
                 # Create the prompt for the model
                 image_file = conv["image"]
                 cur_prompt = human_question
-                # if model.config.mm_use_im_start_end:
-                #     cur_prompt = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + cur_prompt
-                # else:
-                #     cur_prompt = DEFAULT_IMAGE_TOKEN + '\n' + cur_prompt
 
                 conv_ = conv_templates[args.conv_mode].copy()
                 conv_.append_message(conv_.roles[0], cur_prompt)
@@ -53,7 +108,7 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
                 image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
                 image_tensor = process_images([image], image_processor, model.config)[0]
-                # import pdb; pdb.set_trace()
+
                 with torch.inference_mode():
                     output_ids = model.generate(
                         input_ids,
@@ -69,10 +124,16 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
                 generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
-                # Append the old model's answer to the conversation
+                # Append the GPT answer to the conversation
+                conv['conversations'].append({
+                    "from": "gpt",
+                    "value": generated_answer
+                })
+
+                # Append the old model's answer directly after the GPT answer
                 conv['conversations'].append({
                     "from": "old-model",
-                    "value": generated_answer
+                    "value": generated_answer  # Assuming you have the old model's answer here
                 })
 
         updated_conversations.append(conv)
@@ -80,10 +141,6 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
     return updated_conversations
 
 
-# def save_updated_dataset(conversations, output_file):
-#     with open(output_file, 'w') as f:
-#         for conv in conversations:
-#             f.write(json.dumps(conv) + "\n")
 
 def save_updated_dataset(conversations, output_file):
     with open(output_file, 'w', encoding='utf-8') as f:
