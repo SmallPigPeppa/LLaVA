@@ -5,169 +5,137 @@ import json
 from tqdm import tqdm
 from PIL import Image
 import math
-import shortuuid
 
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
-from llava.conversation import conv_templates
+from llava.conversation import conv_templates, SeparatorStyle
 from llava.model.builder import load_pretrained_model
 from llava.utils import disable_torch_init
 from llava.mm_utils import tokenizer_image_token, process_images, get_model_name_from_path
 
 
 def split_list(lst, n):
-    """将列表拆分为n个（大致）相等的块"""
-    chunk_size = math.ceil(len(lst) / n)  # 向上取整
+    """将列表分割成n个（大致）等大小的块"""
+    chunk_size = math.ceil(len(lst) / n)
     return [lst[i:i + chunk_size] for i in range(0, len(lst), chunk_size)]
 
 
 def get_chunk(lst, n, k):
-    """获取第k个块"""
     chunks = split_list(lst, n)
-    if k >= len(chunks):
-        raise ValueError(f"chunk_idx {k} 超出范围，最大索引为 {len(chunks) - 1}")
     return chunks[k]
 
 
-def load_dataset(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
+def update_dataset(args):
+    # 禁用torch初始化以节省内存
+    disable_torch_init()
+
+    # 加载模型
+    model_path = os.path.expanduser(args.model_path)
+    model_name = get_model_name_from_path(model_path)
+    tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
+    model.eval().cuda()
+
+    # 读取原始数据集
+    with open(os.path.expanduser(args.input_file), "r", encoding="utf-8") as f:
         data = json.load(f)
-    return data
 
+    # 如果需要处理数据集的一部分，可以使用分块
+    if args.num_chunks > 1:
+        total_chunks = split_list(data, args.num_chunks)
+        data = total_chunks[args.chunk_idx]
 
-def save_dataset(data, file_path):
-    with open(file_path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    # 遍历数据集并更新回答
+    for entry in tqdm(data, desc="Updating dataset"):
+        image_path = os.path.join(args.image_folder, entry["image"])
 
+        if not os.path.exists(image_path):
+            print(f"图片文件不存在: {image_path}. 跳过此条目.")
+            continue
 
-def generate_answer(model, tokenizer, image_processor, entry, conv_mode, device, temperature, top_p, num_beams):
-    image_path = entry['image']
-    image = Image.open(image_path).convert('RGB')
-    image_tensor = process_images([image], image_processor, model.config)[0].to(device)
+        try:
+            image = Image.open(image_path).convert('RGB')
+        except Exception as e:
+            print(f"无法打开图片 {image_path}: {e}. 跳过此条目.")
+            continue
 
-    conversations = entry['conversations']
-    conv = conv_templates[conv_mode].copy()
+        image_tensor = process_images([image], image_processor, model.config)[0].unsqueeze(0).half().cuda()
 
-    for message in conversations:
-        if message['from'] == 'human':
-            qs = message['value']
+        # 获取对话列表
+        conversations = entry.get("conversations", [])
+
+        # 遍历对话，寻找human-gpt对
+        for i in range(0, len(conversations), 2):
+            if i + 1 >= len(conversations):
+                print(f"条目 {entry['id']} 中的对话不成对. 跳过此条目.")
+                break
+
+            human_msg = conversations[i]
+            gpt_msg = conversations[i + 1]
+
+            if human_msg["from"] != "human" or gpt_msg["from"] != "gpt":
+                print(f"条目 {entry['id']} 中的对话格式不符合预期. 跳过此对话.")
+                continue
+
+            human_question = human_msg["value"]
+
+            # 准备提示语
+            qs = human_question
             if model.config.mm_use_im_start_end:
                 qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + qs
             else:
                 qs = DEFAULT_IMAGE_TOKEN + '\n' + qs
+
+            conv = conv_templates[args.conv_mode].copy()
             conv.append_message(conv.roles[0], qs)
-        elif message['from'] == 'gpt':
-            conv.append_message(conv.roles[1], message['value'])
+            conv.append_message(conv.roles[1], None)
+            prompt = conv.get_prompt()
 
-    prompt = conv.get_prompt()
-    input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').to(device)
+            input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(
+                0).cuda()
 
-    with torch.inference_mode():
-        output_ids = model.generate(
-            input_ids,
-            images=image_tensor.unsqueeze(0).half(),
-            image_sizes=[image.size],
-            do_sample=True if temperature > 0 else False,
-            temperature=temperature,
-            top_p=top_p,
-            num_beams=num_beams,
-            max_new_tokens=1024,
-            use_cache=True
-        )
+            # 生成回答
+            with torch.inference_mode():
+                output_ids = model.generate(
+                    input_ids,
+                    images=image_tensor,
+                    image_sizes=[image.size],
+                    do_sample=True if args.temperature > 0 else False,
+                    temperature=args.temperature,
+                    top_p=args.top_p,
+                    num_beams=args.num_beams,
+                    max_new_tokens=1024,
+                    use_cache=True
+                )
 
-    outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
-    return outputs
+            generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
-
-def update_dataset(data, model, tokenizer, image_processor, conv_mode, device, temperature, top_p, num_beams):
-    for entry in tqdm(data, desc="Processing entries"):
-        try:
-            # 生成新的回答
-            new_answer = generate_answer(model, tokenizer, image_processor, entry, conv_mode, device, temperature,
-                                         top_p, num_beams)
-
-            # 创建新的对话条目
+            # 添加新的回答作为 "from": "old-model"
             new_conversation = {
                 "from": "old-model",
-                "value": new_answer
+                "value": generated_answer
             }
+            conversations.append(new_conversation)
 
-            # 将新的回答添加到 conversations 中
-            entry['conversations'].append(new_conversation)
-        except Exception as e:
-            print(f"Error processing entry ID {entry.get('id', 'unknown')}: {e}")
+    # 保存更新后的数据集
+    with open(os.path.expanduser(args.output_file), "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
-    return data
-
-
-def main(args):
-    # 设置设备
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    # 加载数据集
-    print("Loading dataset...")
-    data = load_dataset(args.input_file)
-
-    # 分割数据集
-    if args.num_chunks > 1:
-        print(f"Splitting dataset into {args.num_chunks} chunks...")
-        data_chunks = split_list(data, args.num_chunks)
-        if args.chunk_idx >= len(data_chunks):
-            raise ValueError(f"chunk_idx {args.chunk_idx} 超出范围，最大索引为 {len(data_chunks) - 1}")
-        data = data_chunks[args.chunk_idx]
-        print(f"Processing chunk {args.chunk_idx} with {len(data)} entries.")
-    else:
-        print("Processing entire dataset as a single chunk.")
-
-    # 加载模型
-    print("Loading model...")
-    disable_torch_init()
-    model_path = os.path.expanduser(args.model_path)
-    model_name = get_model_name_from_path(model_path)
-    tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
-    model.to(device)
-    model.half()  # 使用半精度提高效率
-    model.eval()
-
-    # 更新数据集
-    print("Updating dataset with model-generated answers...")
-    updated_data = update_dataset(
-        data, model, tokenizer, image_processor, args.conv_mode, device,
-        args.temperature, args.top_p, args.num_beams
-    )
-
-    # 如果有分块，只保存当前块
-    if args.num_chunks > 1:
-        # 加载完整的数据集
-        full_data = load_dataset(args.input_file)
-        # 替换当前块的数据
-        full_data_chunks = split_list(full_data, args.num_chunks)
-        full_data_chunks[args.chunk_idx] = updated_data
-        # 合并所有块
-        updated_full_data = []
-        for chunk in full_data_chunks:
-            updated_full_data.extend(chunk)
-    else:
-        updated_full_data = updated_data
-
-    # 保存新的数据集
-    print(f"Saving updated dataset to {args.output_file}...")
-    save_dataset(updated_full_data, args.output_file)
-    print("Done.")
+    print(f"新的数据集已保存到 {args.output_file}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Update dataset with model-generated answers.")
-    parser.add_argument("--model-path", type=str, required=True, help="路径到训练好的模型")
-    parser.add_argument("--model-base", type=str, default=None, help="模型基础名称（如果有）")
-    parser.add_argument("--input-file", type=str, default="llava_v1_5_mix665k-random-100.json", help="输入数据集文件")
+    parser = argparse.ArgumentParser(description="使用模型更新数据集中gpt的回答，并添加为old-model")
+    parser.add_argument("--model-path", type=str, required=True, help="模型路径")
+    parser.add_argument("--model-base", type=str, default=None, help="模型基准")
+    parser.add_argument("--image-folder", type=str, required=True, help="图片文件夹路径")
+    parser.add_argument("--input-file", type=str, required=True, help="输入的JSON数据集文件")
     parser.add_argument("--output-file", type=str, default="llava_v1_5_mix665k-random-100-oldmodel.json",
-                        help="输出更新后的数据集文件")
-    parser.add_argument("--conv-mode", type=str, default="llava_v1", help="对话模板模式")
-    parser.add_argument("--num-chunks", type=int, default=1, help="将数据集分割成的块数，用于并行处理")
-    parser.add_argument("--chunk-idx", type=int, default=0, help="处理的块的索引，从0开始")
-    parser.add_argument("--temperature", type=float, default=0.2, help="生成时的温度参数")
-    parser.add_argument("--top_p", type=float, default=0.9, help="生成时的 top_p 参数")
-    parser.add_argument("--num_beams", type=int, default=1, help="生成时的 beam 数量")
+                        help="输出的JSON数据集文件")
+    parser.add_argument("--conv-mode", type=str, default="llava_v1", help="对话模式")
+    parser.add_argument("--num-chunks", type=int, default=1, help="数据集分块数量")
+    parser.add_argument("--chunk-idx", type=int, default=0, help="处理的数据块索引")
+    parser.add_argument("--temperature", type=float, default=0.2, help="生成温度")
+    parser.add_argument("--top_p", type=float, default=None, help="Top-p采样")
+    parser.add_argument("--num_beams", type=int, default=1, help="束搜索的数量")
     args = parser.parse_args()
 
-    main(args)
+    update_dataset(args)
