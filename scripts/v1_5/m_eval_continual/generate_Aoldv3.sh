@@ -53,9 +53,9 @@ done
 # Wait for all processes to finish
 wait
 
-# Combine all results into the final output file using jq
-echo "Combining results using jq..."
-jq -s 'add | sort_by(.id)' $tmp_dir/llava_v1_5_mix665k-random-8_Aold_part_*.json > $output_file
+# Combine all results into the final output file without sorting
+echo "Combining results without sorting using jq..."
+jq -s 'add' $tmp_dir/llava_v1_5_mix665k-random-8_Aold_part_*.json > $output_file
 
 # Clean up part files in tmp_dir
 rm -rf $tmp_dir
