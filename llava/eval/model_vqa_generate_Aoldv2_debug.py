@@ -28,11 +28,12 @@ def get_chunk(lst, n, k):
 
 
 class ImageDataset(Dataset):
-    def __init__(self, conversations, image_folder, tokenizer, image_processor):
+    def __init__(self, conversations, image_folder, tokenizer, image_processor, model_config):
         self.conversations = conversations
         self.image_folder = image_folder
         self.tokenizer = tokenizer
         self.image_processor = image_processor
+        self.model_config = model_config
 
     def __len__(self):
         return len(self.conversations)
@@ -59,14 +60,14 @@ class ImageDataset(Dataset):
                 # Load and process the image
                 image_file = conv["image"]
                 image = Image.open(os.path.join(self.image_folder, image_file)).convert('RGB')
-                image_tensor = process_images([image], self.image_processor, model.config)[0]
+                image_tensor = process_images([image], self.image_processor, self.model_config)[0]
 
                 return input_ids, image_tensor, conv, i  # Return the input for each chunk
 
 
 def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
-    dataset = ImageDataset(conversations, image_folder, tokenizer, image_processor)
-    data_loader = DataLoader(dataset, batch_size=2, shuffle=False, num_workers=4)
+    dataset = ImageDataset(conversations, image_folder, tokenizer, image_processor, model.config)
+    data_loader = DataLoader(dataset, batch_size=32, shuffle=False, num_workers=4)
 
     updated_conversations = []
 
