@@ -16,19 +16,25 @@ import math
 from torch.nn import DataParallel
 
 
-def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args,
-                                device):
+def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args, device):
     updated_conversations = []
+
+    # 确定实际的模型引用
+    actual_model = model.module if isinstance(model, torch.nn.DataParallel) else model
+
+    # 获取模型配置
+    model_config = actual_model.config
 
     # 准备批量处理
     batch_size = args.batch_size
     num_batches = math.ceil(len(conversations) / batch_size)
 
     for batch_idx in tqdm(range(num_batches), desc="Processing Batches"):
-        batch_convs = conversations[batch_idx * batch_size: (batch_idx + 1) * batch_size]
+        batch_convs = conversations[batch_idx * batch_size : (batch_idx + 1) * batch_size]
         batch_prompts = []
         batch_images = []
         batch_conv_indices = []
+        batch_image_sizes = []
 
         # 收集批量中的所有提示和图像
         for conv_idx, conv in enumerate(batch_convs):
@@ -47,9 +53,10 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
                     batch_prompts.append(prompt)
                     image_file = conv["image"]
                     image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
-                    image_tensor = process_images([image], image_processor, model.config)[0]
+                    image_tensor = process_images([image], image_processor, model_config)[0]
                     batch_images.append(image_tensor)
                     batch_conv_indices.append(conv_idx)
+                    batch_image_sizes.append((image.height, image.width))  # 注意PIL Image的size是 (width, height)
 
         if not batch_prompts:
             # 当前批次没有需要处理的对话
@@ -63,12 +70,10 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
         # 生成回答
         with torch.inference_mode():
-            output_ids = model.module.generate(
+            output_ids = actual_model.generate(
                 input_ids=input_ids,
                 images=images,
-                image_sizes=[(img.size[1], img.size[0]) for img in
-                             [Image.open(os.path.join(image_folder, conv["image"])).convert('RGB') for conv in
-                              batch_convs]],
+                image_sizes=batch_image_sizes,
                 do_sample=True if args.temperature > 0 else False,
                 temperature=args.temperature,
                 top_p=args.top_p,
@@ -83,12 +88,11 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
         # 将生成的答案插入到相应的对话中
         for i, answer in enumerate(generated_answers):
             conv = batch_convs[i]
-            gpt_index = 0  # 根据具体逻辑调整索引
-            if gpt_index < len(conv['conversations']) and conv['conversations'][gpt_index]['from'] == 'gpt':
-                conv['conversations'].insert(gpt_index + 1, {
-                    "from": "old-model",
-                    "value": answer.strip()
-                })
+            # 根据您的逻辑找到正确的插入位置，这里假设插入到最后
+            conv['conversations'].append({
+                "from": "old-model",
+                "value": answer.strip()
+            })
             updated_conversations.append(conv)
 
     return updated_conversations
