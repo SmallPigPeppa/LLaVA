@@ -61,3 +61,5 @@ jq -s 'add' $tmp_dir/output_part_*.json > $output_file
 rm -rf $tmp_dir
 
 echo "Processing complete. Final results saved to $output_file."
+
+/ppio_net0/code/openapi.sh stop b27df5a26611ee33
