@@ -85,7 +85,9 @@ def get_chunk(lst, n, k):
 #         for conv in conversations:
 #             f.write(json.dumps(conv) + "\n")
 
-
+"""
+只支持单轮QA
+"""
 # def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
 #     updated_conversations = []
 #
