@@ -141,6 +141,10 @@ def get_chunk(lst, n, k):
 #
 #     return updated_conversations
 
+"""
+支持多轮QA
+"""
+
 def generate_answers_from_model(model, tokenizer, image_processor, conversations, image_folder, model_name, args):
     updated_conversations = []
 
