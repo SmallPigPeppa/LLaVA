@@ -94,7 +94,9 @@ def eval_model(args):
     tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
 
     # Load the dataset
-    dataset = [json.loads(line) for line in open(os.path.expanduser(args.dataset_file), "r")]
+    # dataset = [json.loads(line) for line in open(os.path.expanduser(args.dataset_file), "r")]
+    with open(os.path.expanduser(args.input_file), "r", encoding="utf-8") as f:
+        dataset = json.load(f)
 
     # Split dataset into chunks (for parallelization)
     dataset = get_chunk(dataset, args.num_chunks, args.chunk_idx)
