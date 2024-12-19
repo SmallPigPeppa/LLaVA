@@ -5,6 +5,7 @@ import json
 from tqdm import tqdm
 import shortuuid
 from torch.utils.data import Dataset, DataLoader
+from torch.nn.utils.rnn import pad_sequence
 
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.conversation import conv_templates, SeparatorStyle
@@ -31,12 +32,11 @@ def collate_fn(batch):
 
 def generate_answers_from_model(model, tokenizer, image_processor, conversations_batch, image_folder, model_name, args):
     updated_batch = []
-
-    # Prepare lists for batch processing
     prompts = []
     images = []
     original_conversations = []
 
+    # Step 1: Prepare prompts and images
     for conv in conversations_batch:
         conversation_history = []
         for dialogue in conv['conversations']:
@@ -58,17 +58,23 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
         original_conversations.append(conv)
 
-    # Tokenize prompts
-    input_ids = tokenizer_image_token(prompts, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').cuda()
+    # Step 2: Tokenize each prompt individually
+    input_ids_list = []
+    for prompt in prompts:
+        input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors=None)
+        input_ids_list.append(torch.tensor(input_ids, dtype=torch.long))
 
-    # Process images in batch
-    image_tensors = process_images(images, image_processor, model.config)
+    # Step 3: Pad sequences to the same length
+    padded_input_ids = pad_sequence(input_ids_list, batch_first=True, padding_value=tokenizer.pad_token_id).cuda()
 
-    # Generate answers in batch
+    # Step 4: Process images in batch
+    image_tensors = process_images(images, image_processor, model.config).half().cuda()
+
+    # Step 5: Generate answers in batch
     with torch.inference_mode():
         output_ids = model.generate(
-            input_ids,
-            images=image_tensors.half().cuda(),
+            padded_input_ids,
+            images=image_tensors,
             image_sizes=[img.size for img in images],
             do_sample=True if args.temperature > 0 else False,
             temperature=args.temperature,
@@ -78,13 +84,12 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
             use_cache=True
         )
 
-    # Decode generated answers
+    # Step 6: Decode generated answers
     generated_answers = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
 
-    # Insert 'old-model' responses into conversations
+    # Step 7: Insert 'old-model' responses into conversations
     for conv, answer in zip(original_conversations, generated_answers):
-        # Find the index where to insert 'old-model' response
-        # Assuming 'gpt' response is immediately after the 'human' question
+        # 找到 'gpt' 回复的索引
         gpt_index = -1
         for i, dialogue in enumerate(conv['conversations']):
             if dialogue['from'] == 'human':
