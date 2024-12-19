@@ -38,10 +38,10 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
                 # Create the prompt for the model
                 image_file = conv["image"]
                 cur_prompt = human_question
-                if model.config.mm_use_im_start_end:
-                    cur_prompt = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + cur_prompt
-                else:
-                    cur_prompt = DEFAULT_IMAGE_TOKEN + '\n' + cur_prompt
+                # if model.config.mm_use_im_start_end:
+                #     cur_prompt = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + cur_prompt
+                # else:
+                #     cur_prompt = DEFAULT_IMAGE_TOKEN + '\n' + cur_prompt
 
                 conv_ = conv_templates[args.conv_mode].copy()
                 conv_.append_message(conv_.roles[0], cur_prompt)
