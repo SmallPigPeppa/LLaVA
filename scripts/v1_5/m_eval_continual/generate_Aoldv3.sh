@@ -21,14 +21,15 @@ TOTAL_LINES=$(jq '. | length' $input_file)
 LINES_PER_GPU=$((TOTAL_LINES / NUM_GPUS))
 REMAINDER=$((TOTAL_LINES % NUM_GPUS))
 
-# Create split files in tmp_dir, assigning extra samples to the last GPU
+# Create split files in tmp_dir
 for i in $(seq 0 $((NUM_GPUS - 1)))
 do
-    START_IDX=$((i * LINES_PER_GPU))
     if [ $i -eq $((NUM_GPUS - 1)) ]; then
-        # Last GPU gets the remaining samples
+        # Last GPU gets the remainder
+        START_IDX=$((i * LINES_PER_GPU))
         END_IDX=$TOTAL_LINES
     else
+        START_IDX=$((i * LINES_PER_GPU))
         END_IDX=$((START_IDX + LINES_PER_GPU))
     fi
 
@@ -52,12 +53,9 @@ done
 # Wait for all processes to finish
 wait
 
-# Combine all results into the final output file in the correct order
-echo "Combining results..."
-for i in $(seq 1 $NUM_GPUS)
-do
-    cat "$tmp_dir/llava_v1_5_mix665k-random-8_Aold_part_$i.json" >> $output_file
-done
+# Combine all results into the final output file using jq
+echo "Combining results using jq..."
+jq -s 'add | sort_by(.id)' $tmp_dir/llava_v1_5_mix665k-random-8_Aold_part_*.json > $output_file
 
 # Clean up part files in tmp_dir
 rm -rf $tmp_dir
