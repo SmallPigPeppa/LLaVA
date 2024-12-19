@@ -61,3 +61,4 @@ jq -s 'add' $tmp_dir/output_part_*.json > $output_file
 rm -rf $tmp_dir
 
 echo "Processing complete. Final results saved to $output_file."
+
