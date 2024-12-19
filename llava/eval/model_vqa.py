@@ -57,7 +57,7 @@ def eval_model(args):
 
         image = Image.open(os.path.join(args.image_folder, image_file)).convert('RGB')
         image_tensor = process_images([image], image_processor, model.config)[0]
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
 
         with torch.inference_mode():
             output_ids = model.generate(
