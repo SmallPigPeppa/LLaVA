@@ -31,9 +31,6 @@ python -m llava.eval.model_vqa_generate_Aoldv3 \
     --image-folder ./playground/data \
     --dataset-file ./playground/data/debug/llava_v1_5_mix665k-random-8.json \
     --output-file ./playground/data/debug/llava_v1_5_mix665k-random-8-Aold.json \
-    --conv-mode llava_v1 \
-    --temperature 0.2 \
-    --top_p 0.9 \
-    --num_beams 5
+    --conv-mode llava_v1
 
 #python your_script.py --model-path /path/to/model --image-folder /path/to/images --dataset-file /path/to/dataset.jsonl --output-file /path/to/output.jsonl
