@@ -1,11 +1,10 @@
+import multiprocessing
 import argparse
 import torch
 import os
 import json
 from tqdm import tqdm
 import shortuuid
-from torch.utils.data import Dataset, DataLoader
-from torch.nn.utils.rnn import pad_sequence
 
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.conversation import conv_templates, SeparatorStyle
@@ -16,132 +15,133 @@ from llava.mm_utils import tokenizer_image_token, process_images, get_model_name
 from PIL import Image
 import math
 
-class ConversationDataset(Dataset):
-    def __init__(self, dataset_file):
-        with open(dataset_file, "r", encoding="utf-8") as f:
-            self.dataset = json.load(f)
 
-    def __len__(self):
-        return len(self.dataset)
+# Function to process a chunk of the dataset on a specific GPU
+def generate_answers_on_gpu(device_id, model, tokenizer, image_processor, conversations, image_folder, model_name, args,
+                            result_queue):
+    # Set the current device to the one assigned by the GPU ID
+    torch.cuda.set_device(device_id)
+    updated_conversations = []
 
-    def __getitem__(self, idx):
-        return self.dataset[idx]
+    # Process each conversation chunk on the assigned GPU
+    for conv in tqdm(conversations):
+        gpt_index = -1  # Initialize to an invalid index
+        conversation_history = []  # This will hold the entire conversation history
 
-def collate_fn(batch):
-    return batch
-
-def generate_answers_from_model(model, tokenizer, image_processor, conversations_batch, image_folder, model_name, args):
-    updated_batch = []
-    prompts = []
-    images = []
-    original_conversations = []
-
-    # Step 1: Prepare prompts and images
-    for conv in conversations_batch:
-        conversation_history = []
-        for dialogue in conv['conversations']:
+        for i, dialogue in enumerate(conv['conversations']):
             if dialogue['from'] == 'human':
                 human_question = dialogue['value']
                 conversation_history.append(f"Human: {human_question}")
-        cur_prompt = "\n".join(conversation_history)
-        conv_ = conv_templates[args.conv_mode].copy()
-        conv_.append_message(conv_.roles[0], cur_prompt)  # Append the concatenated history
-        conv_.append_message(conv_.roles[1], None)
-        prompt = conv_.get_prompt()
-        prompts.append(prompt)
+                cur_prompt = "\n".join(conversation_history)
 
-        # Load and process the image
-        image_file = conv["image"]
-        image_path = os.path.join(image_folder, image_file)
-        image = Image.open(image_path).convert('RGB')
-        images.append(image)
+                conv_ = conv_templates[args.conv_mode].copy()
+                conv_.append_message(conv_.roles[0], cur_prompt)
+                conv_.append_message(conv_.roles[1], None)
+                prompt = conv_.get_prompt()
 
-        original_conversations.append(conv)
+                input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(
+                    0).to(device_id)
 
-    # Step 2: Tokenize each prompt individually
-    input_ids_list = []
-    for prompt in prompts:
-        input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors=None)
-        input_ids_list.append(torch.tensor(input_ids, dtype=torch.long))
+                # Load and process the image
+                image_file = conv["image"]
+                image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+                image_tensor = process_images([image], image_processor, model.config)[0].to(device_id)
 
-    # Step 3: Pad sequences to the same length
-    padded_input_ids = pad_sequence(input_ids_list, batch_first=True, padding_value=tokenizer.pad_token_id).cuda()
+                with torch.inference_mode():
+                    output_ids = model.generate(
+                        input_ids,
+                        images=image_tensor.unsqueeze(0).half().to(device_id),
+                        image_sizes=[image.size],
+                        do_sample=True if args.temperature > 0 else False,
+                        temperature=args.temperature,
+                        top_p=args.top_p,
+                        num_beams=args.num_beams,
+                        max_new_tokens=1024,
+                        use_cache=True
+                    )
 
-    # Step 4: Process images in batch
-    image_tensors = process_images(images, image_processor, model.config).half().cuda()
+                generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
-    # Step 5: Generate answers in batch
-    with torch.inference_mode():
-        output_ids = model.generate(
-            padded_input_ids,
-            images=image_tensors,
-            image_sizes=[img.size for img in images],
-            do_sample=True if args.temperature > 0 else False,
-            temperature=args.temperature,
-            top_p=args.top_p,
-            num_beams=args.num_beams,
-            max_new_tokens=1024,
-            use_cache=True
-        )
-
-    # Step 6: Decode generated answers
-    generated_answers = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
-
-    # Step 7: Insert 'old-model' responses into conversations
-    for conv, answer in zip(original_conversations, generated_answers):
-        # 找到 'gpt' 回复的索引
-        gpt_index = -1
-        for i, dialogue in enumerate(conv['conversations']):
-            if dialogue['from'] == 'human':
                 gpt_index = i + 1
-                break
-        if gpt_index != -1 and gpt_index < len(conv['conversations']) and conv['conversations'][gpt_index]['from'] == 'gpt':
-            conv['conversations'].insert(gpt_index + 1, {
-                "from": "old-model",
-                "value": answer.strip()
-            })
-        else:
-            # 如果没有找到对应的 'gpt' 回复，可以选择其他处理方式
-            conv['conversations'].append({
-                "from": "old-model",
-                "value": answer.strip()
-            })
-        updated_batch.append(conv)
+                if gpt_index < len(conv['conversations']) and conv['conversations'][gpt_index]['from'] == 'gpt':
+                    conv['conversations'].insert(gpt_index + 1, {
+                        "from": "old-model",
+                        "value": generated_answer
+                    })
 
-    return updated_batch
+                conversation_history.append(f"GPT: {generated_answer}")
 
-def save_updated_dataset(conversations, output_file):
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(conversations, f, ensure_ascii=False, indent=2)
+        updated_conversations.append(conv)
 
+    # Put the result in the queue to merge later
+    result_queue.put(updated_conversations)
+
+
+# Function to split the dataset and process it in parallel
 def eval_model(args):
-    # Model setup
     disable_torch_init()
     model_path = os.path.expanduser(args.model_path)
     model_name = get_model_name_from_path(model_path)
     tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, args.model_base, model_name)
 
-    # Prepare Dataset and DataLoader
-    dataset = ConversationDataset(args.dataset_file)
-    dataloader = DataLoader(dataset, batch_size=2, shuffle=False, collate_fn=collate_fn)
+    # Load the dataset
+    with open(os.path.expanduser(args.dataset_file), "r", encoding="utf-8") as f:
+        dataset = json.load(f)
 
+    # Detect available GPUs
+    num_gpus = torch.cuda.device_count()
+    if num_gpus == 0:
+        raise RuntimeError("No GPUs available!")
+
+    # Calculate the base chunk size and distribute the remainder evenly
+    base_chunk_size = len(dataset) // num_gpus
+    remainder = len(dataset) % num_gpus
+
+    # Split the dataset into chunks
+    chunks = []
+    start = 0
+    for i in range(num_gpus):
+        end = start + base_chunk_size + (1 if i < remainder else 0)  # Distribute the remainder
+        chunks.append(dataset[start:end])
+        start = end
+
+    # Prepare a multiprocessing queue to collect results from all processes
+    result_queue = multiprocessing.Queue()
+
+    # Create a list to hold the processes
+    processes = []
+
+    # Start one process per GPU
+    for i in range(num_gpus):
+        p = multiprocessing.Process(target=generate_answers_on_gpu, args=(
+            i, model, tokenizer, image_processor, chunks[i], args.image_folder, model_name, args, result_queue))
+        p.start()
+        processes.append(p)
+
+    # Wait for all processes to finish
+    for p in processes:
+        p.join()
+
+    # Collect the results from the queue
     updated_dataset = []
-
-    for batch in tqdm(dataloader, desc="Processing Batches"):
-        # Generate answers using the model for the current batch
-        updated_batch = generate_answers_from_model(model, tokenizer, image_processor, batch, args.image_folder,
-                                                    model_name, args)
-        updated_dataset.extend(updated_batch)
+    while not result_queue.empty():
+        updated_dataset.extend(result_queue.get())
 
     # Save the updated dataset to a new file
     save_updated_dataset(updated_dataset, args.output_file)
+
+
+def save_updated_dataset(conversations, output_file):
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(conversations, f, ensure_ascii=False, indent=2)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-path", type=str, required=True, help="Path to the pre-trained model")
     parser.add_argument("--model-base", type=str, default=None, help="Base model (optional)")
     parser.add_argument("--image-folder", type=str, required=True, help="Folder containing images")
-    parser.add_argument("--dataset-file", type=str, required=True, help="Path to the dataset file (JSON)")
+    parser.add_argument("--dataset-file", type=str, required=True, help="Path to the dataset file (JSONL)")
     parser.add_argument("--output-file", type=str, required=True, help="Path to save the updated dataset")
     parser.add_argument("--conv-mode", type=str, default="llava_v1", help="Conversation template mode")
     parser.add_argument("--temperature", type=float, default=0.2, help="Temperature for sampling")
