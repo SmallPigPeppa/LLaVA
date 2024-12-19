@@ -29,8 +29,8 @@ echo "Generate $MODEL A-old"
 python -m llava.eval.model_vqa_generate_Aold \
     --model-path "continual-ckpt/domain/$MODEL" \
     --image-folder ./playground/data \
-    --input-file debug/llava_v1_5_mix665k-random-8.json \
-    --output-file debug/llava_v1_5_mix665k-random-8-Aold.json \
+    --input-file ./playground/data/debug/llava_v1_5_mix665k-random-8.json \
+    --output-file ./playground/data/debug/llava_v1_5_mix665k-random-8-Aold.json \
     --conv-mode llava_v1 \
     --temperature 0.2 \
     --top_p 0.9 \
