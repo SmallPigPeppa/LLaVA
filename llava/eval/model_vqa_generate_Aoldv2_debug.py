@@ -57,12 +57,13 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
                 conv_.append_message(conv_.roles[1], None)
                 prompt = conv_.get_prompt()
 
+                # Tokenize and move to the correct device
                 input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').to(device)
 
                 # Load and process the image
                 image_file = conv["image"]
                 image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
-                image_tensor = process_images([image], image_processor, model.config)[0].to(device)
+                image_tensor = process_images([image], image_processor, model.module.config)[0].to(device)
 
                 # Generate answer from model
                 with torch.inference_mode():
