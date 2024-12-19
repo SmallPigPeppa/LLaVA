@@ -53,7 +53,7 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
                 image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
                 image_tensor = process_images([image], image_processor, model.config)[0]
-
+                import pdb; pdb.set_trace()
                 with torch.inference_mode():
                     output_ids = model.generate(
                         input_ids,
