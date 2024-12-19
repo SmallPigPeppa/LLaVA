@@ -26,7 +26,7 @@ echo "Generate A-old from $MODEL"
 #    --temperature 0 \
 #    --conv-mode vicuna_v1
 
-python -m llava.eval.model_vqa_generate_Aoldv2 \
+python -m llava.eval.model_vqa_generate_Aoldv2_debug \
     --model-path "continual-ckpt/domain/$MODEL" \
     --image-folder ./playground/data \
     --dataset-file ./playground/data/debug/llava_v1_5_mix665k-random-8.json \
