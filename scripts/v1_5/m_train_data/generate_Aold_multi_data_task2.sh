@@ -5,8 +5,12 @@ export HF_HOME=/ppio_net0/huggingface
 TASK="task-task1-merged"
 
 # Define the input and output files
-input_file="./playground/data/data-incremental/llava_v1_5_mix665k-task2.json"
-output_file=".playground/data/data-incremental/llava_v1_5_mix665k-task2-Aold.json"
+#input_file="./playground/data/data-incremental/llava_v1_5_mix665k-task2.json"
+#output_file=".playground/data/data-incremental/llava_v1_5_mix665k-task2-Aold.json"
+
+
+input_file="./playground/data/debug/llava_v1_5_mix665k-random-100.json"
+output_file=".playground/data/debug/llava_v1_5_mix665k-random-100-Aold.json"
 
 # Generate temporary directory name based on the output file
 tmp_dir="./c-llava-cache-${output_file##*/}"
@@ -62,4 +66,4 @@ rm -rf $tmp_dir
 
 echo "Processing complete. Final results saved to $output_file."
 
-/ppio_net0/code/openapi.sh stop 49ff17ea22a8e1f5
+#/ppio_net0/code/openapi.sh stop 49ff17ea22a8e1f5
