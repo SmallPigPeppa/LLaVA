@@ -116,7 +116,29 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
 
                 # Load and process the image
                 image_file = conv["image"]
-                image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+                # image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+                image = None  # initial None
+                image_path = os.path.join(image_folder, image_file)
+                try:
+                    image = Image.open(image_path).convert('RGB')
+                except Exception as e:
+                    possible_extensions = ['.jpg', '.png', '.gif']
+                    print(f"Failed to load {image_file}: {e}")
+
+                    # If loading fails, try different extensions
+                    base_filename, _ = os.path.splitext(image_file)
+                    for ext in possible_extensions:
+                        image_path = os.path.join(image_folder, base_filename + ext)
+                        try:
+                            image = Image.open(image_path).convert('RGB')
+                            print(f"Successfully loaded image: {image_path}")
+                            break
+                        except Exception as e:
+                            print(f"Failed to load {base_filename + ext}: {e}")
+                if image is None:
+                    raise ValueError(f"Failed to load any valid image for {image_file}")
+
+
                 image_tensor = process_images([image], image_processor, model.config)[0]
 
                 # Generate answer from model

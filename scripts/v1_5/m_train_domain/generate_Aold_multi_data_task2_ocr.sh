@@ -5,6 +5,7 @@ export HF_HOME=/ppio_net0/huggingface
 TASK="task-coco-merged"
 
 # Define the input and output files
+#input_file="./playground/data/domain-incremental/llava_v1_5_mix665k-ocr_vqa.json"
 input_file="./playground/data/domain-incremental/llava_v1_5_mix665k-ocr_vqa.json"
 output_file="./playground/data/domain-incremental/llava_v1_5_mix665k-ocr_vqa-Aold.json"
 
