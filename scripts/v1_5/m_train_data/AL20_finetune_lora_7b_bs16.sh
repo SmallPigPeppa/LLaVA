@@ -9,8 +9,8 @@ VISION_TOWER="openai/clip-vit-large-patch14-336"
 PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
 
 # Define task names
-#TASK_NAMES=("task1" "task2" "task3" "task4" "task5")
-TASK_NAMES=("task1")
+TASK_NAMES=("task1" "task2" "task3" "task4" "task5")
+#TASK_NAMES=("task1")
 
 # JSON files are dynamically generated based on task names
 DATA_ROOT="./playground/data/data-incremental"
