@@ -91,6 +91,9 @@ def generate_answers_from_model(model, tokenizer, image_processor, conversations
     updated_conversations = []
 
     for conv in tqdm(conversations):
+        # Skip this conversation if it doesn't contain the 'image' key
+        if 'image' not in conv:
+            continue
         # We will collect pairs of "gpt" and "human" indices
         gpt_index = -1  # Initialize to an invalid index
         conversation_history = []  # This will hold the entire conversation history
