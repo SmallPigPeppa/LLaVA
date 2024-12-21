@@ -58,6 +58,7 @@ def process_item(client, item, args, retry_count=1):
          "content": "Here is the original conversation data:\n" + json.dumps(item["conversations"], ensure_ascii=False,
                                                                              indent=2) + "\n\nPlease return the improved JSON result."}
     ]
+    import pdb;pdb.set_trace()
     attempt = 0
     last_error = None
     while attempt < retry_count:
