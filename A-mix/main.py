@@ -59,6 +59,7 @@ def process_item(client, item, args, retry_count=2):
                                                                              indent=2) + "\n\nPlease return the improved JSON result."}
     ]
     attempt = 0
+    last_error = None
     while attempt < retry_count:
         try:
             response = client.chat.completions.create(
