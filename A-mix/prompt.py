@@ -15,7 +15,7 @@ Rule Description:
     Output Format:
         Return improved JSON data, Remove old-model answers.
 
-demo input
+Demo input
 
   {
     "id": "140031996X",
@@ -50,7 +50,7 @@ demo input
 }
 
 
-demo output：
+Demo output：
 
 {
   "id": "140031996X",
@@ -82,7 +82,7 @@ demo output：
     },
     {
       "from": "human",
-      "value": "Generate description for the image based on the updated and old answers, and evaluate relevance between them with a score (0–10)."
+      "value": "Generate description for the image based on the updated and old answers, respectively. Evaluate relevance between them with a score (0–10)."
     },
     {
       "from": "gpt",
