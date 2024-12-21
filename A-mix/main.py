@@ -51,14 +51,19 @@ def extract_json_from_text(response_text: str):
 
 
 def process_item(client, item, args, retry_count=1):
+    # messages = [
+    #     {"role": "system",
+    #      "content": "You are a professional AI assistant. Please improve the conversation based on the following rules: " + rule_description},
+    #     {"role": "user",
+    #      "content": "Here is the original conversation data:\n" + json.dumps(item["conversations"], ensure_ascii=False, indent=2) + "\n\nPlease return the improved JSON result."}
+    # ]
     messages = [
         {"role": "system",
          "content": "You are a professional AI assistant. Please improve the conversation based on the following rules: " + rule_description},
         {"role": "user",
-         "content": "Here is the original conversation data:\n" + json.dumps(item["conversations"], ensure_ascii=False,
-                                                                             indent=2) + "\n\nPlease return the improved JSON result."}
+         "content": "Here is the original conversation data:\n" + json.dumps(item, ensure_ascii=False, indent=2) + "\n\nPlease return the improved JSON result."}
     ]
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     attempt = 0
     last_error = None
     while attempt < retry_count:
