@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 
-# 脚本名：run_loop.sh
-# 功能：重复执行 python main_new.py 命令，最多 100 次。如果任意一次执行时间小于30秒，则提前停止。
+# Goals:
+# 1) Run up to 100 times.
+# 2) After each execution, sleep for 30 seconds.
+# 3) If the total time (execution + sleep) is less than 60 seconds, stop.
 
-MAX_RUNS=100
-MIN_TIME=30  # 小于 30 秒就停止
+MAX_RUNS=100         # Maximum number of runs
+MIN_TOTAL_TIME=60    # If execution + sleep is less than this, stop early
+SLEEP_TIME=30        # Sleep time after each run
 
-for ((i=1; i<=$MAX_RUNS; i++))
+for ((i=1; i<=MAX_RUNS; i++))
 do
-    echo "===> 开始执行第 $i 次... "
+    echo "===> Starting run #$i..."
 
-    # 记录开始时间
+    # Record the start time
     START_TIME=$(date +%s)
 
-    # 这里是你的 python 命令，请根据实际需求调整参数
+    # ----------------------------
+    # Adjust the Python command as needed
     python main_new.py \
       --api_key 09604121-6e12-4e83-8e2e-277b6450b32c \
       --input_file input/part1.json \
@@ -22,20 +26,30 @@ do
       --model meta-llama/llama-3.1-8b-instruct \
       --max_tokens 2048 \
       --max_workers 32
+    # ----------------------------
 
-    # 记录结束时间
+    # Record the end time
     END_TIME=$(date +%s)
-    ELAPSED=$(( END_TIME - START_TIME ))
 
-    echo "===> 第 $i 次执行耗时：$ELAPSED 秒"
+    # Calculate execution time
+    ELAPSED_EXEC=$(( END_TIME - START_TIME ))
+    echo "===> Run #$i took $ELAPSED_EXEC seconds to complete."
 
-    # 如果本次执行时间小于 30 秒，则停止脚本
-    if [ "$ELAPSED" -lt "$MIN_TIME" ]; then
-        echo "本次执行时间 < ${MIN_TIME} 秒，提前停止后续执行。"
+    # Sleep for 30 seconds
+    echo "===> Sleeping for $SLEEP_TIME seconds..."
+    sleep $SLEEP_TIME
+
+    # Calculate total time = execution time + sleep
+    TOTAL_TIME=$(( ELAPSED_EXEC + SLEEP_TIME ))
+    echo "===> Total time for run #$i (execution + sleep): $TOTAL_TIME seconds."
+
+    # If the total time is less than 60 seconds, stop early
+    if [ "$TOTAL_TIME" -lt "$MIN_TOTAL_TIME" ]; then
+        echo "Total time < $MIN_TOTAL_TIME seconds. Stopping early."
         break
     fi
 
     echo
 done
 
-echo "脚本执行完毕。"
+echo "All done."
