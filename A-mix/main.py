@@ -94,7 +94,7 @@ def process_item(client, item, args, retry_count=1):
             attempt += 1
             last_error = e
     # If all retries fail, log the error but do not append to improved_data
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     print(f"Failed to process item with ID {item.get('id')}: {last_error}, after {retry_count} attempts.")
     return None  # Return None to signify failure
 
