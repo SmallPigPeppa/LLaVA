@@ -61,7 +61,8 @@ def process_item(client, item, args, retry_count=1):
         {"role": "system",
          "content": "You are a professional AI assistant. Please improve the conversation based on the following rules: " + rule_description},
         {"role": "user",
-         "content": "Here is the original conversation data:\n" + json.dumps(item, ensure_ascii=False, indent=2) + "\n\nPlease return the improved JSON result."}
+         "content": "Here is the original conversation data:\n" + json.dumps(item, ensure_ascii=False,
+                                                                             indent=2) + "\n\nPlease return the improved JSON result."}
     ]
     # import pdb;pdb.set_trace()
     attempt = 0
@@ -90,6 +91,7 @@ def process_item(client, item, args, retry_count=1):
 
 
 import threading
+
 
 def process_data(data, args):
     """
@@ -152,7 +154,6 @@ def process_data(data, args):
                         json.dump(improved_data, f, ensure_ascii=False, indent=2)
 
     return improved_data
-
 
 
 def save_data(output_file, data):
