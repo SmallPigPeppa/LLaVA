@@ -5,4 +5,4 @@ python main.py \
   --base_url https://api.novita.ai/v3/openai \
   --model meta-llama/llama-3.3-70b-instruct \
   --max_tokens 2048 \
-  --max_workers 1
+  --max_workers 32
