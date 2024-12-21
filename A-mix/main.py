@@ -68,7 +68,9 @@ def process_item(client, item, args, retry_count=1):
         {"role": "system",
          "content": "You are a professional AI assistant. Please improve the conversation based on the following rules: " + rule_description},
         {"role": "user",
-         "content": "Here is the original conversation data:\n" + item + "\n\nPlease return the improved JSON result."}
+         "content": "Here is the original conversation data:\n" +
+                   json.dumps(item, ensure_ascii=False, separators=(',', ':')) +
+                   "\n\nPlease return the improved JSON result."}
     ]
     # import pdb;pdb.set_trace()
     attempt = 0
