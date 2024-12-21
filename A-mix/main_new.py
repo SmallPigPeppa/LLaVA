@@ -5,7 +5,12 @@ from tqdm import tqdm
 from openai import OpenAI
 from prompt import rule_description
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
+import sys
 
+# 全局锁与错误计数器
+lock = threading.Lock()
+error_count = 0
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Process JSON files with OpenAI API.")
@@ -27,7 +32,6 @@ def parse_args():
                         help="Number of workers for parallel processing")
     return parser.parse_args()
 
-
 def load_data(input_file):
     if not os.path.exists(input_file):
         raise FileNotFoundError(f"Input file {input_file} does not exist. Please check the path.")
@@ -36,7 +40,6 @@ def load_data(input_file):
     if not isinstance(data, list):
         raise ValueError("The root element of the JSON is not a list. Please adjust accordingly.")
     return data
-
 
 def extract_json_from_text(response_text: str):
     start_index = response_text.find('{')
@@ -49,20 +52,12 @@ def extract_json_from_text(response_text: str):
     except json.JSONDecodeError:
         return None
 
-
 def process_item(client, item, args, retry_count=1):
-    # messages = [
-    #     {"role": "system",
-    #      "content": "You are a professional AI assistant. Please improve the conversation based on the following rules: " + rule_description},
-    #     {"role": "user",
-    #      "content": "Here is the original conversation data:\n" + json.dumps(item["conversations"], ensure_ascii=False, indent=2) + "\n\nPlease return the improved JSON result."}
-    # ]
     messages = [
         {"role": "system",
          "content": "You are a professional AI assistant. Please improve the conversation based on the following rules: " + rule_description},
         {"role": "user",
-         "content": "Here is the original conversation data:\n" + json.dumps(item, ensure_ascii=False,
-                                                                             indent=2) + "\n\nPlease return the improved JSON result."}
+         "content": "Here is the original conversation data:\n" + json.dumps(item, ensure_ascii=False, indent=2) + "\n\nPlease return the improved JSON result."}
     ]
     attempt = 0
     last_error = None
@@ -75,7 +70,8 @@ def process_item(client, item, args, retry_count=1):
                 max_tokens=args.max_tokens
             )
             response_text = response.choices[0].message.content if not args.stream else "".join(
-                [chunk.choices[0].delta["content"] for chunk in response])
+                [chunk.choices[0].delta["content"] for chunk in response]
+            )
             parsed_json = extract_json_from_text(response_text)
             if parsed_json is not None:
                 return parsed_json
@@ -84,23 +80,12 @@ def process_item(client, item, args, retry_count=1):
         except Exception as e:
             attempt += 1
             last_error = e
-    # If all retries fail, log the error but do not append to improved_data
-    # import pdb;pdb.set_trace()
+
     print(f"Failed to process item with ID {item.get('id')}: {last_error}, after {retry_count} attempts.")
     return None  # Return None to signify failure
 
-
-import threading
-
-
 def process_data(data, args):
-    """
-    改进后的 process_data 函数示例：
-      1. 如果 output_file 已经存在，则读取其中的内容并存储到 improved_data。
-      2. 生成 existing_ids 集合，用于跳过重复处理。
-      3. 每获得一次结果，就写回 output_file。
-    """
-
+    global error_count  # 在函数中需要声明使用全局变量
     # 1. 如果输出文件已存在，则读取已处理的数据
     if os.path.exists(args.output_file):
         with open(args.output_file, "r", encoding="utf-8") as f:
@@ -122,7 +107,6 @@ def process_data(data, args):
         base_url=args.base_url,
         api_key=args.api_key
     )
-    lock = threading.Lock()
 
     # 使用线程池进行处理
     with ThreadPoolExecutor(max_workers=args.max_workers) as executor:
@@ -137,42 +121,42 @@ def process_data(data, args):
         # 4. 处理完每个 future 后，及时写回到 output_file
         for future in tqdm(as_completed(future_to_item), total=len(future_to_item), desc="Processing"):
             result = future.result()
-            if result is not None:
+            if result is None:
+                # 如果处理失败，则累计错误计数
+                with lock:
+                    error_count += 1
+                    # 若错误数超过 100，则终止程序
+                    if error_count >= 100:
+                        print("Error count has exceeded 100. Stopping the program.")
+                        os._exit(1)  # 或者使用 sys.exit(1)
+            else:
                 with lock:
                     # 找到对应的原始项
                     item = future_to_item[future]
-
-                    # 直接用 result 替换原始的 conversations
-                    item["conversations"] = result.get("conversations", item["conversations"])  # 更新 conversations
-
+                    # 用 result 替换原始的 conversations
+                    item["conversations"] = result.get("conversations", item["conversations"])
                     # 添加到 improved_data，并更新 existing_ids
                     improved_data.append(item)
                     existing_ids.add(item["id"])
-
                     # 立即写回到文件，保证多线程环境下数据及时落盘
                     with open(args.output_file, "w", encoding="utf-8") as f:
                         json.dump(improved_data, f, ensure_ascii=False, indent=2)
 
     return improved_data
 
-
 def save_data(output_file, data):
     # Ensure the directory exists
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
-
-    # Save the data to the file
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-
     print(f"\nProcessing completed. Results have been written to: {output_file}")
-
 
 def main():
     args = parse_args()
     data = load_data(args.input_file)
     improved_data = process_data(data, args)
+    # 如果需要在所有处理完成后再次整体保存，可使用 save_data
     # save_data(args.output_file, improved_data)
-
 
 if __name__ == "__main__":
     main()
