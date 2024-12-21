@@ -50,7 +50,7 @@ def extract_json_from_text(response_text: str):
         return None
 
 
-def process_item(client, item, args, retry_count=5):
+def process_item(client, item, args, retry_count=2):
     messages = [
         {"role": "system",
          "content": "You are a professional AI assistant. Please improve the conversation based on the following rules: " + rule_description},
