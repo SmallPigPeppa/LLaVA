@@ -42,7 +42,7 @@ if __name__ == "__main__":
     parser.add_argument("--model-path", type=str, required=True, help="Path to the pre-trained model")
     parser.add_argument("--model-base", type=str, default=None, help="Base model type (optional)")
     parser.add_argument("--save-path", type=str, required=True, help="Directory to save the model and tokenizer")
-    parser.add_argument("--lora-scale-factor", type=float, required=True, help="Directory to save the model and tokenizer")
+    # parser.add_argument("--lora-scale-factor", type=float, required=True, help="Directory to save the model and tokenizer")
     args = parser.parse_args()
 
     save_model_with_trainer(args)
