@@ -15,7 +15,8 @@ do
 
     # Record the start time
     START_TIME=$(date +%s)
-
+#    qwen/qwen-2-7b-instruct
+#    qwen/qwen2.5-32b-instruct
     # ----------------------------
     # Adjust the Python command as needed
     python main_new_fixbug.py \
@@ -23,7 +24,7 @@ do
       --input_file input/part1.json \
       --output_file output-qwen-fixbug/part1.json \
       --base_url https://api.ppinfra.com/v3/openai \
-      --model qwen/qwen2.5-32b-instruct \
+      --model qwen/qwen-2-7b-instruct \
       --max_tokens 4096 \
       --max_workers 1
     # ----------------------------
