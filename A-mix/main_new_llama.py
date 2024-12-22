@@ -41,16 +41,36 @@ def load_data(input_file):
         raise ValueError("The root element of the JSON is not a list. Please adjust accordingly.")
     return data
 
+# def extract_json_from_text(response_text: str):
+#     start_index = response_text.find('{')
+#     end_index = response_text.rfind('}')
+#     if start_index == -1 or end_index == -1 or end_index < start_index:
+#         return None
+#     possible_json = response_text[start_index:end_index + 1]
+#     try:
+#         return json.loads(possible_json)
+#     except json.JSONDecodeError:
+#         return None
+
 def extract_json_from_text(response_text: str):
+    # 首先找到可能的 JSON 数据开始和结束位置
     start_index = response_text.find('{')
     end_index = response_text.rfind('}')
     if start_index == -1 or end_index == -1 or end_index < start_index:
         return None
+
+    # 提取可能的 JSON 字符串
     possible_json = response_text[start_index:end_index + 1]
+
+    # 替换不正确的转义字符
+    corrected_json = possible_json.replace("\\'", "'").replace('\\"', '"').replace('\\\\', '\\')
+
+    # 尝试解析 JSON
     try:
-        return json.loads(possible_json)
+        return json.loads(corrected_json)
     except json.JSONDecodeError:
         return None
+
 
 def process_item(client, item, args, retry_count=1):
     messages = [
