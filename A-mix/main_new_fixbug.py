@@ -137,7 +137,11 @@ def process_data(data, args):
                     # 找到对应的原始项
                     item = future_to_item[future]
                     # 用 result 替换原始的 conversations
-                    item["conversations"] = result.get("conversations", item["conversations"])
+                    # item["conversations"] = result.get("conversations", item["conversations"])
+                    if isinstance(result, dict):
+                        item["conversations"] = result.get("conversations", item["conversations"])
+                    else:
+                        print("Error: 'result' is not a dictionary. It is:", type(result))
                     # 添加到 improved_data，并更新 existing_ids
                     improved_data.append(item)
                     existing_ids.add(item["id"])
