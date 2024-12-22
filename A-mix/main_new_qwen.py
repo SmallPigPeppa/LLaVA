@@ -127,7 +127,7 @@ def process_data(data, args):
                 with lock:
                     error_count += 1
                     # 若错误数超过 100，则终止程序
-                    if error_count >= 100:
+                    if error_count >= 1000000:
                         print("Error count has exceeded 100. Stopping the program.")
                         os._exit(1)  # 或者使用 sys.exit(1)
             else:
