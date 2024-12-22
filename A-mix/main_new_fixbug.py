@@ -52,7 +52,7 @@ def extract_json_from_text(response_text: str):
         # return json.loads(possible_json)
         return json_repair.loads(possible_json)
     except json.JSONDecodeError:
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         return None
 
 def process_item(client, item, args, retry_count=1):
