@@ -20,11 +20,11 @@ do
     # ----------------------------
     # Adjust the Python command as needed
     python main_new_fixbug.py \
-      --api_key 7132bb0a-223c-4fd0-9d9e-893d1bcb17b0 \
+      --api_key 09604121-6e12-4e83-8e2e-277b6450b32c \
       --input_file input/part1.json \
       --output_file output-qwen-fixbug/part1.json \
-      --base_url https://api.ppinfra.com/v3/openai \
-      --model qwen/qwen-2-7b-instruct \
+      --base_url https://api.novita.ai/v3/openai \
+      --model meta-llama/llama-3.1-8b-instruct \
       --max_tokens 4096 \
       --max_workers 1
     # ----------------------------
