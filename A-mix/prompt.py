@@ -13,7 +13,7 @@ Rule Description:
         Q2: Generate description for the image base on updated and previous answers, respectively. evaluate relevance between them with a score (0–10).
             A2: Provide a concise, complete response, generate more than 3 different captions, respectively. using more than 400 words.
     Output Format:
-        Return improved JSON data, Remove old-model answers.
+        Only return improved JSON code, strictly following JSON file format. Remove old-model answers.
 
 Demo input
 
