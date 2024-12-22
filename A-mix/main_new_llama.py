@@ -48,11 +48,9 @@ def extract_json_from_text(response_text: str):
         return None
     possible_json = response_text[start_index:end_index + 1]
     try:
-        import pdb;pdb.set_trace()
         return json.loads(possible_json)
     except json.JSONDecodeError:
         return None
-
 
 def process_item(client, item, args, retry_count=1):
     messages = [
@@ -76,7 +74,6 @@ def process_item(client, item, args, retry_count=1):
             )
             parsed_json = extract_json_from_text(response_text)
             if parsed_json is not None:
-                # import pdb;pdb.set_trace()
                 return parsed_json
             else:
                 attempt += 1
@@ -85,7 +82,6 @@ def process_item(client, item, args, retry_count=1):
             last_error = e
 
     print(f"Failed to process item with ID {item.get('id')}: {last_error}, after {retry_count} attempts.")
-    # import pdb; pdb.set_trace()
     return None  # Return None to signify failure
 
 def process_data(data, args):
@@ -129,8 +125,8 @@ def process_data(data, args):
                 # 如果处理失败，则累计错误计数
                 with lock:
                     error_count += 1
-                    # 若错误数超过 100，则终止程序
-                    if error_count >= 100:
+                    # 若错误数超过 1000，则终止程序
+                    if error_count >= 1000:
                         print("Error count has exceeded 100. Stopping the program.")
                         os._exit(1)  # 或者使用 sys.exit(1)
             else:
