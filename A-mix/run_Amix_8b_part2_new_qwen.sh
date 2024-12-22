@@ -18,7 +18,7 @@ do
 
     # ----------------------------
     # Adjust the Python command as needed
-    python main_new.py \
+    python main_new_fixbug.py \
       --api_key 7132bb0a-223c-4fd0-9d9e-893d1bcb17b0 \
       --input_file input/part2.json \
       --output_file output-qwen/part2.json \
