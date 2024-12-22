@@ -54,3 +54,4 @@ python -m llava.eval.model_vqa_save_weight_hf \
     --model-path ${OUTPUT_DIR} \
     --model-base ${MODEL_PATH} \
     --save-path ${OUTPUT_DIR}-merge
+
