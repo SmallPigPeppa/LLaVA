@@ -18,14 +18,14 @@ do
 
     # ----------------------------
     # Adjust the Python command as needed
-    python main_new.py \
+    python main_new_qwen.py \
       --api_key dcf59e46-a998-4a69-adfd-31aeabac1760 \
       --input_file input/part2.json \
       --output_file output-qwen/part2.json \
       --base_url https://api.ppinfra.com/v3/openai \
       --model qwen/qwen2.5-32b-instruct \
       --max_tokens 2048 \
-      --max_workers 30
+      --max_workers 1
     # ----------------------------
 
     # Record the end time
