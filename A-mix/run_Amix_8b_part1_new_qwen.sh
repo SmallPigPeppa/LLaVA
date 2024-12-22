@@ -25,7 +25,7 @@ do
       --base_url https://api.ppinfra.com/v3/openai \
       --model qwen/qwen2.5-32b-instruct \
       --max_tokens 2048 \
-      --max_workers 32
+      --max_workers 30
     # ----------------------------
 
     # Record the end time
