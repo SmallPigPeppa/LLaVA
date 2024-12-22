@@ -106,7 +106,7 @@ Demo output：
   },
   {
     "from": "human",
-    "value": "What are the key themes of this book? "
+    "value": "xxxxx(A random question1) "
   },
   {
     "from": "gpt",
@@ -114,7 +114,7 @@ Demo output：
   },
   {
     "from": "human",
-    "value": "Why might this book be a suitable gift? "
+    "value": "xxxxx(A random question2)"
   },
   {
     "from": "gpt",
