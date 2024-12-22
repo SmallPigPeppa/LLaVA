@@ -6,8 +6,8 @@
 # 3) If the total time (execution + sleep) is less than 60 seconds, stop.
 
 MAX_RUNS=1000         # Maximum number of runs
-MIN_TOTAL_TIME=80    # If execution + sleep is less than this, stop early
-SLEEP_TIME=30        # Sleep time after each run
+MIN_TOTAL_TIME=10    # If execution + sleep is less than this, stop early
+SLEEP_TIME=5        # Sleep time after each run
 
 for ((i=1; i<=MAX_RUNS; i++))
 do
