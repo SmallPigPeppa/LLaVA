@@ -18,13 +18,13 @@ do
 
     # ----------------------------
     # Adjust the Python command as needed
-    python main_new_qwen.py \
-      --api_key dcf59e46-a998-4a69-adfd-31aeabac1760 \
+    python main_new.py \
+      --api_key 7132bb0a-223c-4fd0-9d9e-893d1bcb17b0 \
       --input_file input/part2.json \
-      --output_file output-qwen72b/part2.json \
+      --output_file output-qwen/part2.json \
       --base_url https://api.ppinfra.com/v3/openai \
-      --model qwen/qwen-2.5-72b-instruct \
-      --max_tokens 2048 \
+      --model qwen/qwen2.5-32b-instruct \
+      --max_tokens 4096 \
       --max_workers 60
     # ----------------------------
 
