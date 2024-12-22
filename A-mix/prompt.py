@@ -78,7 +78,7 @@ Demo output：
     },
     {
       "from": "gpt",
-      "value": "xxxxx."
+      "value": "xxxxx"
     },
     {
       "from": "human",
