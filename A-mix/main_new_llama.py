@@ -53,27 +53,6 @@ def extract_json_from_text(response_text: str):
     except json.JSONDecodeError:
         return None
 
-import re
-def preprocess_and_load_json(json_str):
-    # 步骤1: 正确转义内嵌的双引号
-    # 使用正则表达式找到所有被双引号包裹的字符串，并在这些字符串中转义所有未被转义的双引号
-    def escape_quotes(match):
-        # 替换字符串中的双引号为转义的双引号，除非它已经被转义
-        internal_str = match.group(0)
-        # 替换所有非转义的双引号
-        escaped_str = re.sub(r'(?<!\\)"', r'\\"', internal_str)
-        return escaped_str
-
-    # 匹配所有双引号包裹的字符串
-    json_str = re.sub(r'"[^"\\]*(?:\\.[^"\\]*)*"', escape_quotes, json_str)
-
-    # 步骤2: 尝试加载JSON
-    try:
-        data = json.loads(json_str)
-        return data
-    except json.decoder.JSONDecodeError as e:
-        print(f"JSON decode error: {e}")
-        return None
 
 def process_item(client, item, args, retry_count=1):
     messages = [
