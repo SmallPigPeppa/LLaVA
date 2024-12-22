@@ -76,8 +76,8 @@ def process_item(client, item, args, retry_count=1):
             )
             parsed_json = extract_json_from_text(response_text)
             if parsed_json is not None:
-                import pdb;pdb.set_trace()
-                # return parsed_json
+                # import pdb;pdb.set_trace()
+                return parsed_json
             else:
                 attempt += 1
         except Exception as e:
