@@ -1,7 +1,7 @@
 import argparse
 import torch
 import os
-from llava.model.builder import load_pretrained_model
+from llava.model.builder_debug import load_pretrained_model
 from llava.utils import disable_torch_init
 from transformers import Trainer, TrainingArguments
 
@@ -13,7 +13,7 @@ def save_model_with_trainer(args):
     # Load the pre-trained model and tokenizer
     model_path = os.path.expanduser(args.model_path)
     model_name = os.path.basename(model_path)  # Extract the model name from the path
-    tokenizer, model, _, _ = load_pretrained_model(model_path, args.model_base, model_name)
+    tokenizer, model, _, _ = load_pretrained_model(model_path, args.model_base, model_name, lora_scale_factor=args.lora_scale_factor)
 
     # Set up training arguments (used for saving only, no training or evaluation)
     training_args = TrainingArguments(
@@ -42,6 +42,7 @@ if __name__ == "__main__":
     parser.add_argument("--model-path", type=str, required=True, help="Path to the pre-trained model")
     parser.add_argument("--model-base", type=str, default=None, help="Base model type (optional)")
     parser.add_argument("--save-path", type=str, required=True, help="Directory to save the model and tokenizer")
+    parser.add_argument("--lora-scale-factor", type=float, required=True, help="Directory to save the model and tokenizer")
     args = parser.parse_args()
 
     save_model_with_trainer(args)
