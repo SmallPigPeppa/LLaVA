@@ -2,7 +2,7 @@
 export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 # Set model as a variable
-MODEL="llava-v1.5-7b-lora-task-ocr-merge-Amix-scale1"
+MODEL="llava-v1.5-7b-lora-task-ocr-merge-scale1"
 # Evaluate the model
 python -m llava.eval.model_vqa \
     --model-path "continual-ckpt/domain-Amix/$MODEL" \
