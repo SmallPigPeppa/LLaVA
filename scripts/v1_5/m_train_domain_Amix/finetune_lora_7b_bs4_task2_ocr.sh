@@ -2,7 +2,8 @@
 
 # Set Hugging Face cache directory
 export HF_HOME=/ppio_net0/huggingface
-
+# Limit script to only use GPU 0
+export CUDA_VISIBLE_DEVICES=0
 # Manually specify model and vision configuration
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"  # Update this path with your specific model path
 VISION_TOWER="openai/clip-vit-large-patch14-336"
