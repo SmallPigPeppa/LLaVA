@@ -95,7 +95,7 @@ def process_item(client, item, args, retry_count=1):
             parsed_json = extract_json_from_text(response_text)
             if parsed_json is not None:
                 import pdb;pdb.set_trace()
-                return parsed_json
+                # return parsed_json
             else:
                 attempt += 1
         except Exception as e:
@@ -103,7 +103,7 @@ def process_item(client, item, args, retry_count=1):
             last_error = e
 
     print(f"Failed to process item with ID {item.get('id')}: {last_error}, after {retry_count} attempts.")
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     return None  # Return None to signify failure
 
 def process_data(data, args):
