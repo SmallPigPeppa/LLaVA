@@ -7,6 +7,7 @@ from prompt import rule_description
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 import sys
+import json_repair
 
 # 全局锁与错误计数器
 lock = threading.Lock()
@@ -48,7 +49,8 @@ def extract_json_from_text(response_text: str):
         return None
     possible_json = response_text[start_index:end_index + 1]
     try:
-        return json.loads(possible_json)
+        # return json.loads(possible_json)
+        return json_repair.loads(possible_json)
     except json.JSONDecodeError:
         import pdb; pdb.set_trace()
         return None
