@@ -16,8 +16,8 @@ Rules for Answer (A) Improvement:
 New Q&A Pair Requirements:
 1. **Q1**: Summarize the differences between the updated and old answers.
    - **A1**: Provide a detailed comparison, highlighting more than 5 differences, with at least 400 words.
-2. **Q2**: Generate a description for the image.
-   - **A2**: Write a comprehensive response, using more than 400 words, based on updated answers.
+2. **Q2**: Generate a description for the image based on both updated and old answers.
+   - **A2**: Write a comprehensive response, using more than 400 words.
 3. Add two random questions derived from the image or context.
    - **A**: Provide thoughtful, detailed answers of at least 400 words.
 
@@ -98,7 +98,7 @@ Demo output：
   },
   {
     "from": "human",
-    "value": "Generate a description for the image."
+    "value": "Generate a description for the image based on updated and previous answers."
   },
   {
     "from": "gpt",
