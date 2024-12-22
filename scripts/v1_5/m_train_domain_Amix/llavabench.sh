@@ -1,6 +1,6 @@
 #!/bin/bash
 export HF_HOME=/ppio_net0/huggingface
-
+export CUDA_VISIBLE_DEVICES=0
 # Set model as a variable
 MODEL="llava-v1.5-7b-lora-task-ocr-merge-Amix"
 # Evaluate the model
