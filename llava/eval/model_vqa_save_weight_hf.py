@@ -1,7 +1,7 @@
 import argparse
 import torch
 import os
-from llava.model.builder_debug import load_pretrained_model
+from llava.model.builder import load_pretrained_model
 from llava.utils import disable_torch_init
 from transformers import Trainer, TrainingArguments
 
