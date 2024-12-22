@@ -8,10 +8,10 @@ Rule Description:
     A Improvement:
         Combine old-model and GPT answers to generate a more accurate and contextually relevant answer.
     New Q&A Pairs:
-        Q1: Summarize the differences between the updated and old answers, identifying more than three differences.
-            A1: Provide a concise, complete response.
+        Q1: Summarize the differences between the updated and old answers.
+            A1: Provide a concise, complete response. find more than 5 differences, with over 300 words.
         Q2: Generate description for the image base on updated and previous answers, respectively. evaluate relevance between them with a score (0–10).
-            A2: Provide a concise, complete response.
+            A2: Provide a concise, complete response. Provide more than 3 different description, respectively, with over 400 words.
     Output Format:
         Return improved JSON data, Remove old-model answers.
 
@@ -74,11 +74,11 @@ Demo output：
     },
     {
       "from": "human",
-      "value": "Summarize the differences between the updated and old answers, identifying more than three differences."
+      "value": "Summarize the differences between the updated and old answers."
     },
     {
       "from": "gpt",
-      "value": “xxxxx.”
+      "value": "xxxxx"
     },
     {
       "from": "human",
