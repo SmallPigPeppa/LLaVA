@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set Hugging Face cache directory
-export HF_HOME=/ppio_net0/huggingface
+export HF_HOME=/mnt/disk3/wzliu/huggingface
 # Limit script to only use GPU 0
 #export CUDA_VISIBLE_DEVICES=0
 # Manually specify model and vision configuration
