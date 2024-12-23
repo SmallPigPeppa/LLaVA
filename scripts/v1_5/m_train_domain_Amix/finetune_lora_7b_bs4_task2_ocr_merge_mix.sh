@@ -11,8 +11,6 @@ Ratio=0.2
 #OUT_PATH=${MODEL_PATH}-merged-ratio${Ratio}
 OUT_PATH="continual-ckpt/domain-mix/llava-v1.5-7b-lora-task-textvqa-merged-ratio${Ratio}"
 
-echo "OCR task training completed successfully!"
-
 python -m llava.eval.model_vqa_save_weight_hf_mix \
   --model-path ${MODEL_PATH} \
   --model-base ${MODEL_BASE} \
