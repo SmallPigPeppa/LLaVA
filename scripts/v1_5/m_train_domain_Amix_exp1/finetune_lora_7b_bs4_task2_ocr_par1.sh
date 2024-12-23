@@ -8,7 +8,7 @@ export HF_HOME=/ppio_net0/huggingface
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"  # Update this path with your specific model path
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 DATA_PATH="playground/data/exp1/part1.json"
-OUTPUT_DIR="continual-ckpt/domain-Amix/llava-v1.5-7b-lora-task-ocr"
+OUTPUT_DIR="continual-ckpt/exp1/llava-v1.5-7b-lora-task-ocr"
 
 # Training command for OCR task
 deepspeed llava/train/train_mem.py \
