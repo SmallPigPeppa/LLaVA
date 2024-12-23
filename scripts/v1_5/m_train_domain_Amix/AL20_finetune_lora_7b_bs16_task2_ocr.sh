@@ -7,7 +7,7 @@ export HF_HOME=/mnt/disk3/wzliu/huggingface
 # Manually specify model and vision configuration
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"  # Update this path with your specific model path
 VISION_TOWER="openai/clip-vit-large-patch14-336"
-DATA_PATH="playground/data/part2-v2.json"
+DATA_PATH="playground/data/domain-incremental/merge.json"
 OUTPUT_DIR="continual-ckpt/domain-Amix/llava-v1.5-7b-lora-task-ocr"
 
 # Training command for OCR task
