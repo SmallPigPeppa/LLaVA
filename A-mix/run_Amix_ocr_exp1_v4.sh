@@ -5,7 +5,7 @@ python main_new_fixbugv4.py \
   --input_file /ppio_net0/code/LLaVA/playground/data/exp1/part1-Aold.json \
   --output_file /ppio_net0/code/LLaVA/playground/data/exp1/part1-mix.json \
   --base_url https://api.ppinfra.com/v3/openai \
-  --model qwen/qwen2.5-32b-instruct \
+  --model qwen/qwen-2.5-72b-instruct \
   --max_tokens 2048 \
   --max_workers 100
 
