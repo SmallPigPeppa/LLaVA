@@ -1,6 +1,8 @@
 rule_description = """
 ## Objective:
-Improve the quality of questions (Q) and answers (A) through the following ways:
+"from": "human" corresponds to questions (Q); "from": "gpt" corresponds to answers (A).
+
+Improve the quality of questions and answers through the following ways:
 
 Step 1: Rewrite every A into a smooth and natural paragraph. Remove the constrain "\nAnswer the question using a single word or phrase. in Q1"
 Step 2: Generate new QA JSON data based on the input QA JSON data, randomly generate 2–4 new QA pairs related to the image (A should be between 50–100 words) and add them to the "conversations."
