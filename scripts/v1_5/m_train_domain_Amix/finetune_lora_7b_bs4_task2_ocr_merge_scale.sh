@@ -7,7 +7,7 @@ export HF_HOME=/ppio_net0/huggingface
 # Manually specify model and vision configuration
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa"
-Ratio=1.0
+Ratio=0.2
 OUT_PATH=${MODEL_PATH}-merged-ratio${Ratio}
 
 echo "OCR task training completed successfully!"
