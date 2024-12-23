@@ -7,8 +7,8 @@ export HF_HOME=/ppio_net0/huggingface
 # Manually specify model and vision configuration
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"  # Update this path with your specific model path
 VISION_TOWER="openai/clip-vit-large-patch14-336"
-DATA_PATH="playground/data/exp1/part2-mix-v5.json"
-OUTPUT_DIR="continual-ckpt/exp1/llava-v1.5-7b-lora-task-ocr-mix-v5"
+DATA_PATH="playground/data/exp1/part2-mix-v6.json"
+OUTPUT_DIR="continual-ckpt/exp1/llava-v1.5-7b-lora-task-ocr-mix-v6"
 
 # Training command for OCR task
 deepspeed llava/train/train_mem.py \
