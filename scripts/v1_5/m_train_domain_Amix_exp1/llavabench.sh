@@ -5,13 +5,13 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL="llava-v1.5-7b-lora-task-ocr-mix-v5-merged"
 
 # Evaluate the model
-python -m llava.eval.model_vqa \
-    --model-path "continual-ckpt/exp1/$MODEL" \
-    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
-    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL.jsonl \
-    --temperature 0 \
-    --conv-mode vicuna_v1
+#python -m llava.eval.model_vqa \
+#    --model-path "continual-ckpt/exp1/$MODEL" \
+#    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
+#    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
+#    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL.jsonl \
+#    --temperature 0 \
+#    --conv-mode vicuna_v1
 
 # Create the reviews directory
 mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
