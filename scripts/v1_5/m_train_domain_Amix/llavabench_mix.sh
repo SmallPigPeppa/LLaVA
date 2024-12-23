@@ -2,7 +2,7 @@
 export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 # Set model as a variable
-Ratio=0.2
+Ratio=1.0
 MODEL="llava-v1.5-7b-lora-task-ocr_vqa-merged-ratio${Ratio}"
 # Evaluate the model
 python -m llava.eval.model_vqa \
