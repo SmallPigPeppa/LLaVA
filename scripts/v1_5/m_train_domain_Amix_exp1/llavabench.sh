@@ -2,10 +2,11 @@
 export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 # Set model as a variable
-MODEL="llava-v1.5-7b-lora-task-ocr-merge-Amix"
+MODEL="llava-v1.5-7b-lora-task-ocr-merged-exp1"
+
 # Evaluate the model
 python -m llava.eval.model_vqa \
-    --model-path "continual-ckpt/domain-Amix/$MODEL" \
+    --model-path "continual-ckpt/exp1/$MODEL" \
     --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
     --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
     --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL.jsonl \

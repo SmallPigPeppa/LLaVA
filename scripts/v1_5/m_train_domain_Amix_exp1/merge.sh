@@ -6,8 +6,6 @@ MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 MODEL_PATH="continual-ckpt/exp1/llava-v1.5-7b-lora-task-ocr"
 OUT_PATH=${MODEL_PATH}-merged-exp1
 
-echo "OCR task training completed successfully!"
-
 python -m llava.eval.model_vqa_save_weight_hf \
   --model-path ${MODEL_PATH} \
   --model-base ${MODEL_BASE} \
