@@ -3,7 +3,7 @@
 # Set Hugging Face cache directory
 export HF_HOME=/ppio_net0/huggingface
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
-MODEL_PATH="continual-ckpt/exp1/llava-v1.5-7b-lora-task-ocr-mix-v6"
+MODEL_PATH="continual-ckpt/exp1/llava-v1.5-7b-lora-task-ocr-mix-v4plus"
 OUT_PATH=${MODEL_PATH}-merged
 
 python -m llava.eval.model_vqa_save_weight_hf \
