@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-python main_new_fixbugv3.py \
+python main_new_fixbugv4.py \
   --api_key 7132bb0a-223c-4fd0-9d9e-893d1bcb17b0 \
   --input_file /ppio_net0/code/LLaVA/playground/data/exp1/part1-Aold.json \
   --output_file /ppio_net0/code/LLaVA/playground/data/exp1/part1-mix.json \
