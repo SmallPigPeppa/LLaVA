@@ -3,8 +3,8 @@ rule_description = """
 Improve the quality of questions (Q) and answers (A) through the following ways:
 
 Generate new QA json data based on the input QA json data. The background of the new QA data's questions is based on the old model's description, and the relevant description is improved through the input image. Improve input QA JSON file as follows:
-1. First, summarize the old model's description of the image, using more than 50 words.
-2. At the beginning of the conversation, provide the old model's description ( using more than 50 words.) and task background.
+1. Summarize the old model's QA to generate an old caption/description for the image in a concise, smooth, and natural paragraph.
+2. At the beginning of the conversation, provide the old model's description (generated in step 1) and task background.
 3. Based on this task background, improve the original QA answers and clearly explain why the changes were made.
 4. Remove the old model's data and return the improved QA JSON file.
 
