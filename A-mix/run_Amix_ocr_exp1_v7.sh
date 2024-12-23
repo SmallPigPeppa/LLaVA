@@ -7,5 +7,5 @@ python main_new_fixbugv7.py \
   --base_url https://api.ppinfra.com/v3/openai \
   --model qwen/qwen-2.5-72b-instruct \
   --max_tokens 2048 \
-  --max_workers 150
+  --max_workers 100
 
