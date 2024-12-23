@@ -1,0 +1,102 @@
+rule_description = """
+## Objective:
+Improve the quality of questions (Q) and answers (A) through the following ways:
+
+Generate new QA json data based on the input QA json data. The background of the new QA data's questions is based on the old model's description, and the relevant description is improved through the input image. Improve input QA JSON file as follows:
+1. First, summarize the old model's description of the image.
+2. At the beginning of the conversation, provide the old model's description and task background.
+3. Based on this task background, improve the original QA answers and clearly explain why the changes were made.
+4. Remove the old model's data and return the improved QA JSON file.
+
+
+## Demo Input:
+{
+    "id": "967097339",
+    "image": "ocr_vqa/images/967097339.jpg",
+    "conversations": [
+        {
+            "from": "human",
+            "value": "<image>\nWho is the author of this book?\nAnswer the question using a single word or phrase."
+        },
+        {
+            "from": "gpt",
+            "value": "Allan H. Goodman"
+        },
+        {
+            "from": "old-model",
+            "value": "Alan h goodman"
+        },
+        {
+            "from": "human",
+            "value": "What is the title of this book?"
+        },
+        {
+            "from": "gpt",
+            "value": "Basic Skills for the New Mediator, Second Edition"
+        },
+        {
+            "from": "old-model",
+            "value": "Basic skills for new mediator"
+        },
+        {
+            "from": "human",
+            "value": "What type of book is this?"
+        },
+        {
+            "from": "gpt",
+            "value": "Law"
+        },
+        {
+            "from": "old-model",
+            "value": "Self help"
+        },
+        {
+            "from": "human",
+            "value": "Is this book related to Law?"
+        },
+        {
+            "from": "gpt",
+            "value": "Yes"
+        },
+        {
+            "from": "old-model",
+            "value": "No"
+        }
+    ]
+},
+
+## Demo Output:
+{
+    "id": "967097339",
+    "image": "ocr_vqa/images/967097339.jpg",
+    "conversations": [
+        {
+            "from": "human",
+            "value": "The old model's description of this image is: "The image describes xxxx." Based on the understanding of the input image, correct/improve the relevant description."
+        },
+        {
+            "from": "gpt",
+            "value": "I am ready"
+        },
+        {
+            "from": "human",
+            "value": "<image>\n Who is the author of this book?"
+        },
+        {
+            "from": "gpt",
+            "value": "The author of the book in the image is 'Allan H. Goodman', xxxxx (explain why you changed it this way)"
+        },
+        {
+            "from": "human",
+            "value": "What is the title of this book?"
+        },
+        {
+            "from": "gpt",
+            "value": "The title of the book in the image is 'Basic Skills for the New Mediator, Second Edition', xxxxx (explanation of why this correction was made)"
+        },
+        xxxx (remaining questions and improved answers)
+    ]
+}
+
+"""
+
