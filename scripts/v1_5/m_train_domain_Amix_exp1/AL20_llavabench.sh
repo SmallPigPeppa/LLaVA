@@ -2,7 +2,7 @@
 export HF_HOME=/mnt/disk3/wzliu/huggingface
 export CUDA_VISIBLE_DEVICES=0
 # Set model as a variable
-MODEL="llava-v1.5-7b-lora-task-ocr-merged-exp1-mix"
+MODEL="llava-v1.5-7b-lora-task-ocr-mix-merged-exp1-mix"
 
 # Evaluate the model
 python -m llava.eval.model_vqa \
