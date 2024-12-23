@@ -6,7 +6,7 @@ MODEL="llava-v1.5-7b-lora-task-ocr-merged"
 
 # Evaluate the model
 python -m llava.eval.model_vqa \
-    --model-path " continual-ckpt/domain-Amix/$MODEL" \
+    --model-path "continual-ckpt/domain-Amix/$MODEL" \
     --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
     --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
     --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL.jsonl \
