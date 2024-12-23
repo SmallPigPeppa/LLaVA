@@ -12,7 +12,7 @@ OUT_PATH=${MODEL_PATH}-merged-ratio{Ratio}
 
 echo "OCR task training completed successfully!"
 
-python -m llava.eval.model_vqa_save_weight_hf \
+python -m llava.eval.model_vqa_save_weight_hf_mix \
   --model-path ${MODEL_PATH} \
   --model-base ${MODEL_BASE} \
   --save-path ${OUT_PATH} \
