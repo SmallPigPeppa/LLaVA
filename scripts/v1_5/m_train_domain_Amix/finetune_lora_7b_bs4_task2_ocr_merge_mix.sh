@@ -5,7 +5,7 @@ export HF_HOME=/ppio_net0/huggingface
 # Limit script to only use GPU 0
 #export CUDA_VISIBLE_DEVICES=0
 # Manually specify model and vision configuration
-MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged"
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa"
 Ratio=0.2
 #OUT_PATH=${MODEL_PATH}-merged-ratio${Ratio}
