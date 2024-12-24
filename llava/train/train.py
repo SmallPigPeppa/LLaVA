@@ -995,6 +995,7 @@ def train(attn_implementation=None):
 
     ############################distill
     if model_args.distill:
+        import pdb;pdb.set_trace()
         model.old_model = copy.deepcopy(model.model)
         for param in model.old_model.parameters():
             param.requires_grad = False
