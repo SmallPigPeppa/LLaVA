@@ -99,7 +99,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 images,
                 image_sizes
             )
-
+        import pdb;pdb.set_trace()
         out_dict = super().forward(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -112,7 +112,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict
         )
-        import pdb;pdb.set_trace()
+
         return out_dict
 
     @torch.no_grad()
