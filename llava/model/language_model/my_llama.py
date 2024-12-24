@@ -35,6 +35,7 @@ from transformers.models.llama.modeling_llama import (
 from transformers.models.llama.modeling_llama import (
     is_flash_attn_2_available,
     replace_return_docstrings,
+    add_start_docstrings_to_model_forward
 )
 
 if is_flash_attn_2_available():
@@ -148,7 +149,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
     def get_decoder(self):
         return self.model
 
-    # @add_start_docstrings_to_model_forward(LLAMA_INPUTS_DOCSTRING)
+    @add_start_docstrings_to_model_forward(LLAMA_INPUTS_DOCSTRING)
     @replace_return_docstrings(output_type=CausalLMOutputWithPast, config_class=_CONFIG_FOR_DOC)
     def forward(
         self,
