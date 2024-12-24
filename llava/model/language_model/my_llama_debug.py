@@ -47,18 +47,20 @@ from transformers.models.llama.modeling_llama import LlamaPreTrainedModel, Llama
 
 _CONFIG_FOR_DOC = "LlamaConfig"
 
+from llava.constants import IGNORE_INDEX
+
 
 class ForwardKLLoss(torch.nn.Module):
-    def __init__(self, ignore_index: int = -100):
+    def __init__(self, ignore_index: int = IGNORE_INDEX):
         super().__init__()
         self.ignore_index = ignore_index
 
     def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
         # Implementation from https://github.com/jongwooko/distillm
         # Computes the softmax of the teacher logits
-        teacher_prob = F.softmax(teacher_logits, dim=-1, dtype=torch.float32)
+        teacher_prob = F.softmax(teacher_logits, dim=-1)
         # Computes the student log softmax probabilities
-        student_logprob = F.log_softmax(student_logits, dim=-1, dtype=torch.float32)
+        student_logprob = F.log_softmax(student_logits, dim=-1)
         # Computes the forward KL divergence
         prod_probs = teacher_prob * student_logprob
         # Compute the sum
