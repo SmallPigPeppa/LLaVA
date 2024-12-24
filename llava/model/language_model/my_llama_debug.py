@@ -214,7 +214,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             #     output_hidden_states=output_hidden_states,
             #     return_dict=return_dict,
             # )
-            pass
+            kd_loss=0.
             # output2 = self.model(
             #     input_ids=input_ids,
             #     attention_mask=attention_mask,
