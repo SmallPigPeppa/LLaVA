@@ -27,14 +27,13 @@ import torch.nn.functional as F
 import torch.utils.checkpoint
 from torch import nn
 from torch.nn import CrossEntropyLoss
-from transformers.cache_utils import Cache
-from transformers.modeling_outputs import (
+from transformers.models.llama.modeling_llama import Cache
+from transformers.models.llama.modeling_llama import (
     CausalLMOutputWithPast,
 )
-from transformers.utils import (
-    add_start_docstrings_to_model_forward,
+
+from transformers.models.llama.modeling_llama import (
     is_flash_attn_2_available,
-    logging,
     replace_return_docstrings,
 )
 
@@ -42,12 +41,8 @@ if is_flash_attn_2_available():
     from flash_attn import flash_attn_func, flash_attn_varlen_func
     from flash_attn.bert_padding import index_first_axis, pad_input, unpad_input  # noqa
 
-# logger = logging.get_logger(__name__)
-
+from transformers.models.llama.modeling_llama import LlamaPreTrainedModel, LlamaModel
 _CONFIG_FOR_DOC = "LlamaConfig"
-
-from transformers import LlamaPreTrainedModel, LlamaModel
-
 
 LLAMA_INPUTS_DOCSTRING = r"""
     Args:
@@ -122,6 +117,7 @@ LLAMA_INPUTS_DOCSTRING = r"""
             the complete sequence length.
 """
 
+
 class LlamaForCausalLM(LlamaPreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
@@ -187,7 +183,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             output_hidden_states if output_hidden_states is not None else self.config.output_hidden_states
         )
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
-        import pdb;pdb.set_trace()
+        import pdb;
+        pdb.set_trace()
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
         outputs = self.model(
             input_ids=input_ids,
