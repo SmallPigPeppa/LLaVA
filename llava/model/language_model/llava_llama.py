@@ -112,6 +112,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict
         )
+        import pdb;pdb.set_trace()
         return out_dict
 
     @torch.no_grad()
