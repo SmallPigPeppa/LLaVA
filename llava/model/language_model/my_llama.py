@@ -203,17 +203,17 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             #     output_hidden_states=output_hidden_states,
             #     return_dict=return_dict,
             # )
-            output1 = self.model(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                position_ids=position_ids,
-                past_key_values=past_key_values,
-                inputs_embeds=inputs_embeds,
-                use_cache=use_cache,
-                output_attentions=output_attentions,
-                output_hidden_states=output_hidden_states,
-                return_dict=return_dict,
-            )
+            # output1 = self.model(
+            #     input_ids=input_ids,
+            #     attention_mask=attention_mask,
+            #     position_ids=position_ids,
+            #     past_key_values=past_key_values,
+            #     inputs_embeds=inputs_embeds,
+            #     use_cache=use_cache,
+            #     output_attentions=output_attentions,
+            #     output_hidden_states=output_hidden_states,
+            #     return_dict=return_dict,
+            # )
             output2 = self.base_model(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
@@ -225,7 +225,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 output_hidden_states=output_hidden_states,
                 return_dict=return_dict,
             )
-            import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
 
             hidden_states_old = output2[0]
             # hidden_states_old = outputs_old[0]
@@ -256,7 +256,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 labels=shift_labels_text
             )
 
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
             loss = kd_loss * 10.0 + llava_loss
         elif kd_loss is not None:
