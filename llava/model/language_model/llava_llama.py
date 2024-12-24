@@ -25,7 +25,7 @@ from transformers import AutoConfig, AutoModelForCausalLM, \
 # Modified
 # from transformers import AutoConfig, AutoModelForCausalLM, \
 #                          LlamaConfig, LlamaModel
-# from .my_llama import LlamaForCausalLM
+from .my_llama import LlamaForCausalLM
 # from transformers.models.llama.modeling_llama import add_start_docstrings_to_model_forward, \
 #     LLAMA_INPUTS_DOCSTRING, replace_return_docstrings, Cache, CrossEntropyLoss, F
 # _CONFIG_FOR_DOC = "LlamaConfig"
