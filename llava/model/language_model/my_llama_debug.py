@@ -190,7 +190,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             llava_loss = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
-        if len(pure_text_index) > 0:
+        elif len(pure_text_index) > 0:
             # 获取旧模型输出
             # outputs_old = self.model_old(
             #     input_ids=input_ids,
