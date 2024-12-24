@@ -1022,7 +1022,7 @@ def train(attn_implementation=None):
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     trainer = LLaVATrainer(
         model=model,
         tokenizer=tokenizer,
