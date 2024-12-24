@@ -996,7 +996,10 @@ def train(attn_implementation=None):
     ############################distill
     if model_args.distill:
         import pdb;pdb.set_trace()
-        model.old_model = copy.deepcopy(model.model)
+        if training_args.lora_enable:
+            model.old_model = copy.deepcopy(model.base_model)
+        else:
+            model.old_model = copy.deepcopy(model.model)
         for param in model.old_model.parameters():
             param.requires_grad = False
         model.old_model.eval()  # 确保模型在推理模式下，不进行梯度计算
