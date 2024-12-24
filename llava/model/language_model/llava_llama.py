@@ -21,7 +21,6 @@ import torch.nn as nn
 from transformers import AutoConfig, AutoModelForCausalLM, \
     LlamaConfig, LlamaModel, LlamaForCausalLM
 
-
 ################
 # Modified
 # from transformers import AutoConfig, AutoModelForCausalLM, \
@@ -101,20 +100,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 image_sizes
             )
 
-        # return super().forward(
-        #     input_ids=input_ids,
-        #     attention_mask=attention_mask,
-        #     position_ids=position_ids,
-        #     past_key_values=past_key_values,
-        #     inputs_embeds=inputs_embeds,
-        #     labels=labels,
-        #     use_cache=use_cache,
-        #     output_attentions=output_attentions,
-        #     output_hidden_states=output_hidden_states,
-        #     return_dict=return_dict
-        # )
-
-        return self.llama_forward(
+        out_dict = super().forward(
             input_ids=input_ids,
             attention_mask=attention_mask,
             position_ids=position_ids,
@@ -126,7 +112,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict
         )
-
+        return out_dict
 
     @torch.no_grad()
     def generate(
