@@ -24,7 +24,7 @@ import torch.nn as nn
 ################
 # Modified
 from transformers import AutoConfig, AutoModelForCausalLM, \
-                         LlamaConfig, LlamaModel
+    LlamaConfig, LlamaModel
 from .my_llama import LlamaForCausalLM
 from llava.constants import IMAGE_TOKEN_INDEX
 
@@ -54,6 +54,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
     def __init__(self, config):
         super(LlamaForCausalLM, self).__init__(config)
         self.model = LlavaLlamaModel(config)
+        self.old_model = None
         self.pretraining_tp = config.pretraining_tp
         self.vocab_size = config.vocab_size
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
@@ -175,5 +176,3 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
 
 AutoConfig.register("llava_llama", LlavaConfig)
 AutoModelForCausalLM.register(LlavaConfig, LlavaLlamaForCausalLM)
-
-
