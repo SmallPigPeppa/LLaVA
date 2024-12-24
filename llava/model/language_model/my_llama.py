@@ -178,8 +178,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # import pdb;pdb.set_trace()
         # LLaVA 损失计算
         if len(multi_modal_index) > 0:
-            logits_multi_modal = logits[multi_modal_index]
-            labels_multi_modal = labels[multi_modal_index]
+            logits_multi_modal = logits[multi_modal_index].clone()
+            labels_multi_modal = labels[multi_modal_index].clone()
 
             # 移位处理
             shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
@@ -239,9 +239,9 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             else:
                 logits_old = self.lm_head(hidden_states_old)
 
-            logits_pure_text = logits[pure_text_index]
-            logits_pure_text_old = logits_old[pure_text_index]
-            labels_pure_text = labels[pure_text_index]
+            logits_pure_text = logits[pure_text_index].clone()
+            logits_pure_text_old = logits_old[pure_text_index].clone()
+            labels_pure_text = labels[pure_text_index].clone()
 
             # 移位处理
             shift_logits_new = logits_pure_text[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
