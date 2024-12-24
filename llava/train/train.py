@@ -1036,9 +1036,9 @@ def train(attn_implementation=None):
         trainer.train()
 
     ############################distill
-    if model_args.distill:
-        # 删除旧模型并释放内存
-        del model.base_model.model.model_old
+    # if model_args.distill:
+    #     # 删除旧模型并释放内存
+    #     del model.base_model.model.model_old
 
 
     trainer.save_state()
