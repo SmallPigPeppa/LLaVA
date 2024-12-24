@@ -18,8 +18,11 @@ from typing import List, Optional, Tuple, Union
 import torch
 import torch.nn as nn
 
+# from transformers import AutoConfig, AutoModelForCausalLM, \
+#     LlamaConfig, LlamaModel, LlamaForCausalLM
+
 from transformers import AutoConfig, AutoModelForCausalLM, \
-    LlamaConfig, LlamaModel, LlamaForCausalLM
+    LlamaConfig, LlamaModel
 
 ################
 # Modified
