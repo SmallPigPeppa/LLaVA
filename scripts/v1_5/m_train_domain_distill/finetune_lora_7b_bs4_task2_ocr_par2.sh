@@ -48,4 +48,3 @@ python llava/train/train_mem.py \
     --lazy_preprocess True \
     --report_to wandb
 
-echo "OCR task training completed successfully!"
