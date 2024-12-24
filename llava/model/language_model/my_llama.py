@@ -231,6 +231,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 labels=shift_labels_text
             )
 
+        import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
             loss = kd_loss * 10.0 + llava_loss
         elif kd_loss is not None:
