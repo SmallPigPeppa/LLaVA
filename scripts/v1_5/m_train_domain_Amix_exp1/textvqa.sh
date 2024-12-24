@@ -2,7 +2,7 @@
 
 export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=1
-MODEL="llava-v1.5-7b-lora-task-gqa-merged-exp1-ratio0.01"
+MODEL="llava-v1.5-7b-lora-task-gqa-merged-exp1-ratio1.0"
 python -m llava.eval.model_vqa_loader \
     --model-path "continual-ckpt/exp1/$MODEL" \
     --question-file ./playground/data/eval/textvqa/llava_textvqa_val_v051_ocr.jsonl \
