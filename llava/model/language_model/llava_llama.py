@@ -112,6 +112,8 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             logits = self.lm_head(hidden_states)
         logits = logits.float()
 
+        import pdb; pdb.set_trace()
+
         loss = None
         if labels is not None:
             # Shift so that tokens < n predict n
@@ -183,6 +185,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         #     output_hidden_states=output_hidden_states,
         #     return_dict=return_dict
         # )
+
         return self.llama_forward(
             input_ids=input_ids,
             attention_mask=attention_mask,
