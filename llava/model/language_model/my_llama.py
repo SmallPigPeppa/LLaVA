@@ -174,6 +174,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 config.vocab_size]` or -100 (see `input_ids` docstring). Tokens with indices set to `-100` are ignored
                 (masked), the loss is only computed for the tokens with labels in `[0, ..., config.vocab_size]`.
 
+        Returns:
+        # Placeholder for returns (even if the function does not return anything or returns a specific type)
 
         ```python
         "Hey, are you conscious? Can you talk to me?\nI'm not conscious, but I can talk to you."
