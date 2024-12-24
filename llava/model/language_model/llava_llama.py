@@ -83,6 +83,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
     ) -> Union[Tuple, CausalLMOutputWithPast]:
 
         import pdb; pdb.set_trace()
+        input_ids_copy = input_ids.clone()  # Assuming input_ids is a tensor
         if inputs_embeds is None:
             (
                 input_ids,
