@@ -2,12 +2,12 @@
 export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 # Set model as a variable
-MODEL="llava-v1.5-7b-lora-task-ocr-mix-v7-merged"
+MODEL="llava-v1.5-7b-lora-task-gqa-merged-exp1"
 
 export HF_HOME=/ppio_net0/huggingface
-MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged-exp1-mix"
+MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 MODEL_PATH="continual-ckpt/exp1/llava-v1.5-7b-lora-task-gqa"
-OUT_PATH=${MODEL_PATH}-merged
+OUT_PATH="continual-ckpt/exp1/llava-v1.5-7b-lora-task-gqa-merged-exp1"
 
 python -m llava.eval.model_vqa_save_weight_hf_mix \
   --model-path ${MODEL_PATH} \
