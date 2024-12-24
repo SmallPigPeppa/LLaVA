@@ -133,21 +133,22 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             # cache_position=cache_position,
         )
 
-        # hidden_states = outputs[0]
-        # if self.config.pretraining_tp > 1:
-        #     lm_head_slices = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
-        #     logits = [F.linear(hidden_states, lm_head_slices[i]) for i in range(self.config.pretraining_tp)]
-        #     logits = torch.cat(logits, dim=-1)
-        # else:
-        #     logits = self.lm_head(hidden_states)
-        # logits = logits.float()
-        #
-        # if multi_modal_index is None:
-        #     multi_modal_index = []
-        # if pure_text_index is None:
-        #     pure_text_index = []
+        hidden_states = outputs[0]
+        if self.config.pretraining_tp > 1:
+            lm_head_slices = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
+            logits = [F.linear(hidden_states, lm_head_slices[i]) for i in range(self.config.pretraining_tp)]
+            logits = torch.cat(logits, dim=-1)
+        else:
+            logits = self.lm_head(hidden_states)
+        logits = logits.float()
+
+        if multi_modal_index is None:
+            multi_modal_index = []
+        if pure_text_index is None:
+            pure_text_index = []
 
         loss = None
+
         # llava loss
         if len(multi_modal_index) > 0:
             if labels is not None:
@@ -164,6 +165,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 shift_labels = shift_labels.to(shift_logits.device)
                 llava_loss = loss_fct(shift_logits, shift_labels)
 
+        # distill loss
         if len(pure_text_index) > 0:
             logits_pure_text = logits[pure_text_index]
             outputs_old = self.model_old(
@@ -187,6 +189,10 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             else:
                 logits_old = self.lm_head(hidden_states_old)
             logits_old = logits_old.float()
+
+            logits_pure_text=logits[pure_text_index]
+            logits_pure_text_old = logits_old[pure_text_index]
+
 
 
 
