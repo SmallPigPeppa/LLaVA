@@ -870,8 +870,8 @@ def train(attn_implementation=None):
                 # old_model = copy.deepcopy(model.base_model.model)
                 model.model_old = copy.deepcopy(model.model)
                 # model.base_model.old_model = old_model
-                for param in model.model_old.parameters():
-                    param.requires_grad = False
+                # for param in model.model_old.parameters():
+                #     param.requires_grad = False
                 # model.model_old.eval()  # 确保模型在推理模式下，不进行梯度计算
 
 
