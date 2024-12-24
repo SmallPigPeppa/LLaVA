@@ -175,7 +175,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         llava_loss = None
         kd_loss = None
 
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         # LLaVA 损失计算
         if len(multi_modal_index) > 0:
             logits_multi_modal = logits[multi_modal_index]
