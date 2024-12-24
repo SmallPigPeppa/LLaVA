@@ -13,4 +13,4 @@ python -m llava.eval.model_vqa_loader \
 
 python -m llava.eval.eval_textvqa \
     --annotation-file ./playground/data/eval/textvqa/TextVQA_0.5.1_val.json \
-    --result-file ./playground/data/eval/textvqa/answers/$MODEL.json
+    --result-file ./playground/data/eval/textvqa/answers/$MODEL.jsonl
