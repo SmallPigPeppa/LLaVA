@@ -48,6 +48,27 @@ from transformers.models.llama.modeling_llama import LlamaPreTrainedModel, Llama
 _CONFIG_FOR_DOC = "LlamaConfig"
 
 
+class ForwardKLLoss(torch.nn.Module):
+    def __init__(self, ignore_index: int = -100):
+        super().__init__()
+        self.ignore_index = ignore_index
+
+    def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
+        # Implementation from https://github.com/jongwooko/distillm
+        # Computes the softmax of the teacher logits
+        teacher_prob = F.softmax(teacher_logits, dim=-1, dtype=torch.float32)
+        # Computes the student log softmax probabilities
+        student_logprob = F.log_softmax(student_logits, dim=-1, dtype=torch.float32)
+        # Computes the forward KL divergence
+        prod_probs = teacher_prob * student_logprob
+        # Compute the sum
+        x = torch.sum(prod_probs, dim=-1).view(-1)
+        # We don't want to include the ignore labels in the average
+        mask = (labels != self.ignore_index).int()
+        # Loss is averaged over non-ignored targets
+        return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
+
+
 class LlamaForCausalLM(LlamaPreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
@@ -147,27 +168,29 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         if pure_text_index is None:
             pure_text_index = []
 
-        loss = None
+        # LLaVA 损失和蒸馏损失计算
+        loss_fct = CrossEntropyLoss()
+        loss_fkl = ForwardKLLoss()
 
-        # llava loss
+        llava_loss = None
+        kd_loss = None
+
+        # LLaVA 损失计算
         if len(multi_modal_index) > 0:
-            if labels is not None:
-                logits_multi_modal = logits[multi_modal_index]
-                labels_multi_modal = labels[multi_modal_index]
-                # Shift so that tokens < n predict n
-                shift_logits = logits_multi_modal[..., :-1, :].contiguous()
-                shift_labels = labels_multi_modal[..., 1:].contiguous()
-                # Flatten the tokens
-                loss_fct = CrossEntropyLoss()
-                shift_logits = shift_logits.view(-1, self.config.vocab_size)
-                shift_labels = shift_labels.view(-1)
-                # Enable model parallelism
-                shift_labels = shift_labels.to(shift_logits.device)
-                llava_loss = loss_fct(shift_logits, shift_labels)
+            logits_multi_modal = logits[multi_modal_index]
+            labels_multi_modal = labels[multi_modal_index]
 
-        # distill loss
+            # 移位处理
+            shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
+
+            # 计算 LLaVA 损失
+            shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
+            llava_loss = loss_fct(shift_logits, shift_labels)
+
+        # 蒸馏损失计算
         if len(pure_text_index) > 0:
-            logits_pure_text = logits[pure_text_index]
+            # 获取旧模型输出
             outputs_old = self.model_old(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
@@ -178,38 +201,44 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 output_attentions=output_attentions,
                 output_hidden_states=output_hidden_states,
                 return_dict=return_dict,
-                # cache_position=cache_position,
             )
 
             hidden_states_old = outputs_old[0]
+
+            # 计算旧模型的 logits
             if self.config.pretraining_tp > 1:
                 lm_head_slices_old = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
-                logits_old = [F.linear(hidden_states_old, lm_head_slices_old[i]) for i in range(self.config.pretraining_tp)]
+                logits_old = [F.linear(hidden_states_old, lm_head_slices_old[i]) for i in
+                              range(self.config.pretraining_tp)]
                 logits_old = torch.cat(logits_old, dim=-1)
             else:
                 logits_old = self.lm_head(hidden_states_old)
-            logits_old = logits_old.float()
 
-            logits_pure_text=logits[pure_text_index]
+            logits_pure_text = logits[pure_text_index]
             logits_pure_text_old = logits_old[pure_text_index]
+            labels_pure_text = labels[pure_text_index]
 
+            # 移位处理
+            shift_logits_new = logits_pure_text[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_logits_old = logits_pure_text_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_labels_text = labels_pure_text[..., 1:].contiguous().view(-1)
 
+            # 计算蒸馏损失
+            shift_labels_text = shift_labels_text.to(shift_logits_new.device)  # 确保标签在相同设备上
+            kd_loss = loss_fkl(
+                student_logits=shift_logits_new,
+                teacher_logits=shift_logits_old,
+                labels=shift_labels_text
+            )
 
-
-            logits_pure_text_old =
-
-        loss = None
-        if labels is not None:
-            # Shift so that tokens < n predict n
-            shift_logits = logits[..., :-1, :].contiguous()
-            shift_labels = labels[..., 1:].contiguous()
-            # Flatten the tokens
-            loss_fct = CrossEntropyLoss()
-            shift_logits = shift_logits.view(-1, self.config.vocab_size)
-            shift_labels = shift_labels.view(-1)
-            # Enable model parallelism
-            shift_labels = shift_labels.to(shift_logits.device)
-            loss = loss_fct(shift_logits, shift_labels)
+        if kd_loss is not None and llava_loss is not None:
+            loss = kd_loss * 10.0 + llava_loss
+        elif kd_loss is not None:
+            loss = kd_loss * 10.0
+        elif llava_loss is not None:
+            loss = llava_loss
+        else:
+            loss = None  # 如果两个损失都没有，设置为 None
 
         if not return_dict:
             output = (logits,) + outputs[1:]
