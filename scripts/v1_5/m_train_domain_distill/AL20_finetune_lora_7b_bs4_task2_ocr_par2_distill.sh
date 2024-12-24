@@ -2,7 +2,7 @@
 
 # Set Hugging Face cache directory
 export HF_HOME=/mnt/disk3/wzliu/huggingface
-export CUDA_VISIBLE_DEVICES=0,1,2,3
+#export CUDA_VISIBLE_DEVICES=0,1,2,3
 # Manually specify model and vision configuration
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
@@ -29,9 +29,9 @@ deepspeed llava/train/train_mem.py \
     --bf16 True \
     --output_dir ${OUTPUT_DIR} \
     --num_train_epochs 1 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 1 \
-    --gradient_accumulation_steps 4 \
+    --per_device_train_batch_size 16 \
+    --per_device_eval_batch_size 4 \
+    --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
     --save_steps 50000 \
