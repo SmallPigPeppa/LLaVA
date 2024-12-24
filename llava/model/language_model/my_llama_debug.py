@@ -214,7 +214,17 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             #     output_hidden_states=output_hidden_states,
             #     return_dict=return_dict,
             # )
-            kd_loss=0.
+            logits_multi_modal = logits[pure_text_index].clone()
+            labels_multi_modal = labels[pure_text_index].clone()
+
+            # 移位处理
+            shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
+
+            # 计算 LLaVA 损失
+            shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
+            kd_loss = loss_fct(shift_logits, shift_labels)
+            # kd_loss=0.
             # output2 = self.model(
             #     input_ids=input_ids,
             #     attention_mask=attention_mask,
