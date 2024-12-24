@@ -18,14 +18,14 @@ from typing import List, Optional, Tuple, Union
 import torch
 import torch.nn as nn
 
-# from transformers import AutoConfig, AutoModelForCausalLM, \
-#     LlamaConfig, LlamaModel, LlamaForCausalLM
+from transformers import AutoConfig, AutoModelForCausalLM, \
+    LlamaConfig, LlamaModel, LlamaForCausalLM
 
 ################
 # Modified
-from transformers import AutoConfig, AutoModelForCausalLM, \
-                         LlamaConfig, LlamaModel
-from .my_llama import LlamaForCausalLM
+# from transformers import AutoConfig, AutoModelForCausalLM, \
+#                          LlamaConfig, LlamaModel
+# from .my_llama import LlamaForCausalLM
 # from transformers.models.llama.modeling_llama import add_start_docstrings_to_model_forward, \
 #     LLAMA_INPUTS_DOCSTRING, replace_return_docstrings, Cache, CrossEntropyLoss, F
 # _CONFIG_FOR_DOC = "LlamaConfig"
@@ -82,8 +82,8 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         return_dict: Optional[bool] = None,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
 
-        import pdb; pdb.set_trace()
-        input_ids_copy = input_ids.clone()  # Assuming input_ids is a tensor
+        # import pdb; pdb.set_trace()
+        # input_ids_copy = input_ids.clone()  # Assuming input_ids is a tensor
         if inputs_embeds is None:
             (
                 input_ids,
@@ -101,7 +101,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 images,
                 image_sizes
             )
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         out_dict = super().forward(
             input_ids=input_ids,
             attention_mask=attention_mask,
