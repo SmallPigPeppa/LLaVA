@@ -22,7 +22,7 @@ import torch.nn as nn
 #                          LlamaConfig, LlamaModel, LlamaForCausalLM
 from transformers import AutoConfig, AutoModelForCausalLM, \
                          LlamaConfig, LlamaModel
-from ....my_llama.my_model import LlamaForCausalLM
+from .my_llama import LlamaForCausalLM
 
 from transformers.modeling_outputs import CausalLMOutputWithPast
 from transformers.generation.utils import GenerateOutput
