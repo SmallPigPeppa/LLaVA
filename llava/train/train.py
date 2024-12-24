@@ -66,6 +66,7 @@ class ModelArguments:
     mm_patch_merge_type: Optional[str] = field(default='flat')
     mm_vision_select_feature: Optional[str] = field(default="patch")
     previous_task_model: Optional[str] = field(default=None)  # New parameter
+    distill: bool = field(default=False) #
 
 
 @dataclass
@@ -845,7 +846,6 @@ def train(attn_implementation=None):
             )
         ))
 
-
     if model_args.vision_tower is not None:
         if 'mpt' in model_args.model_name_or_path:
             config = transformers.AutoConfig.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
@@ -993,6 +993,13 @@ def train(attn_implementation=None):
                     if training_args.bf16 and module.weight.dtype == torch.float32:
                         module = module.to(torch.bfloat16)
 
+    ############################distill
+    if model_args.distill:
+        model.old_model = copy.deepcopy(model.model)
+        for param in model.old_model.parameters():
+            param.requires_grad = False
+        model.old_model.eval()  # 确保模型在推理模式下，不进行梯度计算
+
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
 
@@ -1007,6 +1014,12 @@ def train(attn_implementation=None):
         trainer.train(resume_from_checkpoint=True)
     else:
         trainer.train()
+
+    ############################distill
+    if model_args.distill:
+        # 删除旧模型并释放内存
+        del model.old_model
+
 
     trainer.save_state()
     model.config.use_cache = True
@@ -1023,10 +1036,7 @@ def train(attn_implementation=None):
             model.save_pretrained(training_args.output_dir, state_dict=state_dict)
             torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, 'non_lora_trainables.bin'))
     else:
-        safe_save_model_for_hf_trainer(trainer=trainer,output_dir=training_args.output_dir)
-
-
-
+        safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
 
 
 if __name__ == "__main__":
