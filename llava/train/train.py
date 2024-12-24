@@ -997,12 +997,17 @@ def train(attn_implementation=None):
     if model_args.distill:
         import pdb;pdb.set_trace()
         if training_args.lora_enable:
-            model.old_model = copy.deepcopy(model.base_model)
+            old_model = copy.deepcopy(model.base_model.model)
+            model.base_model.old_model = old_model
+            for param in model.base_model.old_model.parameters():
+                param.requires_grad = False
+            model.base_model.old_model.eval()  # 确保模型在推理模式下，不进行梯度计算
         else:
-            model.old_model = copy.deepcopy(model.model)
-        for param in model.old_model.parameters():
-            param.requires_grad = False
-        model.old_model.eval()  # 确保模型在推理模式下，不进行梯度计算
+            old_model = copy.deepcopy(model.model)
+            model.old_model = old_model
+            for param in model.old_model.parameters():
+                param.requires_grad = False
+            model.old_model.eval()  # 确保模型在推理模式下，不进行梯度计算
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
