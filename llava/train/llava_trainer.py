@@ -257,3 +257,4 @@ class LLaVATrainer(Trainer):
             self.model.generation_config.do_sample = True  # <------------------------------------- Here, too
             super(LLaVATrainer, self)._save(output_dir, state_dict)
 
+
