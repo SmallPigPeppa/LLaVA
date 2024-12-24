@@ -38,7 +38,6 @@ from transformers.models.llama.modeling_llama import (
 )
 
 if is_flash_attn_2_available():
-    import pdb;pdb.set_trace()
     from flash_attn import flash_attn_func, flash_attn_varlen_func
     from flash_attn.bert_padding import index_first_axis, pad_input, unpad_input  # noqa
 
