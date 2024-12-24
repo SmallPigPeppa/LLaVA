@@ -45,7 +45,7 @@ if is_flash_attn_2_available():
 
 from transformers.models.llama.modeling_llama import LlamaPreTrainedModel, LlamaModel
 
-_CONFIG_FOR_DOC = "LlamaConfig"
+# _CONFIG_FOR_DOC = "LlamaConfig"
 
 
 class LlamaForCausalLM(LlamaPreTrainedModel):
@@ -79,7 +79,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         return self.model
 
     @add_start_docstrings_to_model_forward(LLAMA_INPUTS_DOCSTRING)
-    @replace_return_docstrings(output_type=CausalLMOutputWithPast, config_class=_CONFIG_FOR_DOC)
+    # @replace_return_docstrings(output_type=CausalLMOutputWithPast, config_class=_CONFIG_FOR_DOC)
     def forward(
         self,
         input_ids: torch.LongTensor = None,
