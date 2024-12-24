@@ -998,11 +998,11 @@ def train(attn_implementation=None):
         import pdb;pdb.set_trace()
         if training_args.lora_enable:
             # old_model = copy.deepcopy(model.base_model.model)
-            model.base_model.model.old_model = copy.deepcopy(model.base_model.model.model)
+            model.base_model.model.model_old = copy.deepcopy(model.base_model.model.model)
             # model.base_model.old_model = old_model
-            for param in model.base_model.model.old_model.parameters():
+            for param in model.base_model.model.model_old.parameters():
                 param.requires_grad = False
-            model.base_model.model.old_model.eval()  # 确保模型在推理模式下，不进行梯度计算
+            model.base_model.model.model_old.eval()  # 确保模型在推理模式下，不进行梯度计算
         else:
             old_model = copy.deepcopy(model.model)
             model.old_model = old_model
@@ -1028,7 +1028,7 @@ def train(attn_implementation=None):
     ############################distill
     if model_args.distill:
         # 删除旧模型并释放内存
-        del model.base_model.model.old_model
+        del model.base_model.model.model_old
 
 
     trainer.save_state()
