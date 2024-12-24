@@ -13,7 +13,7 @@ python -m llava.eval.model_vqa_save_weight_hf_mix \
   --model-path ${MODEL_PATH} \
   --model-base ${MODEL_BASE} \
   --save-path ${OUT_PATH} \
-  --lora-scale-factor 0
+  --lora-scale-factor 1.0
 
 
 # Evaluate the model
