@@ -93,6 +93,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
         cache_position: Optional[torch.LongTensor] = None,
+        multi_modal_index: Optional[List[int]] = None,
+        pure_text_index: Optional[List[int]] = None
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         r"""
         Args:
@@ -139,6 +141,12 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         else:
             logits = self.lm_head(hidden_states)
         logits = logits.float()
+
+        if multi_modal_index is None:
+            multi_modal_index = []
+        if pure_text_index is None:
+            pure_text_index = []
+
 
         loss = None
         if labels is not None:
