@@ -1055,14 +1055,14 @@ def train(attn_implementation=None):
                     return
 
                 # 检查模型是否有 old_model 属性
-                if not hasattr(model, 'old_model'):
-                    print("模型没有 'old_model' 属性，无法复制参数。")
+                if not hasattr(model, 'model_old'):
+                    print("模型没有 'model_old' 属性，无法复制参数。")
                     return
 
                 # 复制参数
                 try:
-                    model.old_model.load_state_dict(model.model.state_dict())
-                    print("成功将 model 的参数复制到 old_model。")
+                    model.model_old.load_state_dict(model.model.state_dict())
+                    print("成功将 model 的参数复制到 model_old。")
                 except Exception as e:
                     print(f"复制参数时发生错误: {e}")
 
