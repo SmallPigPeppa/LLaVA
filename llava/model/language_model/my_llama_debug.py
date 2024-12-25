@@ -300,8 +300,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 labels=shift_labels_text
             )
             kd_loss_ce = loss_fct(
-                student_logits=shift_logits_new,
-                labels=shift_labels_text
+                shift_logits_new,
+                shift_labels_text
             )
 
         # import pdb;pdb.set_trace()
