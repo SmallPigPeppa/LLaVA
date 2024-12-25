@@ -268,7 +268,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, all_loss=loss)
         elif llava_loss is not None:
             loss = llava_loss*0.
-            # loss = 0.
             self.report_metrics(llava_loss=llava_loss, all_loss=loss)
         else:
             loss = None  # 如果两个损失都没有，设置为 None
