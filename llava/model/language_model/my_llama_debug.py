@@ -217,8 +217,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
             llava_loss = loss_fct(shift_logits, shift_labels)
 
-        kd_loss = llava_loss
-        kd_loss_ce = llava_loss
+        # kd_loss = llava_loss
+        # kd_loss_ce = llava_loss
         # 蒸馏损失计算
         # if len(pure_text_index) > 0:
         #     # 获取旧模型输出
