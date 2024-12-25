@@ -301,10 +301,13 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
             loss = kd_loss * 10.0 + llava_loss
+            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
         elif kd_loss is not None:
             loss = kd_loss * 10.0
+            self.report_metrics(kd_loss=kd_loss, all_loss=loss)
         elif llava_loss is not None:
             loss = llava_loss
+            self.report_metrics(llava_loss=llava_loss, all_loss=loss)
         else:
             loss = None  # 如果两个损失都没有，设置为 None
 
@@ -312,7 +315,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
-        self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
+
 
         return CausalLMOutputWithPast(
             loss=loss,
