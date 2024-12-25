@@ -4,7 +4,8 @@ import torch.nn as nn
 
 from torch.utils.data import Sampler
 
-from transformers import Trainer
+# from transformers import Trainer
+from hf_mtask_trainer import HfMultiTaskTrainer as Trainer
 from transformers.trainer import (
     is_sagemaker_mp_enabled,
     get_parameter_names,
