@@ -1079,12 +1079,6 @@ def train(attn_implementation=None):
                     print(f"复制参数时发生错误: {e}")
 
             def on_train_end(self, args, state, control, **kwargs):
-                # 获取当前的模型
-                model = kwargs.get('model', None)
-                if model is None:
-                    print("模型未找到，无法删除旧模型。")
-                    return
-
                 # 检查模型是否有 'model_old' 属性
                 if hasattr(model, 'model_old'):
                     try:
