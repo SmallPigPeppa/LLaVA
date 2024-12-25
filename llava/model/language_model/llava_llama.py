@@ -55,7 +55,6 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
     def __init__(self, config):
         super(LlamaForCausalLM, self).__init__(config)
         self.model = LlavaLlamaModel(config)
-        self.model_old = LlavaLlamaModel(config)
         # self.model_old = None
         self.pretraining_tp = config.pretraining_tp
         self.vocab_size = config.vocab_size
@@ -66,6 +65,10 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
 
     def get_model(self):
         return self.model
+
+    def init_model_old(self):
+        import copy
+        self.model_old = copy.copy(self.model)
 
     def forward(
         self,
