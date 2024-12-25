@@ -256,7 +256,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                                   range(self.config.pretraining_tp)]
                     logits_old = torch.cat(logits_old, dim=-1)
                 else:
-                    print("here")
+                    # print("here")
                     logits_old = self.lm_head_old(hidden_states_old)
 
             logits_pure_text = logits[pure_text_index].clone()
