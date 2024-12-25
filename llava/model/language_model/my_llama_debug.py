@@ -200,7 +200,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         if len(pure_text_index) > 0:
             # 获取旧模型输出
             with torch.no_grad():
-                outputs_old = self.model_old(
+                outputs_old = self.model(
                     input_ids=input_ids,
                     attention_mask=attention_mask,
                     position_ids=position_ids,
