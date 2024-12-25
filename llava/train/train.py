@@ -1053,6 +1053,8 @@ def train(attn_implementation=None):
                 # state_dict_x = model.base_model.model.model.state_dict()
                 # filtered_state_dict = {key: value for key, value in state_dict_x.items() if 'vision_tower' not in key}
                 # model.base_model.model.model_old.load_state_dict(filtered_state_dict)
+                import pdb;pdb.set_trace()
+                model.get_model()
                 model.base_model.model.model_old = copy.deepcopy(model.base_model.model.model)
                 print("成功将 model 的参数复制到 model_old。")
 
