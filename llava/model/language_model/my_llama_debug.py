@@ -171,6 +171,17 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 output_hidden_states=output_hidden_states,
                 return_dict=return_dict,
             )
+            hidden_states_old = outputs_old[0]
+            # 计算旧模型的 logits
+            with torch.no_grad():
+                if self.config.pretraining_tp > 1:
+                    lm_head_slices_old = self.lm_head_old.weight.split(self.vocab_size // self.config.pretraining_tp,
+                                                                       dim=0)
+                    logits_old = [F.linear(hidden_states_old, lm_head_slices_old[i]) for i in
+                                  range(self.config.pretraining_tp)]
+                    logits_old = torch.cat(logits_old, dim=-1)
+                else:
+                    logits_old = self.lm_head_old(hidden_states_old)
 
 
         hidden_states = outputs[0]
@@ -213,18 +224,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
-            hidden_states_old = outputs_old[0]
 
-            # 计算旧模型的 logits
-            with torch.no_grad():
-                if self.config.pretraining_tp > 1:
-                    lm_head_slices_old = self.lm_head_old.weight.split(self.vocab_size // self.config.pretraining_tp,
-                                                                       dim=0)
-                    logits_old = [F.linear(hidden_states_old, lm_head_slices_old[i]) for i in
-                                  range(self.config.pretraining_tp)]
-                    logits_old = torch.cat(logits_old, dim=-1)
-                else:
-                    logits_old = self.lm_head_old(hidden_states_old)
 
             logits_pure_text = logits[pure_text_index]
             logits_pure_text_old = logits_old[pure_text_index]
