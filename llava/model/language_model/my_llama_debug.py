@@ -312,6 +312,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
+        self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
+
         return CausalLMOutputWithPast(
             loss=loss,
             logits=logits,
