@@ -68,8 +68,8 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
 
     def init_model_old(self):
         import copy
-        self.model_old = copy.copy(self.model)
-        self.lm_head_old = copy.copy(self.lm_head)
+        self.model_old = copy.deepcopy(self.model)
+        self.lm_head_old = copy.deepcopy(self.lm_head)
         # for param in self.model_old.parameters():
         #     param.requires_grad = False
         # for param in self.lm_head_old.parameters():
