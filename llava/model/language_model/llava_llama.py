@@ -69,9 +69,11 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
     def init_model_old(self):
         import copy
         self.model_old = copy.copy(self.model)
+        self.lm_head_old = copy.copy(self.lm_head)
 
     def del_model_old(self):
         del self.model_old
+        del self.lm_head_old
 
     def forward(
         self,
@@ -184,7 +186,3 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
 
 AutoConfig.register("llava_llama", LlavaConfig)
 AutoModelForCausalLM.register(LlavaConfig, LlavaLlamaForCausalLM)
-
-
-
-
