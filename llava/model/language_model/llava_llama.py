@@ -71,12 +71,12 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         self.model_old = copy.copy(self.model)
         self.lm_head_old = copy.copy(self.lm_head)
         # 将模型的所有参数的 requires_grad 设置为 False
-        # for param in self.model_old.parameters():
-        #     param.requires_grad = False
-        #
-        # # 如果你有其他需要冻结的部分（例如 lm_head），也可以设置为冻结
-        # for param in self.lm_head_old.parameters():
-        #     param.requires_grad = False
+        for param in self.model_old.parameters():
+            param.requires_grad = False
+
+        # 如果你有其他需要冻结的部分（例如 lm_head），也可以设置为冻结
+        for param in self.lm_head_old.parameters():
+            param.requires_grad = False
 
     def del_model_old(self):
         del self.model_old
