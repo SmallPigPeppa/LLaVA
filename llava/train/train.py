@@ -1076,6 +1076,24 @@ def train(attn_implementation=None):
                 except Exception as e:
                     print(f"复制参数时发生错误: {e}")
 
+            def on_train_end(self, args, state, control, **kwargs):
+                # 获取当前的模型
+                model = kwargs.get('model', None)
+                if model is None:
+                    print("模型未找到，无法删除旧模型。")
+                    return
+
+                # 检查模型是否有 'model_old' 属性
+                if hasattr(model, 'model_old'):
+                    try:
+                        # 删除 'model_old' 属性
+                        del model.model_old
+                        print("成功删除 'model_old'。")
+                    except Exception as e:
+                        print(f"删除 'model_old' 时发生错误: {e}")
+                else:
+                    print("模型没有 'model_old' 属性，无法删除。")
+
         trainer.add_callback(MyCallback)
 
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):

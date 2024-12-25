@@ -210,7 +210,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         if len(pure_text_index) > 0:
             # 获取旧模型输出
             with torch.no_grad():
-                outputs_old = self.model_old(
+                outputs_old = self.model(
                     input_ids=input_ids,
                     attention_mask=attention_mask,
                     position_ids=position_ids,
@@ -247,7 +247,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
             # hidden_states_old = output2[0]
             hidden_states_old = outputs_old[0]
-            hidden_states_old = outputs[0]
+            # hidden_states_old = outputs[0]
 
             # 计算旧模型的 logits
             if self.config.pretraining_tp > 1:
