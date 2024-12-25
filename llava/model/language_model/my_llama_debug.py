@@ -55,32 +55,32 @@ class ForwardKLLoss(torch.nn.Module):
         super().__init__()
         self.ignore_index = ignore_index
 
-    def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
-        # Implementation from https://github.com/jongwooko/distillm
-        # Computes the softmax of the teacher logits
-        teacher_prob = F.softmax(teacher_logits, dim=-1)
-        # Computes the student log softmax probabilities
-        student_logprob = F.log_softmax(student_logits, dim=-1)
-        # Computes the forward KL divergence
-        prod_probs = teacher_prob * student_logprob
-        # Compute the sum
-        x = torch.sum(prod_probs, dim=-1).view(-1)
-        # We don't want to include the ignore labels in the average
-        mask = (labels != self.ignore_index).int()
-        # Loss is averaged over non-ignored targets
-        return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
-
     # def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
-    #     # 计算教师 logits 的 softmax 概率
+    #     # Implementation from https://github.com/jongwooko/distillm
+    #     # Computes the softmax of the teacher logits
     #     teacher_prob = F.softmax(teacher_logits, dim=-1)
-    #     # 计算学生 logits 的 log softmax 概率
+    #     # Computes the student log softmax probabilities
     #     student_logprob = F.log_softmax(student_logits, dim=-1)
-    #     # 计算正向 KL 散度
+    #     # Computes the forward KL divergence
     #     prod_probs = teacher_prob * student_logprob
-    #     # 计算求和
+    #     # Compute the sum
     #     x = torch.sum(prod_probs, dim=-1).view(-1)
-    #     # 直接返回损失（不考虑标签和掩码）
-    #     return -torch.mean(x)
+    #     # We don't want to include the ignore labels in the average
+    #     mask = (labels != self.ignore_index).int()
+    #     # Loss is averaged over non-ignored targets
+    #     return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
+
+    def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
+        # 计算教师 logits 的 softmax 概率
+        teacher_prob = F.softmax(teacher_logits, dim=-1)
+        # 计算学生 logits 的 log softmax 概率
+        student_logprob = F.log_softmax(student_logits, dim=-1)
+        # 计算正向 KL 散度
+        prod_probs = teacher_prob * student_logprob
+        # 计算求和
+        x = torch.sum(prod_probs, dim=-1).view(-1)
+        # 直接返回损失（不考虑标签和掩码）
+        return -torch.mean(x)
 
 
 class LlamaForCausalLM(LlamaPreTrainedModel):
