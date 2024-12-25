@@ -1061,6 +1061,7 @@ def train(attn_implementation=None):
 
                 # 复制参数
                 try:
+                    import pdb;pdb.set_trace()
                     model.model_old.load_state_dict(model.model.state_dict())
                     print("成功将 model 的参数复制到 model_old。")
                 except Exception as e:
