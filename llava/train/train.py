@@ -866,7 +866,7 @@ def train(attn_implementation=None):
                 **bnb_model_from_pretrained_args
             )
             if model_args.distill:
-                import pdb;pdb.set_trace()
+                # import pdb;pdb.set_trace()
                 # if training_args.lora_enable:
                 # old_model = copy.deepcopy(model.base_model.model)
                 model.model_old = copy.deepcopy(model.model)
