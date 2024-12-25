@@ -70,6 +70,7 @@ class ForwardKLLoss(torch.nn.Module):
         # Loss is averaged over non-ignored targets
         return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
 
+
 # from transformers.modeling_outputs import dataclass,ModelOutput
 #
 # @dataclass
@@ -215,6 +216,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         llava_loss = None
         kd_loss = None
+        kd_loss_ce = None
 
         # import pdb;pdb.set_trace()
         # LLaVA 损失计算
@@ -297,25 +299,27 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 teacher_logits=shift_logits_old,
                 labels=shift_labels_text
             )
+            kd_loss_ce = loss_fct(
+                student_logits=shift_logits_new,
+                labels=shift_labels_text
+            )
 
         # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
-            loss = kd_loss * 0.75 + llava_loss
-            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
+            loss = (kd_loss * 0.1 + kd_loss_ce) + llava_loss
+            self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         elif kd_loss is not None:
-            loss = kd_loss * 0.75
-            self.report_metrics(kd_loss=kd_loss, all_loss=loss)
+            loss = kd_loss * 0.1 + kd_loss_ce
+            self.report_metrics(kd_loss=kd_loss,kd_loss_ce=kd_loss_ce, all_loss=loss)
         elif llava_loss is not None:
             loss = llava_loss
-            self.report_metrics(llava_loss=llava_loss, all_loss=loss)
+            self.report_metrics(llava_loss=llava_loss,  all_loss=loss)
         else:
             loss = None  # 如果两个损失都没有，设置为 None
 
         if not return_dict:
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
-
-
 
         return CausalLMOutputWithPast(
             loss=loss,
