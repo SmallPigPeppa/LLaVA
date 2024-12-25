@@ -1073,22 +1073,15 @@ def train(attn_implementation=None):
                     # model.model_old.load_state_dict(filtered_state_dict)
                     # import pdb;pdb.set_trace()
                     model.base_model.model.model_old.load_state_dict(filtered_state_dict)
+                    import pdb;pdb.set_trace()
 
                     print("成功将 model 的参数复制到 model_old。")
                 except Exception as e:
                     print(f"复制参数时发生错误: {e}")
 
             def on_train_end(self, args, state, control, **kwargs):
-                # 检查模型是否有 'model_old' 属性
-                if hasattr(model, 'model_old'):
-                    try:
-                        # 删除 'model_old' 属性
-                        del model.model_old
-                        print("成功删除 'model_old'。")
-                    except Exception as e:
-                        print(f"删除 'model_old' 时发生错误: {e}")
-                else:
-                    print("模型没有 'model_old' 属性，无法删除。")
+                # del model.model_old
+                del model.base_model.model.model_old
 
         trainer.add_callback(MyCallback)
 
