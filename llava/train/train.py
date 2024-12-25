@@ -865,11 +865,11 @@ def train(attn_implementation=None):
                 torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
                 **bnb_model_from_pretrained_args
             )
-            if model_args.distill:
-                # import pdb;pdb.set_trace()
-                # if training_args.lora_enable:
-                # old_model = copy.deepcopy(model.base_model.model)
-                model.model_old = copy.deepcopy(model.model)
+            # if model_args.distill:
+            #     # import pdb;pdb.set_trace()
+            #     # if training_args.lora_enable:
+            #     # old_model = copy.deepcopy(model.base_model.model)
+            #     model.model_old = copy.deepcopy(model.model)
                 # model.base_model.old_model = old_model
                 # for param in model.model_old.parameters():
                 #     param.requires_grad = False
@@ -1024,12 +1024,49 @@ def train(attn_implementation=None):
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
     # import pdb;pdb.set_trace()
+
     trainer = LLaVATrainer(
         model=model,
         tokenizer=tokenizer,
         args=training_args,
         **data_module
     )
+
+    if model_args.distill:
+        from transformers import TrainerCallback
+        # class MyCallback(TrainerCallback):
+        #     "A callback that prints a message at the beginning of training"
+        #
+        #     def on_train_begin(self, args, state, control, **kwargs):
+        #         print("Starting training")
+        #
+        # from transformers import TrainerCallback
+
+        class MyCallback(TrainerCallback):
+            """
+            一个回调类，在训练开始时将模型参数复制到 old_model。
+            """
+
+            def on_train_begin(self, args, state, control, **kwargs):
+                # 获取当前的模型
+                model = kwargs.get('model', None)
+                if model is None:
+                    print("模型未找到，无法复制参数。")
+                    return
+
+                # 检查模型是否有 old_model 属性
+                if not hasattr(model, 'old_model'):
+                    print("模型没有 'old_model' 属性，无法复制参数。")
+                    return
+
+                # 复制参数
+                try:
+                    model.old_model.load_state_dict(model.model.state_dict())
+                    print("成功将 model 的参数复制到 old_model。")
+                except Exception as e:
+                    print(f"复制参数时发生错误: {e}")
+
+        trainer.add_callback(MyCallback)
 
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
         trainer.train(resume_from_checkpoint=True)
