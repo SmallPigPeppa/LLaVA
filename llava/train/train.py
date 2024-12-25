@@ -1073,7 +1073,7 @@ def train(attn_implementation=None):
                     # model.model_old.load_state_dict(filtered_state_dict)
                     # import pdb;pdb.set_trace()
                     model.base_model.model.model_old.load_state_dict(filtered_state_dict)
-                    import pdb;pdb.set_trace()
+                    # import pdb;pdb.set_trace()
 
                     print("成功将 model 的参数复制到 model_old。")
                 except Exception as e:
