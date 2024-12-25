@@ -13,7 +13,7 @@ def occupy_gpu_and_compute(gpu_id):
         tensor2 = torch.randn(18, 10000, 10000, device=device)
 
         # 打印确认信息
-        print(f"GPU {gpu_id} is being occupied and computations are being performed.")
+        # print(f"GPU {gpu_id} is being occupied and computations are being performed.")
 
         result_add = tensor1 + tensor2
 
