@@ -281,7 +281,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # LLaVA 损失和蒸馏损失计算
         loss_fct = CrossEntropyLoss()
-        loss_fkl = ForwardKLWithChunkedOutputLoss(ignore_index=IGNORE_INDEX)
+        loss_fkl = ForwardKLLoss(ignore_index=IGNORE_INDEX)
 
         llava_loss = None
         kd_loss = None
