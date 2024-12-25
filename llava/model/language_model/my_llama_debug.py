@@ -194,8 +194,10 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # import pdb;pdb.set_trace()
         # LLaVA 损失计算
         if len(multi_modal_index) > 0:
-            logits_multi_modal = logits[multi_modal_index].clone()
-            labels_multi_modal = labels[multi_modal_index].clone()
+            # logits_multi_modal = logits[multi_modal_index].clone()
+            # labels_multi_modal = labels[multi_modal_index].clone()
+            logits_multi_modal = logits[multi_modal_index]
+            labels_multi_modal = labels[multi_modal_index]
 
             # 移位处理
             shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
@@ -220,33 +222,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                     output_hidden_states=output_hidden_states,
                     return_dict=return_dict,
                 )
-            # output1 = self.model(
-            #     input_ids=input_ids,
-            #     attention_mask=attention_mask,
-            #     position_ids=position_ids,
-            #     past_key_values=past_key_values,
-            #     inputs_embeds=inputs_embeds,
-            #     use_cache=use_cache,
-            #     output_attentions=output_attentions,
-            #     output_hidden_states=output_hidden_states,
-            #     return_dict=return_dict,
-            # )
-            # output2 = self.base_model(
-            #     input_ids=input_ids,
-            #     attention_mask=attention_mask,
-            #     position_ids=position_ids,
-            #     past_key_values=past_key_values,
-            #     inputs_embeds=inputs_embeds,
-            #     use_cache=use_cache,
-            #     output_attentions=output_attentions,
-            #     output_hidden_states=output_hidden_states,
-            #     return_dict=return_dict,
-            # )
-            # import pdb;pdb.set_trace()
-
-            # hidden_states_old = output2[0]
             hidden_states_old = outputs_old[0]
-            # hidden_states_old = outputs[0]
 
             # 计算旧模型的 logits
             with torch.no_grad():
@@ -256,12 +232,14 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                                   range(self.config.pretraining_tp)]
                     logits_old = torch.cat(logits_old, dim=-1)
                 else:
-                    # print("here")
                     logits_old = self.lm_head_old(hidden_states_old)
 
-            logits_pure_text = logits[pure_text_index].clone()
-            logits_pure_text_old = logits_old[pure_text_index].clone()
-            labels_pure_text = labels[pure_text_index].clone()
+            # logits_pure_text = logits[pure_text_index].clone()
+            # logits_pure_text_old = logits_old[pure_text_index].clone()
+            # labels_pure_text = labels[pure_text_index].clone()
+            logits_pure_text = logits[pure_text_index]
+            logits_pure_text_old = logits_old[pure_text_index]
+            labels_pure_text = labels[pure_text_index]
 
             # 移位处理
             shift_logits_new = logits_pure_text[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
