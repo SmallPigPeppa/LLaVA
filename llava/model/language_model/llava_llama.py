@@ -70,10 +70,10 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         import copy
         self.model_old = copy.deepcopy(self.model)
         self.lm_head_old = copy.deepcopy(self.lm_head)
-        # for param in self.model_old.parameters():
-        #     param.requires_grad = False
-        # for param in self.lm_head_old.parameters():
-        #     param.requires_grad = False
+        for param in self.model_old.parameters():
+            param.requires_grad = False
+        for param in self.lm_head_old.parameters():
+            param.requires_grad = False
 
     def del_model_old(self):
         del self.model_old
