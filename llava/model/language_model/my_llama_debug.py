@@ -273,6 +273,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
             # hidden_states_old = output2[0]
             hidden_states_old = outputs_old[0]
+            hidden_states_old = outputs[0]
 
             # 计算旧模型的 logits
             if self.config.pretraining_tp > 1:
