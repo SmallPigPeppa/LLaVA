@@ -18,8 +18,18 @@ from typing import List, Optional, Tuple, Union
 import torch
 import torch.nn as nn
 
+# from transformers import AutoConfig, AutoModelForCausalLM, \
+#     LlamaConfig, LlamaModel, LlamaForCausalLM
+
+################
+# Modified
 from transformers import AutoConfig, AutoModelForCausalLM, \
-    LlamaConfig, LlamaModel, LlamaForCausalLM
+    LlamaConfig, LlamaModel
+from .my_llama_debug import LlamaForCausalLM
+from llava.constants import IMAGE_TOKEN_INDEX
+
+################
+
 
 from transformers.modeling_outputs import CausalLMOutputWithPast
 from transformers.generation.utils import GenerateOutput
@@ -44,6 +54,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
     def __init__(self, config):
         super(LlamaForCausalLM, self).__init__(config)
         self.model = LlavaLlamaModel(config)
+        # self.model_old = None
         self.pretraining_tp = config.pretraining_tp
         self.vocab_size = config.vocab_size
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
@@ -70,6 +81,10 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         return_dict: Optional[bool] = None,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
 
+        multi_modal_index = [i for i in range(input_ids.shape[0]) if IMAGE_TOKEN_INDEX in input_ids[i]]
+        pure_text_index = [i for i in range(input_ids.shape[0]) if IMAGE_TOKEN_INDEX not in input_ids[i]]
+        # import pdb; pdb.set_trace()
+
         if inputs_embeds is None:
             (
                 input_ids,
@@ -87,7 +102,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 images,
                 image_sizes
             )
-
+        # import pdb;pdb.set_trace()
         out_dict = super().forward(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -98,7 +113,9 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             use_cache=use_cache,
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
-            return_dict=return_dict
+            return_dict=return_dict,
+            multi_modal_index=multi_modal_index,
+            pure_text_index=pure_text_index
         )
 
         return out_dict
@@ -159,3 +176,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
 
 AutoConfig.register("llava_llama", LlavaConfig)
 AutoModelForCausalLM.register(LlavaConfig, LlavaLlamaForCausalLM)
+
+
+
+

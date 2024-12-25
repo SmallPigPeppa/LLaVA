@@ -179,17 +179,18 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # import pdb;pdb.set_trace()
         # LLaVA 损失计算
-        if len(multi_modal_index) > 0:
-            logits_multi_modal = logits[multi_modal_index].clone()
-            labels_multi_modal = labels[multi_modal_index].clone()
+        # if len(multi_modal_index) > 0:
+        logits_multi_modal = logits.clone()
+        labels_multi_modal = labels.clone()
 
-            # 移位处理
-            shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-            shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
 
-            # 计算 LLaVA 损失
-            shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
-            llava_loss = loss_fct(shift_logits, shift_labels)
+        # 移位处理
+        shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+        shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
+
+        # 计算 LLaVA 损失
+        shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
+        llava_loss = loss_fkl(shift_logits,shift_logits, shift_labels)
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
