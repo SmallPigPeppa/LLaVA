@@ -205,7 +205,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             # 计算 LLaVA 损失
             shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
             llava_loss = loss_fct(shift_logits, shift_labels)
-        kd_loss=llava_loss
+        kd_loss = llava_loss
+        kd_loss_ce = llava_loss
         # 蒸馏损失计算
         # if len(pure_text_index) > 0:
         #     # 获取旧模型输出
@@ -269,7 +270,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             loss = kd_loss * 1.0
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, all_loss=loss)
         elif llava_loss is not None:
-            loss = llava_loss*0.
+            loss = llava_loss * 0.
             self.report_metrics(llava_loss=llava_loss, all_loss=loss)
         else:
             loss = None  # 如果两个损失都没有，设置为 None
