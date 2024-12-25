@@ -224,8 +224,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
-
-
             logits_pure_text = logits[pure_text_index]
             logits_pure_text_old = logits_old[pure_text_index]
             labels_pure_text = labels[pure_text_index]
