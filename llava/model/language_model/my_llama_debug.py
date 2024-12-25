@@ -50,25 +50,27 @@ _CONFIG_FOR_DOC = "LlamaConfig"
 from llava.constants import IGNORE_INDEX
 
 
-class ForwardKLLoss(torch.nn.Module):
-    def __init__(self, ignore_index: int = IGNORE_INDEX):
-        super().__init__()
-        self.ignore_index = ignore_index
+# class ForwardKLLoss(torch.nn.Module):
+#     def __init__(self, ignore_index: int = IGNORE_INDEX):
+#         super().__init__()
+#         self.ignore_index = ignore_index
+#
+#     def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
+#         # Implementation from https://github.com/jongwooko/distillm
+#         # Computes the softmax of the teacher logits
+#         teacher_prob = F.softmax(teacher_logits, dim=-1)
+#         # Computes the student log softmax probabilities
+#         student_logprob = F.log_softmax(student_logits, dim=-1)
+#         # Computes the forward KL divergence
+#         prod_probs = teacher_prob * student_logprob
+#         # Compute the sum
+#         x = torch.sum(prod_probs, dim=-1).view(-1)
+#         # We don't want to include the ignore labels in the average
+#         mask = (labels != self.ignore_index).int()
+#         # Loss is averaged over non-ignored targets
+#         return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
 
-    def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
-        # Implementation from https://github.com/jongwooko/distillm
-        # Computes the softmax of the teacher logits
-        teacher_prob = F.softmax(teacher_logits, dim=-1)
-        # Computes the student log softmax probabilities
-        student_logprob = F.log_softmax(student_logits, dim=-1)
-        # Computes the forward KL divergence
-        prod_probs = teacher_prob * student_logprob
-        # Compute the sum
-        x = torch.sum(prod_probs, dim=-1).view(-1)
-        # We don't want to include the ignore labels in the average
-        mask = (labels != self.ignore_index).int()
-        # Loss is averaged over non-ignored targets
-        return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
+import torchtune.modules.loss as tloss
 
 
 class LlamaForCausalLM(LlamaPreTrainedModel):
@@ -172,7 +174,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # LLaVA 损失和蒸馏损失计算
         loss_fct = CrossEntropyLoss()
-        loss_fkl = ForwardKLLoss()
+        loss_fkl = tloss.ForwardKLWithChunkedOutputLoss(ignore_index=IGNORE_INDEX)
 
         llava_loss = None
         kd_loss = None
