@@ -170,6 +170,18 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             return_dict=return_dict,
             # cache_position=cache_position,
         )
+        outputs = self.model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            position_ids=position_ids,
+            past_key_values=past_key_values,
+            inputs_embeds=inputs_embeds,
+            use_cache=use_cache,
+            output_attentions=output_attentions,
+            output_hidden_states=output_hidden_states,
+            return_dict=return_dict,
+            # cache_position=cache_position,
+        )
 
         hidden_states = outputs[0]
         if self.config.pretraining_tp > 1:
@@ -222,21 +234,21 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
 
         # 蒸馏损失计算
-        if len(pure_text_index) > 0:
-            # 获取旧模型输出
-            # with torch.no_grad():
-            print(use_cache)
-            outputs_old = self.model(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                position_ids=position_ids,
-                past_key_values=past_key_values,
-                inputs_embeds=inputs_embeds,
-                use_cache=use_cache,
-                output_attentions=output_attentions,
-                output_hidden_states=output_hidden_states,
-                return_dict=return_dict,
-            )
+        # if len(pure_text_index) > 0:
+        #     # 获取旧模型输出
+        #     # with torch.no_grad():
+        #     print(use_cache)
+        #     outputs_old = self.model(
+        #         input_ids=input_ids,
+        #         attention_mask=attention_mask,
+        #         position_ids=position_ids,
+        #         past_key_values=past_key_values,
+        #         inputs_embeds=inputs_embeds,
+        #         use_cache=use_cache,
+        #         output_attentions=output_attentions,
+        #         output_hidden_states=output_hidden_states,
+        #         return_dict=return_dict,
+        #     )
         #     hidden_states_old = outputs_old[0]
         #
         #     # 计算旧模型的 logits
