@@ -1067,12 +1067,12 @@ def train(attn_implementation=None):
                     state_dict_x = model.base_model.model.model.state_dict()
 
                     # # 过滤掉包含 'vision_tower' 键的部分
-                    # filtered_state_dict = {key: value for key, value in state_dict_x.items() if 'vision_tower' not in key}
-                    #
-                    # # 加载过滤后的 state_dict
+                    filtered_state_dict = {key: value for key, value in state_dict_x.items() if 'vision_tower' not in key}
+
+                    # 加载过滤后的 state_dict
                     # model.model_old.load_state_dict(filtered_state_dict)
-                    import pdb;pdb.set_trace()
-                    model.base_model.model.model_old.load_state_dict(state_dict_x)
+                    # import pdb;pdb.set_trace()
+                    model.base_model.model.model_old.load_state_dict(filtered_state_dict)
 
                     print("成功将 model 的参数复制到 model_old。")
                 except Exception as e:
