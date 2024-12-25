@@ -70,45 +70,19 @@ class ForwardKLLoss(torch.nn.Module):
         # Loss is averaged over non-ignored targets
         return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
 
+    # def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
+    #     # 计算教师 logits 的 softmax 概率
+    #     teacher_prob = F.softmax(teacher_logits, dim=-1)
+    #     # 计算学生 logits 的 log softmax 概率
+    #     student_logprob = F.log_softmax(student_logits, dim=-1)
+    #     # 计算正向 KL 散度
+    #     prod_probs = teacher_prob * student_logprob
+    #     # 计算求和
+    #     x = torch.sum(prod_probs, dim=-1).view(-1)
+    #     # 直接返回损失（不考虑标签和掩码）
+    #     return -torch.mean(x)
 
-# from transformers.modeling_outputs import dataclass,ModelOutput
-#
-# @dataclass
-# class CausalLMOutputWithPast(ModelOutput):
-#     """
-#     Base class for causal language model (or autoregressive) outputs.
-#
-#     Args:
-#         loss (`torch.FloatTensor` of shape `(1,)`, *optional*, returned when `labels` is provided):
-#             Language modeling loss (for next-token prediction).
-#         logits (`torch.FloatTensor` of shape `(batch_size, sequence_length, config.vocab_size)`):
-#             Prediction scores of the language modeling head (scores for each vocabulary token before SoftMax).
-#         past_key_values (`tuple(tuple(torch.FloatTensor))`, *optional*, returned when `use_cache=True` is passed or when `config.use_cache=True`):
-#             Tuple of `tuple(torch.FloatTensor)` of length `config.n_layers`, with each tuple having 2 tensors of shape
-#             `(batch_size, num_heads, sequence_length, embed_size_per_head)`)
-#
-#             Contains pre-computed hidden-states (key and values in the self-attention blocks) that can be used (see
-#             `past_key_values` input) to speed up sequential decoding.
-#         hidden_states (`tuple(torch.FloatTensor)`, *optional*, returned when `output_hidden_states=True` is passed or when `config.output_hidden_states=True`):
-#             Tuple of `torch.FloatTensor` (one for the output of the embeddings, if the model has an embedding layer, +
-#             one for the output of each layer) of shape `(batch_size, sequence_length, hidden_size)`.
-#
-#             Hidden-states of the model at the output of each layer plus the optional initial embedding outputs.
-#         attentions (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed or when `config.output_attentions=True`):
-#             Tuple of `torch.FloatTensor` (one for each layer) of shape `(batch_size, num_heads, sequence_length,
-#             sequence_length)`.
-#
-#             Attentions weights after the attention softmax, used to compute the weighted average in the self-attention
-#             heads.
-#     """
-#
-#     loss: Optional[torch.FloatTensor] = None
-#     kd_loss: Optional[torch.FloatTensor] = None
-#     llava_loss: Optional[torch.FloatTensor] = None
-#     logits: torch.FloatTensor = None
-#     past_key_values: Optional[Tuple[Tuple[torch.FloatTensor]]] = None
-#     hidden_states: Optional[Tuple[torch.FloatTensor, ...]] = None
-#     attentions: Optional[Tuple[torch.FloatTensor, ...]] = None
+
 
 class LlamaForCausalLM(LlamaPreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
@@ -311,10 +285,10 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         elif kd_loss is not None:
             loss = kd_loss * 0.1 + kd_loss_ce
-            self.report_metrics(kd_loss=kd_loss,kd_loss_ce=kd_loss_ce, all_loss=loss)
+            self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, all_loss=loss)
         elif llava_loss is not None:
             loss = llava_loss
-            self.report_metrics(llava_loss=llava_loss,  all_loss=loss)
+            self.report_metrics(llava_loss=llava_loss, all_loss=loss)
         else:
             loss = None  # 如果两个损失都没有，设置为 None
 
