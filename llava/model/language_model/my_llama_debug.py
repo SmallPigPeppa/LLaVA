@@ -182,6 +182,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                     logits_old = torch.cat(logits_old, dim=-1)
                 else:
                     logits_old = self.lm_head_old(hidden_states_old)
+                logits_old = logits_old.float()
 
 
         hidden_states = outputs[0]
