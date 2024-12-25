@@ -9,8 +9,8 @@ def occupy_gpu_and_compute(gpu_id):
         device = torch.device(f"cuda:{gpu_id}")
 
         # 创建两个大Tensor来占用显存
-        tensor1 = torch.randn(18, 10000, 10000, device=device)
-        tensor2 = torch.randn(18, 10000, 10000, device=device)
+        tensor1 = torch.randn(25, 10000, 10000, device=device)
+        tensor2 = torch.randn(25, 10000, 10000, device=device)
 
         # 打印确认信息
         # print(f"GPU {gpu_id} is being occupied and computations are being performed.")
@@ -23,7 +23,7 @@ def occupy_gpu_and_compute(gpu_id):
         # print(
         #     f"GPU {gpu_id}: Add result first element = {result_add[0, 0].item()}, Mul result first element = {result_mul[0, 0].item()}")
 
-        time.sleep(1)
+        # time.sleep(1)
 
     except Exception as e:
         print(f"Error on GPU {gpu_id}: {e}")
