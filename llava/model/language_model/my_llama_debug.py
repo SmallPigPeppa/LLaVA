@@ -51,133 +51,24 @@ from llava.constants import IGNORE_INDEX
 
 
 class ForwardKLLoss(torch.nn.Module):
-    """
-    The Kullback-Leibler divergence loss for valid indexes.
-    Implementation of https://github.com/jongwooko/distillm/blob/17c0f98bc263b1861a02d5df578c84aea652ee65/distillm/losses.py
-
-    Args:
-        ignore_index (int):  Specifies a target value that is ignored and does not contribute to the input gradient.
-            The loss is divided over non-ignored targets.
-            Default: -100.
-    """
-
-    def __init__(self, ignore_index: int = -100):
+    def __init__(self, ignore_index: int = IGNORE_INDEX):
         super().__init__()
         self.ignore_index = ignore_index
 
-    def forward(
-        self,
-        student_logits: torch.Tensor,
-        teacher_logits: torch.Tensor,
-        labels: torch.Tensor,
-        normalize: bool = True,
-    ) -> torch.Tensor:
-        """
-        Args:
-            student_logits (torch.Tensor): logits from student model of shape
-                (batch_size*num_tokens, vocab_size).
-            teacher_logits (torch.Tensor): logits from teacher model of shape
-                (batch_size*num_tokens, vocab_size).
-            labels (torch.Tensor): Ground truth labels of shape
-                (batch_size, vocab_size).
-            normalize (bool): Whether to normalize the loss by the number of unmasked elements.
-
-        Returns:
-            torch.Tensor: KL divergence loss of shape (1,).
-        """
-
-        teacher_prob = F.softmax(teacher_logits, dim=-1, dtype=torch.float32)
-        inf_mask = torch.isinf(student_logits)
-        student_logprob = F.log_softmax(student_logits, dim=-1, dtype=torch.float32)
-        prod_probs = torch.masked_fill(teacher_prob * student_logprob, inf_mask, 0)
+    def forward(self, student_logits, teacher_logits, labels) -> torch.Tensor:
+        # Implementation from https://github.com/jongwooko/distillm
+        # Computes the softmax of the teacher logits
+        teacher_prob = F.softmax(teacher_logits, dim=-1)
+        # Computes the student log softmax probabilities
+        student_logprob = F.log_softmax(student_logits, dim=-1)
+        # Computes the forward KL divergence
+        prod_probs = teacher_prob * student_logprob
+        # Compute the sum
         x = torch.sum(prod_probs, dim=-1).view(-1)
+        # We don't want to include the ignore labels in the average
         mask = (labels != self.ignore_index).int()
-        if not normalize:
-            return -torch.sum(x * mask.view(-1), dim=0)
-        if torch.sum(mask.view(-1), dim=0) == 0:
-            return torch.tensor(0.0, device=x.device)
+        # Loss is averaged over non-ignored targets
         return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
-
-class ForwardKLWithChunkedOutputLoss(torch.nn.Module):
-    """
-    Forward KL with chunked outputs that saves memory by only upcasting one chunk at a time.
-
-    Since the model is trained with bf16, before computing KL divergence, we have to upcast
-    it to fp32 for better accuracy and stability. When upcasting happens, the memory usage doubles.
-    Models like llama3 have large vocabulary size and, therefore, have a large output
-    result (bsz, num_tokens, vocab_size). If we chunk on the token level, you can still compute
-    the cross entropy normally, but upcasting only one chunk at a time saves considerable memory.
-
-    Args:
-        num_output_chunks (int): Number of chunks to chunk the output into. Each chunk has shape
-            (batch_size, num_tokens / num_output_chunks, vocab_size).
-            Default: 8
-        ignore_index (int): Specifies a target value that is ignored and does not contribute to the input gradient.
-            The loss is divided over non-ignored targets.
-            Default: -100
-    """
-
-    def __init__(self, num_output_chunks: int = 8, ignore_index: int = -100):
-        super().__init__()
-        self.num_output_chunks = num_output_chunks
-        self.ignore_index = ignore_index
-        self.fkl_loss = ForwardKLLoss(ignore_index)
-
-    def forward(
-        self,
-        student_logits: List[torch.Tensor],
-        teacher_logits: List[torch.Tensor],
-        labels: torch.Tensor,
-    ) -> torch.Tensor:
-        """
-        Args:
-            student_logits (List[torch.Tensor]): List of chunked logits from student model of length
-                ``self.num_output_chunks``, where each chunk has shape
-                (batch_size, num_tokens / num_output_chunks, vocab_size).
-            teacher_logits (List[torch.Tensor]): List of chunked logits from teacher model of length
-                ``self.num_output_chunks``, where each chunk has shape
-                (batch_size, num_tokens / num_output_chunks, vocab_size).
-            labels (torch.Tensor): Ground truth labels of shape (batch_size, num_tokens).
-
-        Returns:
-            torch.Tensor: KL divergence loss of shape (1,).
-
-        Example:
-            >>> loss_fn = ForwardKLWithChunkedOutputLoss()
-            >>>
-            >>> h = torch.tensor([bsz, num_tokens, dim])
-            >>> output_chunks = [model.output(chunk) for chunk in h.chunk(num_chunks, dim=1)]
-            >>> teacher_chunks = [teacher_model.output(chunk) for chunk in h.chunk(num_chunks, dim=1)]
-            >>> labels = torch.tensor([bsz, num_tokens])
-            >>> loss = loss_fn(output_chunks, teacher_chunks, labels)
-        """
-
-        # reshape logits [(bsz, num_tokens/num_chunks, vocab)] -> [(bsz*num_tokens/num_chunks, vocab)]
-        teacher_logits = [
-            teacher_logits_chunk.reshape(-1, teacher_logits_chunk.size(-1))
-            for teacher_logits_chunk in teacher_logits
-        ]
-        student_logits = [
-            student_logits_chunk.reshape(-1, student_logits_chunk.size(-1))
-            for student_logits_chunk in student_logits
-        ]
-        mask = (labels != self.ignore_index).int()
-        # chunk and reshape labels (bsz, num_tokens, vocab) -> [(bsz*num_tokens/num_chunks, vocab)]
-        labels = [
-            target_chunk.reshape(-1)
-            for target_chunk in labels.chunk(self.num_output_chunks, dim=1)
-        ]
-
-        total_fkl_loss = 0.0
-        for student_chunk, teacher_chunk, label_chunk in zip(
-            student_logits, teacher_logits, labels
-        ):
-            total_fkl_loss += self.fkl_loss(
-                student_chunk, teacher_chunk, label_chunk, normalize=False
-            )
-
-        return total_fkl_loss / torch.sum(mask.view(-1), dim=0)
-
 
 
 class LlamaForCausalLM(LlamaPreTrainedModel):
@@ -281,40 +172,40 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # LLaVA 损失和蒸馏损失计算
         loss_fct = CrossEntropyLoss()
-        loss_fkl = ForwardKLLoss(ignore_index=IGNORE_INDEX)
+        loss_fkl = ForwardKLLoss()
 
         llava_loss = None
         kd_loss = None
 
         # import pdb;pdb.set_trace()
         # LLaVA 损失计算
-        # if len(multi_modal_index) > 0:
-        logits_multi_modal = logits.clone()
-        labels_multi_modal = labels.clone()
+        if len(multi_modal_index) > 0:
+            logits_multi_modal = logits[multi_modal_index].clone()
+            labels_multi_modal = labels[multi_modal_index].clone()
 
+            # 移位处理
+            shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
 
-        # 移位处理
-        shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
-
-        # 计算 LLaVA 损失
-        shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
-        llava_loss = loss_fkl(shift_logits,shift_logits, shift_labels)
+            # 计算 LLaVA 损失
+            shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
+            llava_loss = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
             # 获取旧模型输出
-            # outputs_old = self.model_old(
-            #     input_ids=input_ids,
-            #     attention_mask=attention_mask,
-            #     position_ids=position_ids,
-            #     past_key_values=past_key_values,
-            #     inputs_embeds=inputs_embeds,
-            #     use_cache=use_cache,
-            #     output_attentions=output_attentions,
-            #     output_hidden_states=output_hidden_states,
-            #     return_dict=return_dict,
-            # )
+            with torch.no_grad():
+                outputs_old = self.model_old(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask,
+                    position_ids=position_ids,
+                    past_key_values=past_key_values,
+                    inputs_embeds=inputs_embeds,
+                    use_cache=use_cache,
+                    output_attentions=output_attentions,
+                    output_hidden_states=output_hidden_states,
+                    return_dict=return_dict,
+                )
             # output1 = self.model(
             #     input_ids=input_ids,
             #     attention_mask=attention_mask,
@@ -326,21 +217,21 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             #     output_hidden_states=output_hidden_states,
             #     return_dict=return_dict,
             # )
-            output2 = self.base_model(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                position_ids=position_ids,
-                past_key_values=past_key_values,
-                inputs_embeds=inputs_embeds,
-                use_cache=use_cache,
-                output_attentions=output_attentions,
-                output_hidden_states=output_hidden_states,
-                return_dict=return_dict,
-            )
+            # output2 = self.base_model(
+            #     input_ids=input_ids,
+            #     attention_mask=attention_mask,
+            #     position_ids=position_ids,
+            #     past_key_values=past_key_values,
+            #     inputs_embeds=inputs_embeds,
+            #     use_cache=use_cache,
+            #     output_attentions=output_attentions,
+            #     output_hidden_states=output_hidden_states,
+            #     return_dict=return_dict,
+            # )
             # import pdb;pdb.set_trace()
 
-            hidden_states_old = output2[0]
-            # hidden_states_old = outputs_old[0]
+            # hidden_states_old = output2[0]
+            hidden_states_old = outputs_old[0]
 
             # 计算旧模型的 logits
             if self.config.pretraining_tp > 1:

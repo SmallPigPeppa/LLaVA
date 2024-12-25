@@ -865,15 +865,15 @@ def train(attn_implementation=None):
                 torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
                 **bnb_model_from_pretrained_args
             )
-            # if model_args.distill:
-            #     import pdb;pdb.set_trace()
-            #     # if training_args.lora_enable:
-            #     # old_model = copy.deepcopy(model.base_model.model)
-            #     model.model_old = copy.deepcopy(model.model)
-            #     # model.base_model.old_model = old_model
-            #     # for param in model.model_old.parameters():
-            #     #     param.requires_grad = False
-            #     # model.model_old.eval()  # 确保模型在推理模式下，不进行梯度计算
+            if model_args.distill:
+                import pdb;pdb.set_trace()
+                # if training_args.lora_enable:
+                # old_model = copy.deepcopy(model.base_model.model)
+                model.model_old = copy.deepcopy(model.model)
+                # model.base_model.old_model = old_model
+                # for param in model.model_old.parameters():
+                #     param.requires_grad = False
+                # model.model_old.eval()  # 确保模型在推理模式下，不进行梯度计算
 
 
     else:
