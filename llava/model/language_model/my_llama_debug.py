@@ -228,7 +228,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 position_ids=position_ids,
                 past_key_values=past_key_values,
                 inputs_embeds=inputs_embeds,
-                use_cache=use_cache,
+                use_cache=False,
                 output_attentions=output_attentions,
                 output_hidden_states=output_hidden_states,
                 return_dict=return_dict,
