@@ -83,7 +83,6 @@ class ForwardKLLoss(torch.nn.Module):
     #     return -torch.mean(x)
 
 
-
 class LlamaForCausalLM(LlamaPreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
@@ -227,7 +226,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             # 计算旧模型的 logits
             with torch.no_grad():
                 if self.config.pretraining_tp > 1:
-                    lm_head_slices_old = self.lm_head_old.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
+                    lm_head_slices_old = self.lm_head_old.weight.split(self.vocab_size // self.config.pretraining_tp,
+                                                                       dim=0)
                     logits_old = [F.linear(hidden_states_old, lm_head_slices_old[i]) for i in
                                   range(self.config.pretraining_tp)]
                     logits_old = torch.cat(logits_old, dim=-1)
@@ -261,12 +261,14 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
             loss = kd_loss * 1.0 + llava_loss
+            loss = kd_loss * 1.0
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         elif kd_loss is not None:
             loss = kd_loss * 1.0
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, all_loss=loss)
         elif llava_loss is not None:
             loss = llava_loss
+            loss = 0.
             self.report_metrics(llava_loss=llava_loss, all_loss=loss)
         else:
             loss = None  # 如果两个损失都没有，设置为 None
