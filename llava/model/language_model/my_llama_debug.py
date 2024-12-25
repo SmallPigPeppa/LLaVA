@@ -153,6 +153,9 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         )
 
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
+        print("output_attentions",output_attentions)
+        print("output_hidden_states",output_hidden_states)
+
         # import pdb;pdb.set_trace()
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
         outputs = self.model(
