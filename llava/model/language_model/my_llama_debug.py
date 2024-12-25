@@ -208,8 +208,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # LLaVA 损失计算
         if len(multi_modal_index) > 0:
-            # logits_multi_modal = logits[multi_modal_index].clone()
-            # labels_multi_modal = labels[multi_modal_index].clone()
             logits_multi_modal = logits[multi_modal_index]
             labels_multi_modal = labels[multi_modal_index]
 
@@ -218,7 +216,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
 
             # 计算 LLaVA 损失
-            shift_labels = shift_labels.to(shift_logits.device)  # 确保标签在相同的设备上
+            shift_labels = shift_labels.to(shift_logits.device)
             llava_loss = loss_fct(shift_logits, shift_labels)
 
 
@@ -248,7 +246,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
             loss = kd_loss * 10.0 + llava_loss
-            # loss = kd_loss * 1.0
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         elif kd_loss is not None:
             loss = kd_loss * 10.0
@@ -263,7 +260,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
-        # print(self.generate())
 
         return CausalLMOutputWithPast(
             loss=loss,
