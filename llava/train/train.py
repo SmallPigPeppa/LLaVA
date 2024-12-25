@@ -66,7 +66,7 @@ class ModelArguments:
     mm_patch_merge_type: Optional[str] = field(default='flat')
     mm_vision_select_feature: Optional[str] = field(default="patch")
     previous_task_model: Optional[str] = field(default=None)  # New parameter
-    distill: bool = field(default=False) #
+    distill: bool = field(default=False)  #
 
 
 @dataclass
@@ -409,7 +409,8 @@ def preprocess_llama_2(
                     f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
                     f" (ignored)"
                 )
-                import pdb;pdb.set_trace()
+                import pdb;
+                pdb.set_trace()
 
     return dict(
         input_ids=input_ids,
@@ -870,10 +871,10 @@ def train(attn_implementation=None):
             #     # if training_args.lora_enable:
             #     # old_model = copy.deepcopy(model.base_model.model)
             #     model.model_old = copy.deepcopy(model.model)
-                # model.base_model.old_model = old_model
-                # for param in model.model_old.parameters():
-                #     param.requires_grad = False
-                # model.model_old.eval()  # 确保模型在推理模式下，不进行梯度计算
+            # model.base_model.old_model = old_model
+            # for param in model.model_old.parameters():
+            #     param.requires_grad = False
+            # model.model_old.eval()  # 确保模型在推理模式下，不进行梯度计算
 
 
     else:
@@ -1048,36 +1049,12 @@ def train(attn_implementation=None):
             """
 
             def on_train_begin(self, args, state, control, **kwargs):
-                # 获取当前的模型
-                model = kwargs.get('model', None)
-                if model is None:
-                    print("模型未找到，无法复制参数。")
-                    return
-
-                # 检查模型是否有 old_model 属性
-                if not hasattr(model, 'model_old'):
-                    print("模型没有 'model_old' 属性，无法复制参数。")
-                    return
-
-                # 复制参数
-                try:
-                    # import pdb;pdb.set_trace()
-                    # model.model_old.load_state_dict(model.model.state_dict())
-                    # 获取当前的 state_dict
-                    state_dict_x = model.base_model.model.model.state_dict()
-
-                    # # 过滤掉包含 'vision_tower' 键的部分
-                    filtered_state_dict = {key: value for key, value in state_dict_x.items() if 'vision_tower' not in key}
-
-                    # 加载过滤后的 state_dict
-                    # model.model_old.load_state_dict(filtered_state_dict)
-                    # import pdb;pdb.set_trace()
-                    model.base_model.model.model_old.load_state_dict(filtered_state_dict)
-                    # import pdb;pdb.set_trace()
-
-                    print("成功将 model 的参数复制到 model_old。")
-                except Exception as e:
-                    print(f"复制参数时发生错误: {e}")
+                # import pdb;pdb.set_trace()
+                # state_dict_x = model.base_model.model.model.state_dict()
+                # filtered_state_dict = {key: value for key, value in state_dict_x.items() if 'vision_tower' not in key}
+                # model.base_model.model.model_old.load_state_dict(filtered_state_dict)
+                model.base_model.model.model_old = copy.deepcopy(model.base_model.model.model)
+                print("成功将 model 的参数复制到 model_old。")
 
             def on_train_end(self, args, state, control, **kwargs):
                 # del model.model_old
@@ -1094,7 +1071,6 @@ def train(attn_implementation=None):
     # if model_args.distill:
     #     # 删除旧模型并释放内存
     #     del model.base_model.model.model_old
-
 
     trainer.save_state()
     model.config.use_cache = True
