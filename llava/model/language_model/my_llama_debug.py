@@ -276,6 +276,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
+        # print(self.generate())
+
         return CausalLMOutputWithPast(
             loss=loss,
             logits=logits,
