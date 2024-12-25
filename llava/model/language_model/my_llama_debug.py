@@ -159,6 +159,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         )
 
         with torch.no_grad():
+            # 获取旧模型输出
             outputs_old = self.model(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
@@ -212,9 +213,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
-            # 获取旧模型输出
-
-
             hidden_states_old = outputs_old[0]
 
             # 计算旧模型的 logits
