@@ -49,6 +49,7 @@ class LlavaLlamaModel(LlavaMetaModel, LlamaModel):
 
 
 class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
+    supports_report_metrics: bool = True
     config_class = LlavaConfig
 
     def __init__(self, config):
