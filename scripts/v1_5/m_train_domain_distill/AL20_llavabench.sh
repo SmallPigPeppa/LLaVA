@@ -4,7 +4,6 @@ export CUDA_VISIBLE_DEVICES=0
 # Set model as a variable
 MODEL="llava-v1.5-7b-lora-task-ocr-distill-merged"
 
-#export HF_HOME=/ppio_net0/huggingface
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill"
 OUT_PATH=${MODEL_PATH}-merged
