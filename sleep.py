@@ -20,8 +20,8 @@ def occupy_gpu_and_compute(gpu_id):
         # 乘法计算
         result_mul = tensor1 * tensor2
 
-        print(
-            f"GPU {gpu_id}: Add result first element = {result_add[0, 0].item()}, Mul result first element = {result_mul[0, 0].item()}")
+        # print(
+        #     f"GPU {gpu_id}: Add result first element = {result_add[0, 0].item()}, Mul result first element = {result_mul[0, 0].item()}")
 
         time.sleep(1)
 
