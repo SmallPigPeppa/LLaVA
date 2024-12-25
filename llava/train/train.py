@@ -1061,6 +1061,7 @@ def train(attn_implementation=None):
 
             def on_train_end(self, args, state, control, **kwargs):
                 # del model.model_old
+                model.del_model_old()
                 del model.base_model.model.model_old
 
         trainer.add_callback(MyCallback)

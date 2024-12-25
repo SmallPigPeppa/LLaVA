@@ -70,6 +70,9 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         import copy
         self.model_old = copy.copy(self.model)
 
+    def del_model_old(self):
+        del self.model_old
+
     def forward(
         self,
         input_ids: torch.LongTensor = None,
