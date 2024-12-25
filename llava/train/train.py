@@ -866,7 +866,7 @@ def train(attn_implementation=None):
                 torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
                 **bnb_model_from_pretrained_args
             )
-            model.init_model_old()
+            # model.init_model_old()
             # if model_args.distill:
             #     # import pdb;pdb.set_trace()
             #     # if training_args.lora_enable:
@@ -1048,17 +1048,20 @@ def train(attn_implementation=None):
             """
             一个回调类，在训练开始时将模型参数复制到 old_model。
             """
+            def on_init_end(self, args, state, control, **kwargs):
+                model.init_model_old()
+                print("成功将 model 的参数复制到 model_old")
 
-            def on_train_begin(self, args, state, control, **kwargs):
-                # import pdb;pdb.set_trace()
-                # state_dict_x = model.base_model.model.model.state_dict()
-                # filtered_state_dict = {key: value for key, value in state_dict_x.items() if 'vision_tower' not in key}
-                # model.base_model.model.model_old.load_state_dict(filtered_state_dict)
-                # import pdb;pdb.set_trace()
-                # model.get_model()
-                # model.base_model.model.model_old = copy.deepcopy(model.base_model.model.model)
-                # model.init_model_old()
-                print("成功将 model 的参数复制到 model_old。")
+            # def on_train_begin(self, args, state, control, **kwargs):
+            #     # import pdb;pdb.set_trace()
+            #     # state_dict_x = model.base_model.model.model.state_dict()
+            #     # filtered_state_dict = {key: value for key, value in state_dict_x.items() if 'vision_tower' not in key}
+            #     # model.base_model.model.model_old.load_state_dict(filtered_state_dict)
+            #     # import pdb;pdb.set_trace()
+            #     # model.get_model()
+            #     # model.base_model.model.model_old = copy.deepcopy(model.base_model.model.model)
+            #     model.init_model_old()
+            #     print("成功将 model 的参数复制到 model_old。")
 
             def on_train_end(self, args, state, control, **kwargs):
                 # del model.model_old
