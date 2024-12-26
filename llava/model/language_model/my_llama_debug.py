@@ -173,16 +173,15 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             )
             hidden_states_old = outputs_old[0]
             # 计算旧模型的 logits
-            with torch.no_grad():
-                if self.config.pretraining_tp > 1:
-                    lm_head_slices_old = self.lm_head_old.weight.split(self.vocab_size // self.config.pretraining_tp,
-                                                                       dim=0)
-                    logits_old = [F.linear(hidden_states_old, lm_head_slices_old[i]) for i in
-                                  range(self.config.pretraining_tp)]
-                    logits_old = torch.cat(logits_old, dim=-1)
-                else:
-                    logits_old = self.lm_head_old(hidden_states_old)
-                logits_old = logits_old.float()
+            if self.config.pretraining_tp > 1:
+                lm_head_slices_old = self.lm_head_old.weight.split(self.vocab_size // self.config.pretraining_tp,
+                                                                   dim=0)
+                logits_old = [F.linear(hidden_states_old, lm_head_slices_old[i]) for i in
+                              range(self.config.pretraining_tp)]
+                logits_old = torch.cat(logits_old, dim=-1)
+            else:
+                logits_old = self.lm_head_old(hidden_states_old)
+            logits_old = logits_old.float()
 
 
         hidden_states = outputs[0]
