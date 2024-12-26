@@ -219,6 +219,16 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             shift_labels = shift_labels.to(shift_logits.device)
             llava_loss = loss_fct(shift_logits, shift_labels)
 
+        logits_multi_modal = logits
+        labels_multi_modal = labels
+
+        # 移位处理
+        shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+        shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
+
+        # 计算 LLaVA 损失
+        shift_labels = shift_labels.to(shift_logits.device)
+        loss_x = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
@@ -262,7 +272,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
 
         return CausalLMOutputWithPast(
-            loss=loss,
+            loss=loss_x,
             logits=logits,
             past_key_values=outputs.past_key_values,
             hidden_states=outputs.hidden_states,
