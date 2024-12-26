@@ -1034,8 +1034,6 @@ def train(attn_implementation=None):
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
 
-    import transformers
-    import torch
 
     # Assuming model_args, training_args, model_teacher, and conversation_lib are defined
     if 'mpt' in model_args.model_name_or_path:
