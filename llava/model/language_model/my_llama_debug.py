@@ -204,17 +204,17 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         kd_loss_ce = None
 
         # LLaVA 损失计算
-        if len(multi_modal_index) > 0:
-            logits_multi_modal = logits[multi_modal_index]
-            labels_multi_modal = labels[multi_modal_index]
-
-            # 移位处理
-            shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-            shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
-
-            # 计算 LLaVA 损失
-            shift_labels = shift_labels.to(shift_logits.device)
-            llava_loss = loss_fct(shift_logits, shift_labels)
+        # if len(multi_modal_index) > 0:
+        #     logits_multi_modal = logits[multi_modal_index]
+        #     labels_multi_modal = labels[multi_modal_index]
+        #
+        #     # 移位处理
+        #     shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+        #     shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
+        #
+        #     # 计算 LLaVA 损失
+        #     shift_labels = shift_labels.to(shift_logits.device)
+        #     llava_loss = loss_fct(shift_logits, shift_labels)
 
         logits_multi_modal = logits
         labels_multi_modal = labels
@@ -252,20 +252,20 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         kd_loss = loss_x * 0.
 
 
-        # import pdb;pdb.set_trace()
-        if kd_loss is not None and llava_loss is not None:
-            loss = kd_loss * 0. + llava_loss
-            # self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
-            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
-        elif kd_loss is not None:
-            loss = kd_loss * 0.
-            # self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, all_loss=loss)
-            self.report_metrics(kd_loss=kd_loss,  all_loss=loss)
-        elif llava_loss is not None:
-            loss = llava_loss
-            self.report_metrics(llava_loss=llava_loss, all_loss=loss)
-        else:
-            loss = None  # 如果两个损失都没有，设置为 None
+        # # import pdb;pdb.set_trace()
+        # if kd_loss is not None and llava_loss is not None:
+        #     # loss = kd_loss * 0. + llava_loss
+        #     # self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
+        #     self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
+        # elif kd_loss is not None:
+        #     loss = kd_loss * 0.
+        #     # self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, all_loss=loss)
+        #     self.report_metrics(kd_loss=kd_loss,  all_loss=loss)
+        # elif llava_loss is not None:
+        #     loss = llava_loss
+        #     self.report_metrics(llava_loss=llava_loss, all_loss=loss)
+        # else:
+        #     loss = None  # 如果两个损失都没有，设置为 None
 
         if not return_dict:
             output = (logits,) + outputs[1:]
