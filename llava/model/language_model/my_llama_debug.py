@@ -71,8 +71,6 @@ class ForwardKLLoss(torch.nn.Module):
         return -torch.sum(x * mask.view(-1), dim=0) / torch.sum(mask.view(-1), dim=0)
 
 
-
-
 class LlamaForCausalLM(LlamaPreTrainedModel):
     _tied_weights_keys = ["lm_head.weight"]
 
@@ -183,7 +181,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 logits_old = self.lm_head_old(hidden_states_old)
             logits_old = logits_old.float()
 
-
         hidden_states = outputs[0]
         if self.config.pretraining_tp > 1:
             lm_head_slices = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
@@ -252,7 +249,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         #         shift_logits_new,
         #         shift_labels_text
         #     )
-        kd_loss=llava_loss*0.
+        kd_loss = loss_x * 0.
         # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
             loss = kd_loss * 0. + llava_loss
@@ -269,7 +266,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         if not return_dict:
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
-
 
         return CausalLMOutputWithPast(
             loss=loss_x,
