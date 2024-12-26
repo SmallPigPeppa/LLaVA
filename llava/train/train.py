@@ -867,15 +867,6 @@ def train(attn_implementation=None):
                 **bnb_model_from_pretrained_args
             )
             model.init_model_old()
-            # if model_args.distill:
-            #     # import pdb;pdb.set_trace()
-            #     # if training_args.lora_enable:
-            #     # old_model = copy.deepcopy(model.base_model.model)
-            #     model.model_old = copy.deepcopy(model.model)
-            # model.base_model.old_model = old_model
-            # for param in model.model_old.parameters():
-            #     param.requires_grad = False
-            # model.model_old.eval()  # 确保模型在推理模式下，不进行梯度计算
 
 
     else:
@@ -886,6 +877,7 @@ def train(attn_implementation=None):
             torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
             **bnb_model_from_pretrained_args
         )
+
 
     model.config.use_cache = False
 
@@ -1006,26 +998,9 @@ def train(attn_implementation=None):
                     if training_args.bf16 and module.weight.dtype == torch.float32:
                         module = module.to(torch.bfloat16)
 
-    ############################distill
-    # if model_args.distill:
-    #     import pdb;pdb.set_trace()
-    #     if training_args.lora_enable:
-    #         # old_model = copy.deepcopy(model.base_model.model)
-    #         model.base_model.model.model_old = copy.deepcopy(model.base_model.model.model)
-    #         # model.base_model.old_model = old_model
-    #         for param in model.base_model.model.model_old.parameters():
-    #             param.requires_grad = False
-    #         model.base_model.model.model_old.eval()  # 确保模型在推理模式下，不进行梯度计算
-    #     else:
-    #         old_model = copy.deepcopy(model.model)
-    #         model.old_model = old_model
-    #         for param in model.old_model.parameters():
-    #             param.requires_grad = False
-    #         model.old_model.eval()  # 确保模型在推理模式下，不进行梯度计算
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
-    # import pdb;pdb.set_trace()
 
     trainer = LLaVATrainer(
         model=model,
@@ -1036,37 +1011,18 @@ def train(attn_implementation=None):
 
     if model_args.distill:
         from transformers import TrainerCallback
-        # class MyCallback(TrainerCallback):
-        #     "A callback that prints a message at the beginning of training"
-        #
-        #     def on_train_begin(self, args, state, control, **kwargs):
-        #         print("Starting training")
-        #
-        # from transformers import TrainerCallback
 
         class MyCallback(TrainerCallback):
             """
             一个回调类，在训练开始时将模型参数复制到 old_model。
             """
-            # def on_init_end(self, args, state, control, **kwargs):
-            #     model.init_model_old()
-            #     print("成功将 model 的参数复制到 model_old")
 
             def on_train_begin(self, args, state, control, **kwargs):
-                # import pdb;pdb.set_trace()
-                # state_dict_x = model.base_model.model.model.state_dict()
-                # filtered_state_dict = {key: value for key, value in state_dict_x.items() if 'vision_tower' not in key}
-                # model.base_model.model.model_old.load_state_dict(filtered_state_dict)
-                # import pdb;pdb.set_trace()
-                # model.get_model()
-                model.base_model.model.model_old = copy.deepcopy(model.base_model.model.model)
-                model.init_model_old()
+                # model.init_model_old()
                 print("成功将 model 的参数复制到 model_old。")
 
             def on_train_end(self, args, state, control, **kwargs):
-                # del model.model_old
                 model.del_model_old()
-                # del model.base_model.model.model_old
 
         trainer.add_callback(MyCallback)
 
@@ -1075,10 +1031,6 @@ def train(attn_implementation=None):
     else:
         trainer.train()
 
-    ############################distill
-    # if model_args.distill:
-    #     # 删除旧模型并释放内存
-    #     del model.base_model.model.model_old
 
     trainer.save_state()
     model.config.use_cache = True

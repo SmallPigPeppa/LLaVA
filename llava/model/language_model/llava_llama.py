@@ -61,20 +61,15 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
 
         # Initialize weights and apply final processing
         self.post_init()
-        self.config = config
 
     def get_model(self):
         return self.model
 
     def init_model_old(self):
-        # import copy
-        # self.model_old = copy.deepcopy(self.model)
-        # self.lm_head_old = copy.deepcopy(self.lm_head)
-        import pdb;pdb.set_trace()
-        self.model_old = LlavaLlamaModel(self.config)
-        self.lm_head_old = nn.Linear(self.config.hidden_size, self.config.vocab_size, bias=False)
-        self.model_old.load_state_dict(self.model.state_dict())
-        self.lm_head_old.load_state_dict(self.lm_head.state_dict())
+        import copy
+        self.model_old = copy.deepcopy(self.model)
+        self.lm_head_old = copy.deepcopy(self.lm_head)
+
         for param in self.model_old.parameters():
             param.requires_grad = False
         for param in self.lm_head_old.parameters():
