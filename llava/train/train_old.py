@@ -409,8 +409,6 @@ def preprocess_llama_2(
                     f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
                     f" (ignored)"
                 )
-                import pdb;
-                pdb.set_trace()
 
     return dict(
         input_ids=input_ids,
@@ -672,7 +670,6 @@ class LazySupervisedDataset(Dataset):
                  tokenizer: transformers.PreTrainedTokenizer,
                  data_args: DataArguments):
         super(LazySupervisedDataset, self).__init__()
-        # import pdb; pdb.set_trace()
         list_data_dict = json.load(open(data_path, "r"))
 
         rank0_print("Formatting inputs...Skip in lazy mode")
@@ -695,7 +692,6 @@ class LazySupervisedDataset(Dataset):
     def modality_lengths(self):
         length_list = []
         for sample in self.list_data_dict:
-            # import pdb; pdb.set_trace()
             cur_len = sum(len(conv['value'].split()) for conv in sample['conversations'])
             cur_len = cur_len if 'image' in sample else -cur_len
             length_list.append(cur_len)
@@ -867,14 +863,6 @@ def train(attn_implementation=None):
                 **bnb_model_from_pretrained_args
             )
 
-            model_teacher = LlavaLlamaForCausalLM.from_pretrained(
-                model_args.model_name_or_path,
-                cache_dir=training_args.cache_dir,
-                attn_implementation=attn_implementation,
-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
-            )
-
 
 
     else:
@@ -888,11 +876,9 @@ def train(attn_implementation=None):
 
 
     model.config.use_cache = False
-    model_teacher.config.use_cache = False
 
     if model_args.freeze_backbone:
         model.model.requires_grad_(False)
-        model_teacher.model.requires_grad_(False)
 
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training
@@ -903,13 +889,11 @@ def train(attn_implementation=None):
     if training_args.gradient_checkpointing:
         if hasattr(model, "enable_input_require_grads"):
             model.enable_input_require_grads()
-            model_teacher.enable_input_require_grads()
         else:
             def make_inputs_require_grad(module, input, output):
                 output.requires_grad_(True)
 
             model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
-            model_teacher.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
 
     if training_args.lora_enable:
         from peft import LoraConfig, get_peft_model
@@ -997,9 +981,6 @@ def train(attn_implementation=None):
         model.config.mm_use_im_patch_token = model_args.mm_use_im_patch_token
         model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
 
-        # todo
-        import pdb;pdb.set_trace()
-        model.model_old.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
 
     if training_args.bits in [4, 8]:
         from peft.tuners.lora import LoraLayer
@@ -1025,22 +1006,6 @@ def train(attn_implementation=None):
         **data_module
     )
 
-    if model_args.distill:
-        from transformers import TrainerCallback
-
-        class MyCallback(TrainerCallback):
-            """
-            一个回调类，在训练开始时将模型参数复制到 old_model。
-            """
-
-            def on_train_begin(self, args, state, control, **kwargs):
-                # model.init_model_old()
-                print("成功将 model 的参数复制到 model_old。")
-
-            def on_train_end(self, args, state, control, **kwargs):
-                model.del_model_old()
-
-        trainer.add_callback(MyCallback)
 
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
         trainer.train(resume_from_checkpoint=True)
