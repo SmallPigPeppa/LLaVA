@@ -40,6 +40,7 @@ def save_model_with_trainer(args):
         raise ValueError("Number of models and weights must match.")
 
     # Load each model
+    tokenizer=None
     models = []
     device = torch.device('cpu')  # Force models to load on CPU
     for model_path in model_paths:
@@ -61,8 +62,11 @@ def save_model_with_trainer(args):
         save_strategy="no",  # No automatic saving during training
     )
 
+    device = torch.device('cuda')
+    averaged_model.to(device)
+
+
     # Initialize the Hugging Face Trainer with the averaged model and tokenizer
-    tokenizer, _, _, _ = load_pretrained_model(model_paths[0], args.model_base, os.path.basename(model_paths[0]))  # Use the tokenizer of the first model
     trainer = Trainer(
         model=averaged_model,
         args=training_args,
