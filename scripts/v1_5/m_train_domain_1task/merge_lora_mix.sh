@@ -33,3 +33,4 @@ python -m llava.eval.model_vqa_save_weight_hf_mix_multi \
   --model-path "$MODEL_PATHS_STR" \
   --model-weights $MODEL_WEIGHTS \
   --save-path $OUTPUT_DIR
+
