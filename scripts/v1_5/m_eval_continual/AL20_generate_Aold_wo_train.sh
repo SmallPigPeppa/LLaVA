@@ -11,6 +11,6 @@ python -m llava.eval.model_vqa_generate_Aold \
     --model-path "continual-ckpt/distill/$MODEL" \
     --image-folder ./playground/data \
     --dataset-file ./playground/data/domain-incremental/llava_v1_5_mix665k-others.json \
-    --output-file /playground/data/domain-incremental/llava_v1_5_mix665k-others-Aold.json \
+    --output-file ./playground/data/domain-incremental/llava_v1_5_mix665k-others-Aold.json \
     --conv-mode llava_v1
 
