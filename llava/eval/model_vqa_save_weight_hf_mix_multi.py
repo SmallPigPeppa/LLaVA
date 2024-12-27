@@ -6,27 +6,25 @@ from llava.utils import disable_torch_init
 from transformers import Trainer, TrainingArguments
 
 
-def average_models(models, weights):
-    """Averages the models based on the given weights."""
+def average_models(weights_list, model_weights):
+    """Averages the models' weights based on the given weights."""
     # Ensure the weights sum to 1 for proper averaging
-    weight_sum = sum(weights)
+    weight_sum = sum(model_weights)
     if weight_sum != 1.0:
-        weights = [w / weight_sum for w in weights]
+        model_weights = [w / weight_sum for w in model_weights]
 
-    # Get the state_dict of the first model to initialize the averaged model
-    model_state_dict = models[0].state_dict()
+    # Create a dictionary to store the averaged weights
+    averaged_weights = None
 
-    # Iterate over the models and average their weights
-    for model, weight in zip(models, weights):
-        state_dict = model.state_dict()
-        for key in model_state_dict:
-            model_state_dict[key] += state_dict[key] * weight
+    # Iterate over the list of model weights and average them
+    for weights, weight in zip(weights_list, model_weights):
+        if averaged_weights is None:
+            averaged_weights = {key: value * weight for key, value in weights.items()}
+        else:
+            for key in weights:
+                averaged_weights[key] += weights[key] * weight
 
-    # Create a new model with the averaged weights
-    averaged_model = models[0]
-    averaged_model.load_state_dict(model_state_dict)
-
-    return averaged_model
+    return averaged_weights
 
 
 def save_model_with_trainer(args):
@@ -40,16 +38,30 @@ def save_model_with_trainer(args):
     if len(model_paths) != len(model_weights):
         raise ValueError("Number of models and weights must match.")
 
-    # Load each model
-    models = []
+    # Extract the weights from each model and free up memory
+    weights_list = []
     for model_path in model_paths:
         model_path = os.path.expanduser(model_path)
         model_name = os.path.basename(model_path)  # Extract the model name from the path
         tokenizer, model, _, _ = load_pretrained_model(model_path, args.model_base, model_name)
-        models.append(model)
 
-    # Average the models based on the provided weights
-    averaged_model = average_models(models, model_weights)
+        # Extract weights from the model
+        weights = model.state_dict()
+        weights_list.append(weights)
+
+        # Free up memory by deleting the model
+        del model
+        torch.cuda.empty_cache()
+
+    # Average the weights based on the provided weights
+    averaged_weights = average_models(weights_list, model_weights)
+
+    # Create a new model and load the averaged weights
+    model_name = os.path.basename(model_paths[0])  # Use the name of the first model
+    tokenizer, averaged_model, _, _ = load_pretrained_model(model_paths[0], args.model_base, model_name)
+
+    # Load the averaged weights into the new model
+    averaged_model.load_state_dict(averaged_weights)
 
     # Set up training arguments (used for saving only, no training or evaluation)
     training_args = TrainingArguments(
@@ -61,7 +73,6 @@ def save_model_with_trainer(args):
     )
 
     # Initialize the Hugging Face Trainer with the averaged model and tokenizer
-    tokenizer, _, _, _ = load_pretrained_model(model_paths[0], args.model_base, os.path.basename(model_paths[0]))  # Use the tokenizer of the first model
     trainer = Trainer(
         model=averaged_model,
         args=training_args,
@@ -79,7 +90,8 @@ if __name__ == "__main__":
     parser.add_argument("--model-path", type=str, required=True, help="Comma-separated paths to the pre-trained models")
     parser.add_argument("--model-base", type=str, default=None, help="Base model type (optional)")
     parser.add_argument("--model-weights", type=str, required=True, help="Comma-separated weights for each model")
-    parser.add_argument("--save-path", type=str, required=True, help="Directory to save the averaged model and tokenizer")
+    parser.add_argument("--save-path", type=str, required=True,
+                        help="Directory to save the averaged model and tokenizer")
     args = parser.parse_args()
 
     save_model_with_trainer(args)
