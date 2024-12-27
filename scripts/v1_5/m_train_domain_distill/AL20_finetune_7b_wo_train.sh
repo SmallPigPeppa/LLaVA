@@ -7,13 +7,12 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3
 MODEL_PATH="lmsys/vicuna-7b-v1.5"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 DATA_PATH="playground/data/exp1/part2-with-others.json"
-OUTPUT_DIR="continual-ckpt/distill/llava-v1.5-7b-lora-wo-train"
+OUTPUT_DIR="continual-ckpt/distill/llava-v1.5-7b-wo-train"
 PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
 
 
 # Training command for OCR task
 deepspeed llava/train/train_mem.py \
-    --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --distill True \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path ${MODEL_PATH} \
