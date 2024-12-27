@@ -13,7 +13,6 @@ PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
 
 # Training command for OCR task
 deepspeed llava/train/train_mem.py \
-    --distill True \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path ${MODEL_PATH} \
     --version v1 \

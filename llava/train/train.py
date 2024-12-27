@@ -409,8 +409,6 @@ def preprocess_llama_2(
                     f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
                     f" (ignored)"
                 )
-                import pdb;
-                pdb.set_trace()
 
     return dict(
         input_ids=input_ids,
@@ -672,7 +670,6 @@ class LazySupervisedDataset(Dataset):
                  tokenizer: transformers.PreTrainedTokenizer,
                  data_args: DataArguments):
         super(LazySupervisedDataset, self).__init__()
-        # import pdb; pdb.set_trace()
         list_data_dict = json.load(open(data_path, "r"))
 
         rank0_print("Formatting inputs...Skip in lazy mode")
@@ -695,7 +692,6 @@ class LazySupervisedDataset(Dataset):
     def modality_lengths(self):
         length_list = []
         for sample in self.list_data_dict:
-            # import pdb; pdb.set_trace()
             cur_len = sum(len(conv['value'].split()) for conv in sample['conversations'])
             cur_len = cur_len if 'image' in sample else -cur_len
             length_list.append(cur_len)
@@ -867,14 +863,6 @@ def train(attn_implementation=None):
                 **bnb_model_from_pretrained_args
             )
 
-            model_teacher = LlavaLlamaForCausalLM.from_pretrained(
-                model_args.model_name_or_path,
-                cache_dir=training_args.cache_dir,
-                attn_implementation=attn_implementation,
-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
-                **bnb_model_from_pretrained_args
-            )
-
 
 
     else:
@@ -886,12 +874,11 @@ def train(attn_implementation=None):
             **bnb_model_from_pretrained_args
         )
 
+
     model.config.use_cache = False
-    model_teacher.config.use_cache = False
 
     if model_args.freeze_backbone:
         model.model.requires_grad_(False)
-        model_teacher.model.requires_grad_(False)
 
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training
@@ -902,13 +889,11 @@ def train(attn_implementation=None):
     if training_args.gradient_checkpointing:
         if hasattr(model, "enable_input_require_grads"):
             model.enable_input_require_grads()
-            model_teacher.enable_input_require_grads()
         else:
             def make_inputs_require_grad(module, input, output):
                 output.requires_grad_(True)
 
             model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
-            model_teacher.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
 
     if training_args.lora_enable:
         from peft import LoraConfig, get_peft_model
@@ -927,28 +912,6 @@ def train(attn_implementation=None):
                 model.to(torch.float16)
         rank0_print("Adding LoRA adapters...")
         model = get_peft_model(model, lora_config)
-
-        lora_config_teacher = LoraConfig(
-            r=training_args.lora_r,
-            lora_alpha=training_args.lora_alpha,
-            target_modules=find_all_linear_names(model_teacher),
-            lora_dropout=training_args.lora_dropout,
-            bias=training_args.lora_bias,
-            task_type="CAUSAL_LM",
-        )
-
-        # Check the precision settings from training_args
-        if training_args.bits == 16:
-            if training_args.bf16:
-                model_teacher.to(torch.bfloat16)
-            if training_args.fp16:
-                model_teacher.to(torch.float16)
-
-        # Printing the status of LoRA adapter addition
-        rank0_print("Teacher Adding LoRA adapters...")
-
-        # Adding LoRA adapters to the model
-        model_teacher = get_peft_model(model_teacher, lora_config_teacher)
 
     if 'mpt' in model_args.model_name_or_path:
         tokenizer = transformers.AutoTokenizer.from_pretrained(
@@ -1018,6 +981,7 @@ def train(attn_implementation=None):
         model.config.mm_use_im_patch_token = model_args.mm_use_im_patch_token
         model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
 
+
     if training_args.bits in [4, 8]:
         from peft.tuners.lora import LoraLayer
         for name, module in model.named_modules():
@@ -1031,89 +995,9 @@ def train(attn_implementation=None):
                     if training_args.bf16 and module.weight.dtype == torch.float32:
                         module = module.to(torch.bfloat16)
 
+
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
-
-
-    # Assuming model_args, training_args, model_teacher, and conversation_lib are defined
-    if 'mpt' in model_args.model_name_or_path:
-        tokenizer_teacher = transformers.AutoTokenizer.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=training_args.cache_dir,
-            model_max_length=training_args.model_max_length,
-            padding_side="right"
-        )
-    else:
-        tokenizer_teacher = transformers.AutoTokenizer.from_pretrained(
-            model_args.model_name_or_path,
-            cache_dir=training_args.cache_dir,
-            model_max_length=training_args.model_max_length,
-            padding_side="right",
-            use_fast=False,
-        )
-
-    # Adjust tokenizer based on model version
-    if model_args.version == "v0":
-        if tokenizer_teacher.pad_token is None:
-            smart_tokenizer_and_embedding_resize(
-                special_tokens_dict=dict(pad_token="[PAD]"),
-                tokenizer=tokenizer_teacher,
-                model=model_teacher,
-            )
-    elif model_args.version == "v0.5":
-        tokenizer_teacher.pad_token = tokenizer_teacher.unk_token
-    else:
-        tokenizer_teacher.pad_token = tokenizer_teacher.unk_token
-        if model_args.version in conversation_lib.conv_templates:
-            conversation_lib.default_conversation = conversation_lib.conv_templates[model_args.version]
-        else:
-            conversation_lib.default_conversation = conversation_lib.conv_templates["vicuna_v1"]
-
-    # Initialize vision modules if specified
-    if model_args.vision_tower is not None:
-        model_teacher.get_model().initialize_vision_modules(
-            model_args=model_args,
-            fsdp=training_args.fsdp
-        )
-
-        vision_tower = model_teacher.get_vision_tower()
-        vision_tower.to(dtype=torch.bfloat16 if training_args.bf16 else torch.float16, device=training_args.device)
-
-        data_args.image_processor = vision_tower.image_processor
-        data_args.is_multimodal = True
-
-        model_teacher.config.image_aspect_ratio = data_args.image_aspect_ratio
-        model_teacher.config.tokenizer_padding_side = tokenizer_teacher.padding_side
-        model_teacher.config.tokenizer_model_max_length = tokenizer_teacher.model_max_length
-
-        model_teacher.config.tune_mm_mlp_adapter = training_args.tune_mm_mlp_adapter = model_args.tune_mm_mlp_adapter
-        if model_args.tune_mm_mlp_adapter:
-            model_teacher.requires_grad_(False)
-            for p in model_teacher.get_model().mm_projector.parameters():
-                p.requires_grad = True
-
-        model_teacher.config.freeze_mm_mlp_adapter = training_args.freeze_mm_mlp_adapter
-        if training_args.freeze_mm_mlp_adapter:
-            for p in model_teacher.get_model().mm_projector.parameters():
-                p.requires_grad = False
-
-        if training_args.bits in [4, 8]:
-            model_teacher.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
-
-        model_teacher.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
-        model_teacher.config.mm_projector_lr = training_args.mm_projector_lr
-        training_args.use_im_start_end = model_args.mm_use_im_start_end
-        model_teacher.config.mm_use_im_patch_token = model_args.mm_use_im_patch_token
-        model_teacher.initialize_vision_tokenizer(model_args, tokenizer=tokenizer_teacher)
-
-
-    model.base_model.model.model_old = model_teacher.base_model.model.model
-    model.base_model.model.lm_head_old = model_teacher.base_model.model.lm_head
-    for param in model.base_model.model.model_old.parameters():
-        param.requires_grad = False
-
-    for param in model.base_model.model.lm_head_old.parameters():
-        param.requires_grad = False
 
     trainer = LLaVATrainer(
         model=model,
@@ -1122,27 +1006,12 @@ def train(attn_implementation=None):
         **data_module
     )
 
-    if model_args.distill:
-        from transformers import TrainerCallback
-
-        class MyCallback(TrainerCallback):
-            """
-            一个回调类，在训练开始时将模型参数复制到 old_model。
-            """
-
-            # def on_train_begin(self, args, state, control, **kwargs):
-            #     # model.init_model_old()
-            #     print("成功将 model 的参数复制到 model_old。")
-
-            def on_train_end(self, args, state, control, **kwargs):
-                model.del_model_old()
-
-        trainer.add_callback(MyCallback)
 
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
         trainer.train(resume_from_checkpoint=True)
     else:
         trainer.train()
+
 
     trainer.save_state()
     model.config.use_cache = True
