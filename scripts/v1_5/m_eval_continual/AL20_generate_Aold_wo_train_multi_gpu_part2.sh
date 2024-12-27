@@ -2,7 +2,7 @@
 
 # 设置Hugging Face缓存目录
 export HF_HOME=/mnt/disk3/wzliu/huggingface
-export CUDA_VISIBLE_DEVICES=0,1,2,3  # 限定GPU为0, 1, 2, 3
+#export CUDA_VISIBLE_DEVICES=0,1,2,3  # 限定GPU为0, 1, 2, 3
 
 # 定义模型和任务相关参数
 MODEL="llava-v1.5-7b-wo-train"

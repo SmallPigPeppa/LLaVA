@@ -2,7 +2,7 @@
 
 # 设置Hugging Face缓存目录
 export HF_HOME=/mnt/disk3/wzliu/huggingface
-export CUDA_VISIBLE_DEVICES=0,1,2,3  # 限定GPU为0, 1, 2, 3
+#export CUDA_VISIBLE_DEVICES=0,1,2,3  # 限定GPU为0, 1, 2, 3
 
 # 定义模型和任务相关参数
 MODEL="llava-v1.5-7b-wo-train"
@@ -16,8 +16,8 @@ TMP_DIR="./c-llava-cache-${OUTPUT_FILE##*/}"
 mkdir -p $TMP_DIR
 
 # 检测可用的GPU数量，只考虑0,1,2,3
-NUM_GPUS=4  # 固定为4个GPU
-echo "检测到 $NUM_GPUS 个GPU（限定为0,1,2,3）。"
+NUM_GPUS=8  # 固定为4个GPU
+echo "检测到 $NUM_GPUS 个GPU（限定为0,1,2,3,4,5,6,7）。"
 
 # 使用jq拆分数据集为NUM_GPUS部分
 echo "使用jq将数据集拆分为 $NUM_GPUS 部分..."
