@@ -228,6 +228,7 @@ def generate_answers_from_model(model, tokenizer, image_processor, items, image_
 
 
 def save_updated_dataset(conversations, output_file):
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
     with open(output_file, 'w', encoding='utf-8') as f:
         # Write the entire list as a JSON array in one go
         json.dump(conversations, f, ensure_ascii=False, indent=2)
