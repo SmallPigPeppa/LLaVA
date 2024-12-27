@@ -222,7 +222,7 @@ def generate_answers_from_model(model, tokenizer, image_processor, items, image_
 
                 conv.append_message(conv.roles[1], output)
 
-        updated_conversations.append(conv)
+        updated_conversations.append(item)
 
     return updated_conversations
 
