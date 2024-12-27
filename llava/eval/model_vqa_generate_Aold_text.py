@@ -154,7 +154,7 @@ def generate_answers_from_model(model, tokenizer, image_processor, items, image_
                     use_cache=True,
                     temperature=0.7,
                     max_new_tokens=1024, )
-                import pdb; pdb.set_trace()
+                # import pdb; pdb.set_trace()
                 output = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
 
