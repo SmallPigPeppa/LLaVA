@@ -1,6 +1,6 @@
 #!/bin/bash
 export HF_HOME=/mnt/disk3/wzliu/huggingface
-
+export CUDA_VISIBLE_DEVICES=0,1,2,3
 # Set the model for the current task
 MODEL="llava-v1.5-7b-wo-train"
 
