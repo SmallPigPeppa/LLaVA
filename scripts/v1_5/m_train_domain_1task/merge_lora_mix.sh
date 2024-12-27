@@ -28,7 +28,7 @@ OUTPUT_DIR="continual-ckpt/domain-1task-mix/all"
 MODEL_PATHS_STR=$(IFS=,; echo "${MODEL_PATHS[*]}")
 
 # 运行 Python 脚本
-python -m llava.eval.model_vqa_save_weight_hf_mix_multi.py \
+python -m llava.eval.model_vqa_save_weight_hf_mix_multi \
   --model-base $MODEL_BASE \
   --model-path "$MODEL_PATHS_STR" \
   --model-weights $MODEL_WEIGHTS \
