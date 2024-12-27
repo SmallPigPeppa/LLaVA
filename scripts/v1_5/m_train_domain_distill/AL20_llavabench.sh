@@ -4,8 +4,9 @@ export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 # Set model as a variable
 
+#llava-v1.5-7b-lora-task-ocr-distill-mix-merged.jsonl
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
-MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda10.0"
+MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-mix"
 OUT_PATH="${MODEL_PATH}-merged"
 MODEL="${OUT_PATH##*/}"
 
