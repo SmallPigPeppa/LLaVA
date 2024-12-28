@@ -6,7 +6,7 @@ export HF_HOME=/ppio_net0/huggingface
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 DATA_PATH="playground/data/exp1/part2-with-others.json"
-OUTPUT_DIR="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-no-distill-datamix"
+OUTPUT_DIR="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-all-datamix"
 
 
 # Training command for OCR task
@@ -46,4 +46,3 @@ deepspeed llava/train/train_mem.py \
     --dataloader_num_workers 4 \
     --lazy_preprocess True \
     --report_to wandb
-
