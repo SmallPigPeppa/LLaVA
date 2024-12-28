@@ -29,7 +29,7 @@ deepspeed llava/train/train_mem.py \
     --bf16 True \
     --output_dir ${OUTPUT_DIR} \
     --num_train_epochs 1 \
-    --max_steps -1 \
+    --max_steps 124 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 2 \
     --gradient_accumulation_steps 4 \
