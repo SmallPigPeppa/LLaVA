@@ -263,6 +263,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         else:
             kd_loss = llava_loss * 0.
+            kd_loss_ce = llava_loss * 0.
             loss = kd_loss * 1.0 + llava_loss
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
 
