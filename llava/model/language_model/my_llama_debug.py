@@ -227,42 +227,42 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         llava_loss = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
-        # if len(pure_text_index) > 0:
-        #     logits_pure_text = logits[pure_text_index]
-        #     logits_pure_text_old = logits_old[pure_text_index]
-        #     labels_pure_text = labels[pure_text_index]
-        #
-        #     # 移位处理
-        #     shift_logits_new = logits_pure_text[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        #     shift_logits_old = logits_pure_text_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        #     shift_labels_text = labels_pure_text[..., 1:].contiguous().view(-1)
-        #
-        #     # 计算蒸馏损失
-        #     shift_labels_text = shift_labels_text.to(shift_logits_new.device)  # 确保标签在相同设备上
-        #     kd_loss = loss_fkl(
-        #         student_logits=shift_logits_new,
-        #         teacher_logits=shift_logits_old,
-        #         labels=shift_labels_text
-        #     )
-        #     kd_loss_ce = loss_fct(
-        #         shift_logits_new,
-        #         shift_labels_text
-        #     )
+        if len(pure_text_index) > 0:
+            logits_pure_text = logits[pure_text_index]
+            logits_pure_text_old = logits_old[pure_text_index]
+            labels_pure_text = labels[pure_text_index]
 
-        # distill text and multi-modal
-        shift_logits_old = logits_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        kd_loss = loss_fkl(
-            student_logits=shift_logits,
-            teacher_logits=shift_logits_old,
-            labels=shift_labels
-        )
+            # 移位处理
+            shift_logits_new = logits_pure_text[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_logits_old = logits_pure_text_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_labels_text = labels_pure_text[..., 1:].contiguous().view(-1)
+
+            # 计算蒸馏损失
+            shift_labels_text = shift_labels_text.to(shift_logits_new.device)  # 确保标签在相同设备上
+            kd_loss = loss_fkl(
+                student_logits=shift_logits_new,
+                teacher_logits=shift_logits_old,
+                labels=shift_labels_text
+            )
+            kd_loss_ce = loss_fct(
+                shift_logits_new,
+                shift_labels_text
+            )
+
+        # # distill text and multi-modal
+        # shift_logits_old = logits_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+        # kd_loss = loss_fkl(
+        #     student_logits=shift_logits,
+        #     teacher_logits=shift_logits_old,
+        #     labels=shift_labels
+        # )
 
         # import pdb;pdb.set_trace()
         if kd_loss is not None:
             # loss = kd_loss * 1.0 + llava_loss
             # kd_loss = llava_loss * 0.
             kd_loss_ce = llava_loss * 0.
-            loss = kd_loss * 1.0 + llava_loss
+            loss = kd_loss * 3.0 + llava_loss
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         else:
             kd_loss = llava_loss * 0.
