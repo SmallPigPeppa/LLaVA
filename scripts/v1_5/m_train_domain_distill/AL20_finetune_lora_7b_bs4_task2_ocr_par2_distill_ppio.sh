@@ -8,6 +8,7 @@ VISION_TOWER="openai/clip-vit-large-patch14-336"
 DATA_PATH="playground/data/exp1/part2-with-others.json"
 OUTPUT_DIR="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse"
 
+
 # Training command for OCR task
 deepspeed llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
