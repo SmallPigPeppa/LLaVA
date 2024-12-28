@@ -155,6 +155,14 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             return_dict=return_dict,
             # cache_position=cache_position,
         )
+        hidden_states = outputs[0]
+        if self.config.pretraining_tp > 1:
+            lm_head_slices = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
+            logits = [F.linear(hidden_states, lm_head_slices[i]) for i in range(self.config.pretraining_tp)]
+            logits = torch.cat(logits, dim=-1)
+        else:
+            logits = self.lm_head(hidden_states)
+        logits = logits.float()
 
         with torch.no_grad():
             # 获取旧模型输出
@@ -180,15 +188,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             else:
                 logits_old = self.lm_head_old(hidden_states_old)
             logits_old = logits_old.float()
-
-        hidden_states = outputs[0]
-        if self.config.pretraining_tp > 1:
-            lm_head_slices = self.lm_head.weight.split(self.vocab_size // self.config.pretraining_tp, dim=0)
-            logits = [F.linear(hidden_states, lm_head_slices[i]) for i in range(self.config.pretraining_tp)]
-            logits = torch.cat(logits, dim=-1)
-        else:
-            logits = self.lm_head(hidden_states)
-        logits = logits.float()
 
         if multi_modal_index is None:
             multi_modal_index = []
@@ -228,64 +227,44 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         llava_loss = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
-        # if len(pure_text_index) > 0:
-        #     logits_pure_text = logits[pure_text_index]
-        #     logits_pure_text_old = logits_old[pure_text_index]
-        #     labels_pure_text = labels[pure_text_index]
-        #
-        #     # 移位处理
-        #     shift_logits_new = logits_pure_text[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        #     shift_logits_old = logits_pure_text_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        #     shift_labels_text = labels_pure_text[..., 1:].contiguous().view(-1)
-        #
-        #     # 计算蒸馏损失
-        #     shift_labels_text = shift_labels_text.to(shift_logits_new.device)  # 确保标签在相同设备上
-        #     kd_loss = loss_fkl(
-        #         student_logits=shift_logits_new,
-        #         teacher_logits=shift_logits_old,
-        #         labels=shift_labels_text
-        #     )
-        #     kd_loss_ce = loss_fct(
-        #         shift_logits_new,
-        #         shift_labels_text
-        #     )
-        # kd_loss = loss_x * 0.
-        # logits_pure_text = logits[pure_text_index]
-        # logits_pure_text_old = logits_old
-        # labels_pure_text = labels[pure_text_index]
+        if len(pure_text_index) > 0:
+            logits_pure_text = logits[pure_text_index]
+            logits_pure_text_old = logits_old[pure_text_index]
+            labels_pure_text = labels[pure_text_index]
 
-        # 移位处理
-        # shift_logits_new = logits_pure_text[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        shift_logits_old = logits_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        # shift_labels_text = labels_pure_text[..., 1:].contiguous().view(-1)
+            # 移位处理
+            shift_logits_new = logits_pure_text[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_logits_old = logits_pure_text_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_labels_text = labels_pure_text[..., 1:].contiguous().view(-1)
 
-        # 计算蒸馏损失
-        # shift_labels_text = shift_labels_text.to(shift_logits_new.device)  # 确保标签在相同设备上
-        kd_loss = loss_fkl(
-            student_logits=shift_logits,
-            teacher_logits=shift_logits_old,
-            labels=shift_labels
-        )
-        # kd_loss_ce = loss_fct(
-        #     shift_logits_new,
-        #     shift_labels_text
+            # 计算蒸馏损失
+            shift_labels_text = shift_labels_text.to(shift_logits_new.device)  # 确保标签在相同设备上
+            kd_loss = loss_fkl(
+                student_logits=shift_logits_new,
+                teacher_logits=shift_logits_old,
+                labels=shift_labels_text
+            )
+            kd_loss_ce = loss_fct(
+                shift_logits_new,
+                shift_labels_text
+            )
+
+        # distill text and multi-modal
+        # shift_logits_old = logits_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+        # kd_loss = loss_fkl(
+        #     student_logits=shift_logits,
+        #     teacher_logits=shift_logits_old,
+        #     labels=shift_labels
         # )
 
-
         # import pdb;pdb.set_trace()
-        if kd_loss is not None and llava_loss is not None:
+        if kd_loss is not None:
             loss = kd_loss * 1.0 + llava_loss
-            # self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
-            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
-        elif kd_loss is not None:
-            loss = kd_loss * 0.
-            # self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, all_loss=loss)
-            self.report_metrics(kd_loss=kd_loss,  all_loss=loss)
-        elif llava_loss is not None:
-            loss = llava_loss
-            self.report_metrics(llava_loss=llava_loss, all_loss=loss)
+            self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         else:
-            loss = None  # 如果两个损失都没有，设置为 None
+            kd_loss = llava_loss * 0.
+            loss = kd_loss * 1.0 + llava_loss
+            self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
 
         if not return_dict:
             output = (logits,) + outputs[1:]
