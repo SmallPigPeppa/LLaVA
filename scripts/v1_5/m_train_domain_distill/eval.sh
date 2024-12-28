@@ -1,5 +1,5 @@
 #!/bin/bash
-export HF_HOME=/mnt/disk3/wzliu/huggingface
+export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
