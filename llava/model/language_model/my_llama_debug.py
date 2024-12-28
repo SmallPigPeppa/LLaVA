@@ -248,8 +248,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 shift_logits_new,
                 shift_labels_text
             )
-            hidden_states_text=hidden_states[pure_text_index]
-            hidden_states_text_old = hidden_states_old[pure_text_index]
+            hidden_states_text = hidden_states[pure_text_index].contiguous()
+            hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
             kd_loss = torch.nn.functional.mse_loss(hidden_states_text, hidden_states_text_old)
 
         # # distill text and multi-modal
@@ -262,16 +262,16 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
-            loss = kd_loss * 1.0 + llava_loss
+            loss = kd_loss * 30.0 + llava_loss
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         elif kd_loss is None:
             kd_loss = llava_loss * 0.
             kd_loss_ce = llava_loss * 0.
-            loss = kd_loss * 1.0 + llava_loss
+            loss = kd_loss * 30.0 + llava_loss
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
         elif llava_loss is None:
             llava_loss = kd_loss * 0.
-            loss = kd_loss * 1.0 + llava_loss
+            loss = kd_loss * 30.0 + llava_loss
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
 
         if not return_dict:
