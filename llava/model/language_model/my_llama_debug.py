@@ -250,12 +250,12 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         #     )
 
         # distill text and multi-modal
-        # shift_logits_old = logits_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        # kd_loss = loss_fkl(
-        #     student_logits=shift_logits,
-        #     teacher_logits=shift_logits_old,
-        #     labels=shift_labels
-        # )
+        shift_logits_old = logits_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+        kd_loss = loss_fkl(
+            student_logits=shift_logits,
+            teacher_logits=shift_logits_old,
+            labels=shift_labels
+        )
 
         # import pdb;pdb.set_trace()
         if kd_loss is not None:
