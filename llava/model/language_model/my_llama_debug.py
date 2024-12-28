@@ -203,28 +203,28 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         kd_loss_ce = None
 
         # LLaVA 损失计算
-        # if len(multi_modal_index) > 0:
-        #     logits_multi_modal = logits[multi_modal_index]
-        #     labels_multi_modal = labels[multi_modal_index]
+        if len(multi_modal_index) > 0:
+            logits_multi_modal = logits[multi_modal_index]
+            labels_multi_modal = labels[multi_modal_index]
+
+            # 移位处理
+            shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
+
+            # 计算 LLaVA 损失
+            shift_labels = shift_labels.to(shift_logits.device)
+            llava_loss = loss_fct(shift_logits, shift_labels)
+
+        # logits_multi_modal = logits
+        # labels_multi_modal = labels
         #
-        #     # 移位处理
-        #     shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        #     shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
+        # # 移位处理
+        # shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+        # shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
         #
-        #     # 计算 LLaVA 损失
-        #     shift_labels = shift_labels.to(shift_logits.device)
-        #     llava_loss = loss_fct(shift_logits, shift_labels)
-
-        logits_multi_modal = logits
-        labels_multi_modal = labels
-
-        # 移位处理
-        shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
-        shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
-
-        # 计算 LLaVA 损失
-        shift_labels = shift_labels.to(shift_logits.device)
-        llava_loss = loss_fct(shift_logits, shift_labels)
+        # # 计算 LLaVA 损失
+        # shift_labels = shift_labels.to(shift_logits.device)
+        # llava_loss = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
@@ -258,15 +258,16 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # )
 
         # import pdb;pdb.set_trace()
-        if kd_loss is not None:
-            # loss = kd_loss * 1.0 + llava_loss
-            # kd_loss = llava_loss * 0.
-            kd_loss_ce = llava_loss * 0.
-            loss = kd_loss * 3.0 + llava_loss
+        if kd_loss is not None and llava_loss is not None:
+            loss = kd_loss * 1.0 + llava_loss
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
-        else:
+        elif kd_loss is None:
             kd_loss = llava_loss * 0.
             kd_loss_ce = llava_loss * 0.
+            loss = kd_loss * 1.0 + llava_loss
+            self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
+        elif llava_loss is None:
+            llava_loss = kd_loss * 0.
             loss = kd_loss * 1.0 + llava_loss
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
 
