@@ -5,7 +5,7 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 
 # First, evaluate the model without lambda
-MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-no-distill-datamix"
+MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-all-datamix"
 OUT_PATH="${MODEL_PATH}-mix-merged"
 MODEL="${OUT_PATH##*/}"
 
