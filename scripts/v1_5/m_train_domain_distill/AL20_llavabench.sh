@@ -13,6 +13,7 @@ OUT_PATH="${MODEL_PATH}-merged"
 MODEL="${OUT_PATH##*/}"
 
 
+
 # Create the reviews directory
 mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
 
