@@ -7,7 +7,7 @@ MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 
 # First, evaluate the model without lambda
 #MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix"
-MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse"
+MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse-all"
 OUT_PATH="${MODEL_PATH}-mix-merged"
 MODEL="${OUT_PATH##*/}"
 
