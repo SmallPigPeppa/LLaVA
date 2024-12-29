@@ -249,9 +249,9 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 shift_logits_new,
                 shift_labels_text
             )
-            import pdb;pdb.set_trace()
-            hidden_states_text = hidden_states[pure_text_index].contiguous()
-            hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
+            # import pdb;pdb.set_trace()
+            hidden_states_text = hidden_states[pure_text_index].contiguous().view(-1, 4096)
+            hidden_states_text_old = hidden_states_old[pure_text_index].contiguous().view(-1, 4096)
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
 
         # # distill text and multi-modal
