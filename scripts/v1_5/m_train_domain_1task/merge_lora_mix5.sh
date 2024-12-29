@@ -10,19 +10,19 @@ MODEL_BASE="lmsys/vicuna-7b-v1.5"
 MODEL_PATHS=(
   "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-others"
   "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-coco"
-  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-ocr_vqa"
-  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-textvqa"
-  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-gqa"
-  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-vg"
+#  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-ocr_vqa"
+#  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-textvqa"
+#  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-gqa"
+#  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-vg"
 )
 
 
 # 设置模型权重比例
-MODEL_WEIGHTS="8.32,56.39,11.17,3.17,12.42,13.74"
-#MODEL_WEIGHTS="8.32,56.39,3.17"
+#MODEL_WEIGHTS="8.32,56.39,11.17,3.17,12.42,13.74"
+MODEL_WEIGHTS="8.32,56.39"
 
 # 设置输出路径
-OUTPUT_DIR="continual-ckpt/domain-1task-mix/all"
+OUTPUT_DIR="continual-ckpt/domain-1task-mix/others-coco"
 
 # 将模型路径列表转换为以逗号分隔的字符串，并传递给 Python 脚本
 MODEL_PATHS_STR=$(IFS=,; echo "${MODEL_PATHS[*]}")
