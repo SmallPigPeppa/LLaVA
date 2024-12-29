@@ -240,19 +240,19 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
             # 计算蒸馏损失
             shift_labels_text = shift_labels_text.to(shift_logits_new.device)  # 确保标签在相同设备上
-            kd_loss = loss_fkl(
-                student_logits=shift_logits_new,
-                teacher_logits=shift_logits_old,
-                labels=shift_labels_text
-            )
+            # kd_loss = loss_fkl(
+            #     student_logits=shift_logits_new,
+            #     teacher_logits=shift_logits_old,
+            #     labels=shift_labels_text
+            # )
             kd_loss_ce = loss_fct(
                 shift_logits_new,
                 shift_labels_text
             )
             import pdb;pdb.set_trace()
-            # hidden_states_text = hidden_states[pure_text_index].contiguous()
-            # hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
-            # kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
+            hidden_states_text = hidden_states[pure_text_index].contiguous()
+            hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
+            kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
 
         # # distill text and multi-modal
         # shift_logits_old = logits_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
