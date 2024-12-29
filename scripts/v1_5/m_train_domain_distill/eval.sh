@@ -1,11 +1,13 @@
 #!/bin/bash
 export HF_HOME=/ppio_net0/huggingface
+export HF_HOME=/mnt/disk3/wzliu/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 
 # First, evaluate the model without lambda
-MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix"
+#MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix"
+OUTPUT_DIR="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse"
 OUT_PATH="${MODEL_PATH}-mix-merged"
 MODEL="${OUT_PATH##*/}"
 
