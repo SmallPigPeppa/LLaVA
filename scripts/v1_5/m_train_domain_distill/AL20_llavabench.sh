@@ -11,6 +11,7 @@ MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0
 MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-no-distill-datamix-mix"
 MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-all-datamix-mix"
 MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix-mix"
+MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse-mix"
 OUT_PATH="${MODEL_PATH}-merged"
 MODEL="${OUT_PATH##*/}"
 
