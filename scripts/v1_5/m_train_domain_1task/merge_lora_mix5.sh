@@ -3,8 +3,6 @@
 # Set Hugging Face cache directory
 export HF_HOME=/ppio_net0/huggingface
 
-#!/bin/bash
-
 # 设置模型基路径
 MODEL_BASE="lmsys/vicuna-7b-v1.5"
 
