@@ -26,7 +26,7 @@ import torch
 import torch.nn.functional as F
 import torch.utils.checkpoint
 from torch import nn
-from torch.nn import CrossEntropyLoss
+from torch.nn import CrossEntropyLoss, MSELoss
 from transformers.models.llama.modeling_llama import Cache
 from transformers.models.llama.modeling_llama import (
     CausalLMOutputWithPast,
@@ -197,6 +197,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # LLaVA 损失和蒸馏损失计算
         loss_fct = CrossEntropyLoss()
         loss_fkl = ForwardKLLoss()
+        loss_mse = MSELoss()
 
         llava_loss = None
         kd_loss = None
@@ -250,7 +251,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             )
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
-            kd_loss = torch.nn.functional.mse_loss(hidden_states_text, hidden_states_text_old)
+            kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
 
         # # distill text and multi-modal
         # shift_logits_old = logits_old[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
