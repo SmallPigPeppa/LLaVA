@@ -18,6 +18,7 @@ MODEL_PATHS=(
 #  "continual-ckpt/domain-1task/llava-v1.5-7b-lora-task-vg"
 )
 
+
 # 设置模型权重比例
 #MODEL_WEIGHTS="8.32,56.39,11.17,3.17,12.42,13.74"
 MODEL_WEIGHTS="56.39,3.17"
