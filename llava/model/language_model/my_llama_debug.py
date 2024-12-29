@@ -202,6 +202,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         llava_loss = None
         kd_loss = None
         kd_loss_ce = None
+        loss = None
 
         # LLaVA 损失计算
         if len(multi_modal_index) > 0:
@@ -275,6 +276,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             llava_loss = kd_loss * 0.
             loss = kd_loss * 100.0 + llava_loss
             self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
+
 
         if not return_dict:
             output = (logits,) + outputs[1:]
