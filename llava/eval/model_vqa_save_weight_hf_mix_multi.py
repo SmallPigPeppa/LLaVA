@@ -39,6 +39,7 @@ def save_model_with_trainer(args):
         raise ValueError("Number of models and weights must match.")
 
     # Extract the weights from each model and free up memory
+    model = None
     weights_list = []
     for model_path in model_paths:
         model_path = os.path.expanduser(model_path)
@@ -50,19 +51,11 @@ def save_model_with_trainer(args):
         weights = {key: value.cpu() for key, value in weights.items()}  # Ensure weights are on CPU
         weights_list.append(weights)
 
-        # Free up memory by deleting the model
-        del model
-        torch.cuda.empty_cache()
-
     # Average the weights based on the provided weights
     averaged_weights = average_models(weights_list, model_weights)
 
-    # Create a new model and load the averaged weights
-    model_name = os.path.basename(model_paths[0])  # Use the name of the first model
-    tokenizer, averaged_model, _, _ = load_pretrained_model(model_paths[0], args.model_base, model_name)
-
     # Load the averaged weights into the new model
-    averaged_model.load_state_dict(averaged_weights)
+    model.load_state_dict(averaged_weights)
 
     # Set up training arguments (used for saving only, no training or evaluation)
     training_args = TrainingArguments(
@@ -75,7 +68,7 @@ def save_model_with_trainer(args):
 
     # Initialize the Hugging Face Trainer with the averaged model and tokenizer
     trainer = Trainer(
-        model=averaged_model,
+        model=model,
         args=training_args,
         tokenizer=tokenizer  # Include the tokenizer to save it with the model
     )
