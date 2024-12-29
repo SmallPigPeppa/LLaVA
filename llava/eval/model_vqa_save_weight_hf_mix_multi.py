@@ -49,7 +49,7 @@ def save_model_with_trainer(args):
         # Extract weights from the model and move them to the CPU
         weights = model.state_dict()
         weights = {key: value.cpu() for key, value in weights.items()}
-        import pdb;pdb.set_trace()# Ensure weights are on CPU
+        # import pdb;pdb.set_trace()# Ensure weights are on CPU
         weights_list.append(weights)
 
     # Average the weights based on the provided weights
