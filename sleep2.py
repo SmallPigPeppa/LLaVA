@@ -32,5 +32,5 @@ def occupy_gpu_and_compute(gpu_id):
 # 在0到7号GPU上运行
 if __name__ == "__main__":
     while True:
-        for gpu_id in range(1,8):
+        for gpu_id in range(4,8):
             occupy_gpu_and_compute(gpu_id)
