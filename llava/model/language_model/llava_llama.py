@@ -116,6 +116,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 images,
                 image_sizes
             )
+            import pdb;pdb.set_trace()
         # import pdb;pdb.set_trace()
         out_dict = super().forward(
             input_ids=input_ids,
