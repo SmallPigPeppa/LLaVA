@@ -4,6 +4,7 @@ export CUDA_VISIBLE_DEVICES=0
 SPLIT="mmbench_dev_20230712"
 MODEL=continual-ckpt/domain-Amix/llava-v1.5-7b-lora-task-ocr-merged
 MODEL=continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse-all-mix-merged
+MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
 python -m llava.eval.model_vqa_mmbench \
     --model-path $MODEL \
     --question-file ./playground/data/eval/mmbench/$SPLIT.tsv \
