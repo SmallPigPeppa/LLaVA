@@ -7,7 +7,7 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 #DATA_PATH="playground/data/domain-incremental/merge.json"
-DATA_PATH="playground/data/exp1/part2.json"
+DATA_PATH="playground/data/exp1/part2-others.json"
 OUTPUT_DIR="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-mse"
 
 
