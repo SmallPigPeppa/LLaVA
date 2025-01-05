@@ -97,7 +97,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
 
         multi_modal_index = [i for i in range(input_ids.shape[0]) if IMAGE_TOKEN_INDEX in input_ids[i]]
         pure_text_index = [i for i in range(input_ids.shape[0]) if IMAGE_TOKEN_INDEX not in input_ids[i]]
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
 
         if inputs_embeds is None:
             (
