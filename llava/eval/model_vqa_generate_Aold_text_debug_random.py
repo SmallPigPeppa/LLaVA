@@ -148,68 +148,17 @@ def generate_answers_from_model(model, tokenizer, image_processor, items, image_
                 inputs = tokenizer([prompt])
                 input_ids = torch.as_tensor(inputs.input_ids).cuda()
 
+                import pdb; pdb.set_trace()
+
                 output_ids = model.generate(
                     input_ids,
                     do_sample=True,
                     use_cache=True,
                     temperature=0.7,
                     max_new_tokens=1024, )
-                # import pdb; pdb.set_trace()
+
+                import pdb; pdb.set_trace()
                 output = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
-
-
-
-
-                #
-                #
-                # conv.append_message(conv.roles[1], None)
-                # prompt = conv.get_prompt()
-                #
-                # input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda()
-                #
-                # # Load and process the image
-                # image_file = conv["image"]
-                # # image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
-                # image = None  # initial None
-                # image_path = os.path.join(image_folder, image_file)
-                # try:
-                #     image = Image.open(image_path).convert('RGB')
-                # except Exception as e:
-                #     possible_extensions = ['.jpg', '.png', '.gif']
-                #     print(f"Failed to load {image_file}: {e}")
-                #
-                #     # If loading fails, try different extensions
-                #     base_filename, _ = os.path.splitext(image_file)
-                #     for ext in possible_extensions:
-                #         image_path = os.path.join(image_folder, base_filename + ext)
-                #         try:
-                #             image = Image.open(image_path).convert('RGB')
-                #             print(f"Successfully loaded image: {image_path}")
-                #             break
-                #         except Exception as e:
-                #             print(f"Failed to load {base_filename + ext}: {e}")
-                # if image is None:
-                #     raise ValueError(f"Failed to load any valid image for {image_file}")
-                #
-                #
-                # image_tensor = process_images([image], image_processor, model.config)[0]
-                #
-                # # Generate answer from model
-                # with torch.inference_mode():
-                #     output_ids = model.generate(
-                #         input_ids,
-                #         images=None,
-                #         image_sizes=None,
-                #         do_sample=True if args.temperature > 0 else False,
-                #         temperature=args.temperature,
-                #         top_p=args.top_p,
-                #         num_beams=args.num_beams,
-                #         max_new_tokens=1024,
-                #         use_cache=True
-                #     )
-                #
-                # # Decode and clean up the generated answer
-                # generated_answer = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
 
                 # Now find the "gpt" index that corresponds to this human question
                 gpt_index = i + 1  # The next index is the gpt response
