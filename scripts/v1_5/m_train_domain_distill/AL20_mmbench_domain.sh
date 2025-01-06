@@ -1,6 +1,6 @@
 #!/bin/bash
-#export HF_HOME=/mnt/disk3/wzliu/huggingface
-export HF_HOME=/ppio_net0/huggingface
+export HF_HOME=/mnt/disk3/wzliu/huggingface
+#export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=6
 SPLIT="mmbench_dev_20230712"
 
