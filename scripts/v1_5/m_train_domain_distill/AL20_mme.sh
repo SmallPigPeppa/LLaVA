@@ -18,3 +18,4 @@ python convert_answer_to_mme.py --experiment llava-v1.5-13b
 cd eval_tool
 
 python calculation.py --results_dir answers/llava-v1.5-13b
+
