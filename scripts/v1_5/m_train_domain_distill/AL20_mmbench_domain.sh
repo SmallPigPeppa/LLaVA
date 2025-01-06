@@ -9,9 +9,10 @@ MODELS=(
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged"
-    "continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
+#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
+    "checkpoints/llava-v1.5-7b-lora-merged"
 )
 
 # Iterate over models and run evaluation
