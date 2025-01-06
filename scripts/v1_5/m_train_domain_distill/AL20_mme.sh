@@ -4,7 +4,11 @@ export HF_HOME=/mnt/disk3/wzliu/huggingface
 export CUDA_VISIBLE_DEVICES=7
 MODEL=checkpoints/llava-v1.5-7b-lora-merged
 MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged
-MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged
+#MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged
+
+rm -rf ./playground/data/eval/MME/eval_tool
+unzip ./playground/data/eval/MME/eval_tool.zip
+
 python -m llava.eval.model_vqa_loader \
     --model-path $MODEL \
     --question-file ./playground/data/eval/MME/llava_mme.jsonl \
@@ -20,4 +24,7 @@ python convert_answer_to_mme.py --experiment llava-v1.5-13b
 cd eval_tool
 
 python calculation.py --results_dir answers/llava-v1.5-13b
+
+
+
 
