@@ -1,7 +1,7 @@
 #!/bin/bash
 export HF_HOME=/ppio_net0/huggingface
 export HF_HOME=/mnt/disk3/wzliu/huggingface
-
+export CUDA_VISIBLE_DEVICES=7
 # Set model as a variable
 MODEL_PATH="checkpoints/llava-v1.5-7b-lora"
 MODEL_BASE="lmsys/vicuna-7b-v1.5"
