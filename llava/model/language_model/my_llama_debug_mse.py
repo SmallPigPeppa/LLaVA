@@ -135,6 +135,11 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         ```python
         "Hey, are you conscious? Can you talk to me?\nI'm not conscious, but I can talk to you."
         ```"""
+        if multi_modal_index is None:
+            multi_modal_index = []
+        if pure_text_index is None:
+            pure_text_index = []
+
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
         output_hidden_states = (
             output_hidden_states if output_hidden_states is not None else self.config.output_hidden_states
@@ -164,26 +169,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             logits = self.lm_head(hidden_states)
         logits = logits.float()
 
-        with torch.no_grad():
-            # 获取旧模型输出(only on pure text)
-            import pdb;pdb.set_trace()
-            outputs_old = self.model_old(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                position_ids=position_ids,
-                past_key_values=past_key_values,
-                inputs_embeds=inputs_embeds,
-                use_cache=use_cache,
-                output_attentions=output_attentions,
-                output_hidden_states=output_hidden_states,
-                return_dict=return_dict,
-            )
-            hidden_states_old = outputs_old[0]
-
-        if multi_modal_index is None:
-            multi_modal_index = []
-        if pure_text_index is None:
-            pure_text_index = []
 
         # LLaVA 损失和蒸馏损失计算
         loss_fct = CrossEntropyLoss()
@@ -209,6 +194,24 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
+            with torch.no_grad():
+                # 获取旧模型输出(only on pure text)
+                import pdb;
+                pdb.set_trace()
+                attention_mask_t = attention_mask[pure_text_index]
+                inputs_embeds_t = inputs_embeds[pure_text_index]
+                outputs_old = self.model_old(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask_t,
+                    position_ids=position_ids,
+                    past_key_values=past_key_values,
+                    inputs_embeds=inputs_embeds_t,
+                    use_cache=use_cache,
+                    output_attentions=output_attentions,
+                    output_hidden_states=output_hidden_states,
+                    return_dict=return_dict,
+                )
+                hidden_states_old = outputs_old[0]
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
@@ -217,16 +220,15 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
             loss = kd_loss * 100.0 + llava_loss
-            self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
+            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
         elif kd_loss is None:
             kd_loss = llava_loss * 0.
-            kd_loss_ce = llava_loss * 0.
             loss = kd_loss * 100.0 + llava_loss
-            self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
+            self.report_metrics(kd_loss=kd_loss,  llava_loss=llava_loss, all_loss=loss)
         elif llava_loss is None:
             llava_loss = kd_loss * 0.
             loss = kd_loss * 100.0 + llava_loss
-            self.report_metrics(kd_loss=kd_loss, kd_loss_ce=kd_loss_ce, llava_loss=llava_loss, all_loss=loss)
+            self.report_metrics(kd_loss=kd_loss,  llava_loss=llava_loss, all_loss=loss)
 
 
         if not return_dict:
