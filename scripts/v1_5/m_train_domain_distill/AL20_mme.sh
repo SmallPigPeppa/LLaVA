@@ -7,7 +7,7 @@ MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged
 
 rm -rf ./playground/data/eval/MME/eval_tool
-unzip ./playground/data/eval/MME/eval_tool.zip
+unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
 
 python -m llava.eval.model_vqa_loader \
     --model-path $MODEL \
