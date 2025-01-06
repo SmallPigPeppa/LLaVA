@@ -1,7 +1,7 @@
 #!/bin/bash
 export HF_HOME=/mnt/disk3/wzliu/huggingface
-export HF_HOME=/ppio_net0/huggingface
-export CUDA_VISIBLE_DEVICES=0
+#export HF_HOME=/ppio_net0/huggingface
+export CUDA_VISIBLE_DEVICES=7
 
 python -m llava.eval.model_vqa_loader \
     --model-path checkpoints/llava-v1.5-7b-lora-merged \
