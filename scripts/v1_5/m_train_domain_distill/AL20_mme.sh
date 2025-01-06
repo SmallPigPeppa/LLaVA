@@ -1,9 +1,10 @@
 #!/bin/bash
 export HF_HOME=/mnt/disk3/wzliu/huggingface
 #export HF_HOME=/ppio_net0/huggingface
-export CUDA_VISIBLE_DEVICES=6
+export CUDA_VISIBLE_DEVICES=7
 MODEL=checkpoints/llava-v1.5-7b-lora-merged
 MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged
+MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged
 python -m llava.eval.model_vqa_loader \
     --model-path $MODEL \
     --question-file ./playground/data/eval/MME/llava_mme.jsonl \
