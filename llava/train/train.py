@@ -78,7 +78,7 @@ class DataArguments:
     is_multimodal: bool = False
     image_folder: Optional[str] = field(default=None)
     image_aspect_ratio: str = 'square'
-    data_shuffle: bool = True
+
 
 
 @dataclass
@@ -115,6 +115,7 @@ class TrainingArguments(transformers.TrainingArguments):
     lora_bias: str = "none"
     mm_projector_lr: Optional[float] = None
     group_by_modality_length: bool = field(default=False)
+    data_shuffle: bool = True
 
 
 def maybe_zero_3(param, ignore_status=False, name=None):
