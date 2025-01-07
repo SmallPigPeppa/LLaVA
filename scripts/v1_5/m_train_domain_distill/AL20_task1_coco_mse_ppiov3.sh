@@ -7,8 +7,8 @@ export HF_HOME=/ppio_net0/huggingface
 # Manually specify model and vision configuration
 MODEL_PATH="lmsys/vicuna-7b-v1.5"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
-DATA_PATH="playground/data/domain-incremental-mse/coco-with-othersv2.json"
-OUTPUT_DIR="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v2"
+DATA_PATH="playground/data/domain-incremental-mse/coco-with-othersv3.json"
+OUTPUT_DIR="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v3"
 PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
 
 
@@ -16,6 +16,7 @@ PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
 deepspeed llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --distill True \
+    --data_seed 0 \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path ${MODEL_PATH} \
     --version v1 \
