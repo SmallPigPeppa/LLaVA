@@ -78,6 +78,7 @@ class DataArguments:
     is_multimodal: bool = False
     image_folder: Optional[str] = field(default=None)
     image_aspect_ratio: str = 'square'
+    data_shuffle: bool = True
 
 
 @dataclass

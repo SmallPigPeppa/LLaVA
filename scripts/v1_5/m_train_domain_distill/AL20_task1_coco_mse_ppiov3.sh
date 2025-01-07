@@ -16,7 +16,7 @@ PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
 deepspeed llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --distill True \
-    --data_seed 0 \
+    --data_shuffle False \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path ${MODEL_PATH} \
     --version v1 \
