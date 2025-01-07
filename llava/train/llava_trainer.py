@@ -76,7 +76,7 @@ def get_modality_length_grouped_indices(lengths, batch_size, world_size, generat
     mm_indices, mm_lengths = zip(*[(i, l) for i, l in enumerate(lengths) if l > 0])
     lang_indices, lang_lengths = zip(*[(i, -l) for i, l in enumerate(lengths) if l < 0])
 
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
 
     mm_shuffle = [mm_indices[i] for i in get_length_grouped_indices(mm_lengths, batch_size, world_size, generator=None)]
     lang_shuffle = [lang_indices[i] for i in
