@@ -4,11 +4,11 @@ export HF_HOME=/mnt/disk3/wzliu/huggingface
 export CUDA_VISIBLE_DEVICES=4
 MODEL=checkpoints/llava-v1.5-7b-lora-merged
 MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged
-MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged
-MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
-MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged
-MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged
-MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged
+#MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged
+#MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
+#MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged
+#MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged
+#MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged
 
 rm -rf ./playground/data/eval/MME/eval_tool
 unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
