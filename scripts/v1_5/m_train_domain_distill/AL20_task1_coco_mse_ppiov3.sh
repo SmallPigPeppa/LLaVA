@@ -4,7 +4,7 @@
 export HF_HOME=/ppio_net0/huggingface
 export HF_HOME=/mnt/disk3/wzliu/huggingface
 export CUDA_VISIBLE_DEVICES=0,1,2,3
-export CUDA_VISIBLE_DEVICES=0
+#export CUDA_VISIBLE_DEVICES=0
 # Manually specify model and vision configuration
 MODEL_PATH="lmsys/vicuna-7b-v1.5"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
@@ -36,7 +36,7 @@ deepspeed llava/train/train_mem.py \
     --num_train_epochs 1 \
     --max_steps -1 \
     --per_device_train_batch_size 8 \
-    --per_device_eval_batch_size 2 \
+    --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
