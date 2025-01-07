@@ -116,6 +116,7 @@ class TrainingArguments(transformers.TrainingArguments):
     mm_projector_lr: Optional[float] = None
     group_by_modality_length: bool = field(default=False)
     data_shuffle: bool = True
+    dataloader_prefetch_factor: int = None
 
 
 def maybe_zero_3(param, ignore_status=False, name=None):
