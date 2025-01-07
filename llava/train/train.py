@@ -115,7 +115,7 @@ class TrainingArguments(transformers.TrainingArguments):
     lora_bias: str = "none"
     mm_projector_lr: Optional[float] = None
     group_by_modality_length: bool = field(default=False)
-    data_shuffle: bool = True
+    # data_shuffle: bool = True
     # dataloader_prefetch_factor: int = 2
 
 
