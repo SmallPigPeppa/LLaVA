@@ -48,5 +48,5 @@ merge_datasets(
     coco_file='playground/data/domain-incremental/llava_v1_5_mix665k-coco.json',
     others_file='playground/data/domain-incremental/llava_v1_5_mix665k-others.json',
     output_file='playground/data/domain-incremental-mse/coco-with-othersv3.json',
-    interval=7  # 控制每n个coco样本插入1个others样本
+    interval=3  # 控制每n个coco样本插入1个others样本
 )
