@@ -183,6 +183,7 @@ class LLaVATrainer(Trainer):
             "persistent_workers": self.args.dataloader_persistent_workers,
             "shuffle": self.args.data_shuffle
         }
+        print("dataloader_params",dataloader_params)
 
         if not isinstance(train_dataset, torch.utils.data.IterableDataset):
             dataloader_params["sampler"] = self._get_train_sampler()
