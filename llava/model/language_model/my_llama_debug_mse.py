@@ -191,26 +191,31 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             llava_loss = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
+
+        with torch.no_grad():
+            # 获取旧模型输出(only on pure text)
+            # import pdb;pdb.set_trace()
+            # attention_mask_t = attention_mask[pure_text_index].contiguous()
+            # inputs_embeds_t = inputs_embeds[pure_text_index].contiguous()
+            attention_mask_t = attention_mask
+            inputs_embeds_t = inputs_embeds
+            outputs_old = self.model_old(
+                input_ids=input_ids,
+                attention_mask=attention_mask_t,
+                position_ids=position_ids,
+                past_key_values=past_key_values,
+                inputs_embeds=inputs_embeds_t,
+                use_cache=use_cache,
+                output_attentions=output_attentions,
+                output_hidden_states=output_hidden_states,
+                return_dict=return_dict,
+            )
+            hidden_states_old = outputs_old[0]
+
         if len(pure_text_index) > 0:
-            with torch.no_grad():
-                # 获取旧模型输出(only on pure text)
-                # import pdb;pdb.set_trace()
-                attention_mask_t = attention_mask[pure_text_index].contiguous()
-                inputs_embeds_t = inputs_embeds[pure_text_index].contiguous()
-                outputs_old = self.model_old(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask_t,
-                    position_ids=position_ids,
-                    past_key_values=past_key_values,
-                    inputs_embeds=inputs_embeds_t,
-                    use_cache=use_cache,
-                    output_attentions=output_attentions,
-                    output_hidden_states=output_hidden_states,
-                    return_dict=return_dict,
-                )
-                hidden_states_old = outputs_old[0]
+
             hidden_states_text = hidden_states[pure_text_index].contiguous()
-            hidden_states_text_old = hidden_states_old.contiguous()
+            hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
             # import pdb;pdb.set_trace()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
 
