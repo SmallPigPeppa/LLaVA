@@ -196,7 +196,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         if len(pure_text_index) > 0:
             with torch.no_grad():
                 # 获取旧模型输出(only on pure text)
-                import pdb;pdb.set_trace()
+                # import pdb;pdb.set_trace()
                 attention_mask_t = attention_mask[pure_text_index]
                 inputs_embeds_t = inputs_embeds[pure_text_index]
                 outputs_old = self.model_old(
@@ -213,7 +213,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 hidden_states_old = outputs_old[0]
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old.contiguous()
-            import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
 
 
