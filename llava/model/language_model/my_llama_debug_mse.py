@@ -169,7 +169,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             logits = self.lm_head(hidden_states)
         logits = logits.float()
 
-
         # LLaVA 损失和蒸馏损失计算
         loss_fct = CrossEntropyLoss()
         loss_mse = MSELoss()
@@ -190,7 +189,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             # 计算 LLaVA 损失
             shift_labels = shift_labels.to(shift_logits.device)
             llava_loss = loss_fct(shift_logits, shift_labels)
-
 
         # 蒸馏损失计算
         if len(pure_text_index) > 0:
@@ -216,20 +214,18 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             # import pdb;pdb.set_trace()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
 
-
         # import pdb;pdb.set_trace()
         if kd_loss is not None and llava_loss is not None:
             loss = kd_loss * 10.0 + llava_loss
-            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss)
+            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
         elif kd_loss is None:
             kd_loss = llava_loss * 0.
             loss = kd_loss * 10.0 + llava_loss
-            self.report_metrics(kd_loss=kd_loss,  llava_loss=llava_loss, all_loss=loss)
+            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
         elif llava_loss is None:
             llava_loss = kd_loss * 0.
             loss = kd_loss * 10.0 + llava_loss
-            self.report_metrics(kd_loss=kd_loss,  llava_loss=llava_loss, all_loss=loss)
-
+            self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
 
         if not return_dict:
             output = (logits,) + outputs[1:]
