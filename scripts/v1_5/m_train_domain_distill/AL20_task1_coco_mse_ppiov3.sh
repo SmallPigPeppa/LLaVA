@@ -1,16 +1,17 @@
 #!/bin/bash
 
 # Set Hugging Face cache directory
-export HF_HOME=/ppio_net0/huggingface
+#export HF_HOME=/ppio_net0/huggingface
 export HF_HOME=/mnt/disk3/wzliu/huggingface
-export CUDA_VISIBLE_DEVICES=0,1,2,3
-export CUDA_VISIBLE_DEVICES=0
+#export CUDA_VISIBLE_DEVICES=0,1,2,3
+#export CUDA_VISIBLE_DEVICES=0
 # Manually specify model and vision configuration
 MODEL_PATH="lmsys/vicuna-7b-v1.5"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 DATA_PATH="playground/data/domain-incremental-mse/coco-with-othersv3.json"
 OUTPUT_DIR="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v3"
 PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
+
 
 
 # Training command for OCR task
@@ -35,8 +36,8 @@ deepspeed llava/train/train_mem.py \
     --num_train_epochs 1 \
     --max_steps -1 \
     --per_device_train_batch_size 8 \
-    --per_device_eval_batch_size 1 \
-    --gradient_accumulation_steps 4 \
+    --per_device_eval_batch_size 2 \
+    --gradient_accumulation_steps 2 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
     --save_steps 50000 \
@@ -53,4 +54,5 @@ deepspeed llava/train/train_mem.py \
     --lazy_preprocess True \
     --report_to wandb
 
-#/ppio_net0/code/openapi.sh stop 1ad06ee0e8bb7b15
+/ppio_net0/code/openapi.sh stop 1ad06ee0e8bb7b15
+
