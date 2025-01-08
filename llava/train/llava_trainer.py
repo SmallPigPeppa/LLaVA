@@ -152,13 +152,14 @@ class LLaVATrainer(Trainer):
             return None
 
         if self.args.group_by_modality_length:
-            print("here")
+            # print("here")
             lengths = self.train_dataset.modality_lengths
             return LengthGroupedSampler(
                 self.args.train_batch_size,
                 world_size=self.args.world_size * self.args.gradient_accumulation_steps,
                 lengths=lengths,
-                group_by_modality=True,
+                # group_by_modality=True,
+                group_by_modality=False,
             )
         else:
             return super()._get_train_sampler()
