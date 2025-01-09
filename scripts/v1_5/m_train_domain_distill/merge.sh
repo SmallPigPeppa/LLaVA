@@ -9,7 +9,7 @@ MODEL_BASE="lmsys/vicuna-7b-v1.5"
 # First, evaluate the model without lambda
 #MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix"
 #MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse-all"
-MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda0"
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda10"
 OUT_PATH="${MODEL_PATH}-merged"
 #MODEL="${OUT_PATH##*/}"
 MODEL_NAME=$(basename $OUT_PATH)
