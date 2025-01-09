@@ -25,7 +25,7 @@ deepspeed llava/train/train_mem.py \
     --image_folder ./playground/data \
     --vision_tower ${VISION_TOWER} \
     --pretrain_mm_mlp_adapter ${PRETRAIN_ADAPTER} \
-    --mm_projector_type mlp2x_gelu \gi
+    --mm_projector_type mlp2x_gelu \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end False \
     --mm_use_im_patch_token False \
