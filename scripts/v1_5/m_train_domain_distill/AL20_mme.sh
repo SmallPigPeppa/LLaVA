@@ -1,7 +1,7 @@
 #!/bin/bash
 export HF_HOME=/mnt/disk3/wzliu/huggingface
 export HF_HOME=/ppio_net0/huggingface
-export CUDA_VISIBLE_DEVICES=4
+export CUDA_VISIBLE_DEVICES=0
 MODEL=checkpoints/llava-v1.5-7b-lora-merged
 MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged
