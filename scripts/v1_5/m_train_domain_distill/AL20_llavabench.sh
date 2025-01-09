@@ -37,3 +37,4 @@ python llava/eval/eval_gpt_review_bench.py \
 python llava/eval/summarize_gpt_review.py -f playground/data/eval/llava-bench-in-the-wild/reviews/$MODEL.jsonl
 
 
+
