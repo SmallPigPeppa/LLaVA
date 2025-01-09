@@ -1,14 +1,16 @@
 #!/bin/bash
 export HF_HOME=/ppio_net0/huggingface
-export HF_HOME=/mnt/disk3/wzliu/huggingface
+#export HF_HOME=/mnt/disk3/wzliu/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
-MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+#MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+MODEL_BASE="lmsys/vicuna-7b-v1.5"
 
 # First, evaluate the model without lambda
 #MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix"
-MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse-all"
-OUT_PATH="${MODEL_PATH}-mix-merged"
+#MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse-all"
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda0"
+OUT_PATH="${MODEL_PATH}-merged"
 MODEL="${OUT_PATH##*/}"
 
 # Evaluate the model (1st command - saving weights)
