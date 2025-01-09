@@ -11,7 +11,8 @@ MODEL_BASE="lmsys/vicuna-7b-v1.5"
 #MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse-all"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda0"
 OUT_PATH="${MODEL_PATH}-merged"
-MODEL="${OUT_PATH##*/}"
+#MODEL="${OUT_PATH##*/}"
+MODEL_NAME=$(basename $OUT_PATH)
 
 # Evaluate the model (1st command - saving weights)
 python -m llava.eval.model_vqa_save_weight_hf \
@@ -21,9 +22,9 @@ python -m llava.eval.model_vqa_save_weight_hf \
 
 # Evaluate the model (2nd command - actual evaluation)
 python -m llava.eval.model_vqa \
-    --model-path "continual-ckpt/distill/$MODEL" \
+    --model-path $OUT_PATH \
     --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
     --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL.jsonl \
+    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL_NAME.jsonl \
     --temperature 0 \
     --conv-mode vicuna_v1
