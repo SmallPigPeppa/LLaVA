@@ -9,7 +9,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3
 MODEL_PATH="lmsys/vicuna-7b-v1.5"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 DATA_PATH="playground/data/domain-incremental-mse/coco-with-othersv4.json"
-OUTPUT_DIR="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda0"
+OUTPUT_DIR="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0"
 PRETRAIN_ADAPTER="./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin"
 
 
@@ -35,9 +35,9 @@ deepspeed llava/train/train_mem.py \
     --output_dir ${OUTPUT_DIR} \
     --num_train_epochs 1 \
     --max_steps -1 \
-    --per_device_train_batch_size 8 \
+    --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 2 \
-    --gradient_accumulation_steps 2 \
+    --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
     --save_steps 50000 \
