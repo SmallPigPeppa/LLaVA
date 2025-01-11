@@ -5,7 +5,7 @@ import random
 with open('playground/data/domain-incremental/llava_v1_5_mix665k-textvqa.json', 'r') as f:
     coco_data = json.load(f)
 
-with open('playground/data/domain-incremental-mse/llava_v1_5_mix665k-others.json', 'r') as f:
+with open('playground/data/domain-incremental/llava_v1_5_mix665k-others.json', 'r') as f:
     others_data = json.load(f)
 
 # 统计样本数量
