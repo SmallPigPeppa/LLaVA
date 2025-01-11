@@ -17,7 +17,7 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0"
 MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa"
-
+MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-v2"
 OUT_PATH="${MODEL_PATH}-merged"
 #MODEL="${OUT_PATH##*/}"
 MODEL=$(basename $OUT_PATH)
