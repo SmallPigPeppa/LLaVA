@@ -11,6 +11,10 @@ MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged
 MODEL=continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda0-merged
 
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0"
+#MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0"
+MODEL="${MODEL_PATH}-merged"
+
 rm -rf ./playground/data/eval/MME/eval_tool
 unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
 
