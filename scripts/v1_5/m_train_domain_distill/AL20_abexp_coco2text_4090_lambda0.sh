@@ -7,10 +7,20 @@ export HF_HOME=/ppio_net0/huggingface
 #export CUDA_VISIBLE_DEVICES=0
 # Manually specify model and vision configuration
 
-MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+
 VISION_TOWER="openai/clip-vit-large-patch14-336"
+
+MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 DATA_PATH="playground/data/domain-incremental/llava_v1_5_mix665k-textvqa.json"
 OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text"
+
+
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
+DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-others.json"
+OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda0"
+
+
+
 
 
 #MODEL_PATH="lmsys/vicuna-7b-v1.5"
@@ -58,5 +68,5 @@ deepspeed llava/train/train_mem.py \
     --lazy_preprocess True \
     --report_to wandb
 
-#/ppio_net0/code/openapi.sh stop 1ad06ee0e8bb7b15
+#/ppio_net0/code/openapi.sh stop c9b6332a877ee875
 
