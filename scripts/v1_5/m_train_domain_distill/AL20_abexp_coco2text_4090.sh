@@ -10,7 +10,7 @@ export HF_HOME=/ppio_net0/huggingface
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 DATA_PATH="playground/data/domain-incremental/llava_v1_5_mix665k-textvqa.json"
-OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa"
+OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text"
 
 
 #MODEL_PATH="lmsys/vicuna-7b-v1.5"
