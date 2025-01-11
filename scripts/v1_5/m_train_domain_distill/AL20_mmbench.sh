@@ -23,4 +23,4 @@ python scripts/convert_mmbench_for_submission.py \
     --annotation-file ./playground/data/eval/mmbench/$SPLIT.tsv \
     --result-dir ./playground/data/eval/mmbench/answers/$SPLIT \
     --upload-dir ./playground/data/eval/mmbench/answers_upload/$SPLIT \
-    --experiment llava-v1.5-13b
+    --experiment llava-v1.5-13b-c
