@@ -13,6 +13,7 @@ MODELS=(
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
     "checkpoints/llava-v1.5-7b-lora-merged"
+    "continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
 )
 
 # Iterate over models and run evaluation
