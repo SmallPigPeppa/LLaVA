@@ -19,8 +19,6 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v
 DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-others.json"
 OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1"
 
-MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
-
 
 
 
@@ -51,7 +49,7 @@ deepspeed llava/train/train_mem.py \
     --output_dir ${OUTPUT_DIR} \
     --num_train_epochs 1 \
     --max_steps -1 \
-    --per_device_train_batch_size 8 \
+    --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
