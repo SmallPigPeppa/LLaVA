@@ -227,6 +227,11 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
             # import pdb;pdb.set_trace()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
+        else:
+            hidden_states_text = hidden_states.contiguous()
+            hidden_states_text_old = hidden_states_old.contiguous()
+            kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
+            kd_loss = kd_loss * 0.
 
         # import pdb;pdb.set_trace()
         # if kd_loss is not None and llava_loss is not None:
@@ -243,8 +248,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
 
         # 确保 kd_loss 和 llava_loss 是 tensor，并进行初始化
-        kd_loss = kd_loss if kd_loss is not None else torch.tensor(0.0, device=logits.device)
-        llava_loss = llava_loss if llava_loss is not None else torch.tensor(0.0, device=logits.device)
+        # kd_loss = kd_loss if kd_loss is not None else torch.tensor(0.0, device=logits.device)
+        # llava_loss = llava_loss if llava_loss is not None else torch.tensor(0.0, device=logits.device)
 
         # 计算最终 loss
         loss = kd_loss * 1.0 + llava_loss
