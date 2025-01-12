@@ -192,13 +192,15 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             llava_loss = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
-
+        if len(multi_modal_index) == 0:
+            if torch.distributed.get_rank() == 0:  # 仅在进程0中调试
+                import pdb;pdb.set_trace()
         with torch.no_grad():
             # 获取旧模型输出(only on pure text)
             # import pdb;pdb.set_trace()
             # attention_mask_t = attention_mask[pure_text_index].contiguous()
             # inputs_embeds_t = inputs_embeds[pure_text_index].contiguous()
-            print("line 201")
+
             attention_mask_t = attention_mask
             inputs_embeds_t = inputs_embeds
             outputs_old = self.model_old(
@@ -213,14 +215,14 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 return_dict=return_dict,
             )
             hidden_states_old = outputs_old[0]
-            print("line216")
+
 
         if len(pure_text_index) > 0:
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
             # import pdb;pdb.set_trace()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
-            print("line 222")
+
 
         # import pdb;pdb.set_trace()
         # if kd_loss is not None and llava_loss is not None:
@@ -244,14 +246,14 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         loss = kd_loss * 1.0 + llava_loss
 
         # 汇报指标
-        print("line247")
+
         self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
 
         if not return_dict:
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
-        print("line254")
+
         return CausalLMOutputWithPast(
             loss=loss,
             logits=logits,
