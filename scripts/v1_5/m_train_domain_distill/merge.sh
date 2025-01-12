@@ -13,11 +13,11 @@ MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda10"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda5"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0"
-MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0"
-MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa"
-MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-v2"
-MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0"
-MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0-llama"
+#MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0"
+#MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa"
+#MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-v2"
+#MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0"
+#MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0-llama"
 OUT_PATH="${MODEL_PATH}-merged"
 #MODEL="${OUT_PATH##*/}"
 MODEL_NAME=$(basename $OUT_PATH)
@@ -29,10 +29,10 @@ python -m llava.eval.model_vqa_save_weight_hf \
   --save-path ${OUT_PATH}
 
 # Evaluate the model (2nd command - actual evaluation)
-python -m llava.eval.model_vqa \
-    --model-path $OUT_PATH \
-    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
-    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL_NAME.jsonl \
-    --temperature 0 \
-    --conv-mode vicuna_v1
+#python -m llava.eval.model_vqa \
+#    --model-path $OUT_PATH \
+#    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
+#    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
+#    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL_NAME.jsonl \
+#    --temperature 0 \
+#    --conv-mode vicuna_v1
