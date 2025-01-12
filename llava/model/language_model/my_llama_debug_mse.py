@@ -191,16 +191,11 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             shift_labels = shift_labels.to(shift_logits.device)
             llava_loss = loss_fct(shift_logits, shift_labels)
 
-        # 蒸馏损失计算
-        # if len(multi_modal_index) == 0:
-        #     if torch.distributed.get_rank() == 0:  # 仅在进程0中调试
-        #         import pdb;pdb.set_trace()
         with torch.no_grad():
             # 获取旧模型输出(only on pure text)
             # import pdb;pdb.set_trace()
             # attention_mask_t = attention_mask[pure_text_index].contiguous()
             # inputs_embeds_t = inputs_embeds[pure_text_index].contiguous()
-
             attention_mask_t = attention_mask
             inputs_embeds_t = inputs_embeds
             outputs_old = self.model_old(
@@ -246,16 +241,18 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         loss = kd_loss * 1.0 + llava_loss
 
         # 汇报指标
-        # print(kd_loss)
-        # print(llava_loss)
-        print(loss)
-        # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
+        self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
 
         if not return_dict:
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
-
+        # 输出各个字段的内容
+        print("loss:", loss)
+        print("logits:", logits)
+        print("past_key_values:", outputs.past_key_values)
+        print("hidden_states:", outputs.hidden_states)
+        print("attentions:", outputs.attentions)
         return CausalLMOutputWithPast(
             loss=loss,
             logits=logits,
