@@ -177,7 +177,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         kd_loss = None
         loss = None
 
-
         # LLaVA 损失计算
         if len(multi_modal_index) > 0:
             logits_multi_modal = logits[multi_modal_index]
@@ -190,6 +189,18 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             # 计算 LLaVA 损失
             shift_labels = shift_labels.to(shift_logits.device)
             llava_loss = loss_fct(shift_logits, shift_labels)
+        else:
+            logits_multi_modal = logits
+            labels_multi_modal = labels
+
+            # 移位处理
+            shift_logits = logits_multi_modal[..., :-1, :].contiguous().view(-1, self.config.vocab_size)
+            shift_labels = labels_multi_modal[..., 1:].contiguous().view(-1)
+
+            # 计算 LLaVA 损失
+            shift_labels = shift_labels.to(shift_logits.device)
+            llava_loss = loss_fct(shift_logits, shift_labels)
+            llava_loss = llava_loss * 0.
 
         with torch.no_grad():
             # 获取旧模型输出(only on pure text)
@@ -211,13 +222,11 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             )
             hidden_states_old = outputs_old[0]
 
-
         if len(pure_text_index) > 0:
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
             # import pdb;pdb.set_trace()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
-
 
         # import pdb;pdb.set_trace()
         # if kd_loss is not None and llava_loss is not None:
@@ -248,11 +257,11 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             return (loss,) + output if loss is not None else output
 
         # 输出各个字段的内容
-        print("loss:", loss)
-        print("logits:", logits)
-        print("past_key_values:", outputs.past_key_values)
-        print("hidden_states:", outputs.hidden_states)
-        print("attentions:", outputs.attentions)
+        # print("loss:", loss)
+        # print("logits:", logits)
+        # print("past_key_values:", outputs.past_key_values)
+        # print("hidden_states:", outputs.hidden_states)
+        # print("attentions:", outputs.attentions)
         return CausalLMOutputWithPast(
             loss=loss,
             logits=logits,
