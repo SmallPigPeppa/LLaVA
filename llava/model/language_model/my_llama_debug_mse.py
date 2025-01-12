@@ -220,28 +220,28 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
 
         # import pdb;pdb.set_trace()
-        if kd_loss is not None and llava_loss is not None:
-            loss = kd_loss * 1.0 + llava_loss
-            # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
-        elif kd_loss is None:
-            kd_loss = llava_loss * 0.
-            loss = kd_loss * 1.0 + llava_loss
-            # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
-        elif llava_loss is None:
-            llava_loss = kd_loss * 0.
-            loss = kd_loss * 1.0 + llava_loss
-
-        self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
-
-        # # 确保 kd_loss 和 llava_loss 是 tensor，并进行初始化
-        # kd_loss = kd_loss if kd_loss is not None else torch.tensor(0.0, device=logits.device)
-        # llava_loss = llava_loss if llava_loss is not None else torch.tensor(0.0, device=logits.device)
+        # if kd_loss is not None and llava_loss is not None:
+        #     loss = kd_loss * 1.0 + llava_loss
+        #     # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
+        # elif kd_loss is None:
+        #     kd_loss = llava_loss * 0.
+        #     loss = kd_loss * 1.0 + llava_loss
+        #     # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
+        # elif llava_loss is None:
+        #     llava_loss = kd_loss * 0.
+        #     loss = kd_loss * 1.0 + llava_loss
         #
-        # # 计算最终 loss
-        # loss = kd_loss * 1.0 + llava_loss
-
-        # # 汇报指标
         # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
+
+        # 确保 kd_loss 和 llava_loss 是 tensor，并进行初始化
+        kd_loss = kd_loss if kd_loss is not None else torch.tensor(0.0, device=logits.device)
+        llava_loss = llava_loss if llava_loss is not None else torch.tensor(0.0, device=logits.device)
+
+        # 计算最终 loss
+        loss = kd_loss * 1.0 + llava_loss
+
+        # 汇报指标
+        self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
 
         if not return_dict:
             output = (logits,) + outputs[1:]
