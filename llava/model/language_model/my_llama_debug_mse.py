@@ -192,9 +192,9 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             llava_loss = loss_fct(shift_logits, shift_labels)
 
         # 蒸馏损失计算
-        if len(multi_modal_index) == 0:
-            if torch.distributed.get_rank() == 0:  # 仅在进程0中调试
-                import pdb;pdb.set_trace()
+        # if len(multi_modal_index) == 0:
+        #     if torch.distributed.get_rank() == 0:  # 仅在进程0中调试
+        #         import pdb;pdb.set_trace()
         with torch.no_grad():
             # 获取旧模型输出(only on pure text)
             # import pdb;pdb.set_trace()
