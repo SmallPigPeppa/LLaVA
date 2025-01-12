@@ -16,7 +16,7 @@ OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text"
 
 
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
-DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-othersv3.json"
+DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-others.json"
 OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1"
 
 
@@ -51,7 +51,7 @@ deepspeed llava/train/train_mem.py \
     --max_steps -1 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 1 \
-    --gradient_accumulation_steps 1 \
+    --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
     --save_steps 50000 \
@@ -68,5 +68,5 @@ deepspeed llava/train/train_mem.py \
     --lazy_preprocess True \
     --report_to wandb
 
-#/ppio_net0/code/openapi.sh stop c9b6332a877ee875
+/ppio_net0/code/openapi.sh stop 6a6c8c51e745398e
 
