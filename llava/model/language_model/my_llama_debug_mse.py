@@ -240,8 +240,8 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # # 计算最终 loss
         # loss = kd_loss * 1.0 + llava_loss
 
-        # 汇报指标
-        self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
+        # # 汇报指标
+        # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
 
         if not return_dict:
             output = (logits,) + outputs[1:]
