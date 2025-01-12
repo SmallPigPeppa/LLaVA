@@ -244,12 +244,14 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         loss = kd_loss * 1.0 + llava_loss
 
         # 汇报指标
+        print("line247")
         self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
 
         if not return_dict:
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
+        print("line254")
         return CausalLMOutputWithPast(
             loss=loss,
             logits=logits,
