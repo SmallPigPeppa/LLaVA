@@ -16,7 +16,7 @@ OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text"
 
 
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
-DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-others.json"
+DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-othersv3.json"
 OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1"
 
 
