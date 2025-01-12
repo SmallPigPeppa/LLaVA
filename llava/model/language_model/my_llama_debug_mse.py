@@ -177,6 +177,10 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         kd_loss = None
         loss = None
 
+        # kd_loss = torch.tensor(0.0, device=logits.device)
+        # llava_loss = torch.tensor(0.0, device=logits.device)
+        loss = torch.tensor(0.0, device=logits.device)
+
         # LLaVA 损失计算
         if len(multi_modal_index) > 0:
             logits_multi_modal = logits[multi_modal_index]
@@ -213,7 +217,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             hidden_states_old = outputs_old[0]
 
         if len(pure_text_index) > 0:
-
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
             # import pdb;pdb.set_trace()
