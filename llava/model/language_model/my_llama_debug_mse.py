@@ -213,12 +213,14 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
                 return_dict=return_dict,
             )
             hidden_states_old = outputs_old[0]
+            print("line216")
 
         if len(pure_text_index) > 0:
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
             # import pdb;pdb.set_trace()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
+            print("line 222")
 
         # import pdb;pdb.set_trace()
         # if kd_loss is not None and llava_loss is not None:
