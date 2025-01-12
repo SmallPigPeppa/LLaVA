@@ -177,9 +177,6 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         kd_loss = None
         loss = None
 
-        # kd_loss = torch.tensor(0.0, device=logits.device)
-        # llava_loss = torch.tensor(0.0, device=logits.device)
-        loss = torch.tensor(0.0, device=logits.device)
 
         # LLaVA 损失计算
         if len(multi_modal_index) > 0:
@@ -198,7 +195,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         with torch.no_grad():
             # 获取旧模型输出(only on pure text)
-            import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
             # attention_mask_t = attention_mask[pure_text_index].contiguous()
             # inputs_embeds_t = inputs_embeds[pure_text_index].contiguous()
             attention_mask_t = attention_mask
@@ -219,28 +216,29 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         if len(pure_text_index) > 0:
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
-            import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
             kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
 
         # import pdb;pdb.set_trace()
-        # if kd_loss is not None and llava_loss is not None:
-        #     loss = kd_loss * 10.0 + llava_loss
-        #     self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
-        # elif kd_loss is None:
-        #     kd_loss = llava_loss * 0.
-        #     loss = kd_loss * 10.0 + llava_loss
-        #     self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
-        # elif llava_loss is None:
-        #     llava_loss = kd_loss * 0.
-        #     loss = kd_loss * 10.0 + llava_loss
-        #     self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
+        if kd_loss is not None and llava_loss is not None:
+            loss = kd_loss * 1.0 + llava_loss
+            # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
+        elif kd_loss is None:
+            kd_loss = llava_loss * 0.
+            loss = kd_loss * 1.0 + llava_loss
+            # self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
+        elif llava_loss is None:
+            llava_loss = kd_loss * 0.
+            loss = kd_loss * 1.0 + llava_loss
 
-        # 确保 kd_loss 和 llava_loss 是 tensor，并进行初始化
-        kd_loss = kd_loss if kd_loss is not None else torch.tensor(0.0, device=logits.device)
-        llava_loss = llava_loss if llava_loss is not None else torch.tensor(0.0, device=logits.device)
+        self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
 
-        # 计算最终 loss
-        loss = kd_loss * 1.0 + llava_loss
+        # # 确保 kd_loss 和 llava_loss 是 tensor，并进行初始化
+        # kd_loss = kd_loss if kd_loss is not None else torch.tensor(0.0, device=logits.device)
+        # llava_loss = llava_loss if llava_loss is not None else torch.tensor(0.0, device=logits.device)
+        #
+        # # 计算最终 loss
+        # loss = kd_loss * 1.0 + llava_loss
 
         # 汇报指标
         self.report_metrics(kd_loss=kd_loss, llava_loss=llava_loss, all_loss=loss, num_text=len(pure_text_index))
