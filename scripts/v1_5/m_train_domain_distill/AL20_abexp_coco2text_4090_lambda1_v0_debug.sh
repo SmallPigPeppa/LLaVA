@@ -3,8 +3,8 @@
 # Set Hugging Face cache directory
 export HF_HOME=/ppio_net0/huggingface
 export HF_HOME=/mnt/disk3/wzliu/huggingface
-#export CUDA_VISIBLE_DEVICES=0,1,2,3
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+#export CUDA_VISIBLE_DEVICES=0
 # Manually specify model and vision configuration
 
 
@@ -51,7 +51,7 @@ deepspeed llava/train/train_mem.py \
     --output_dir ${OUTPUT_DIR} \
     --num_train_epochs 1 \
     --max_steps -1 \
-    --per_device_train_batch_size 1 \
+    --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
