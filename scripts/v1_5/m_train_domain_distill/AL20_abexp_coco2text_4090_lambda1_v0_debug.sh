@@ -19,6 +19,8 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v
 DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-others.json"
 OUTPUT_DIR="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1"
 
+MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
+
 
 
 
