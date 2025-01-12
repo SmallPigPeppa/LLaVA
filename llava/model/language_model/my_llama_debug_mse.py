@@ -256,12 +256,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
 
-        # 输出各个字段的内容
-        # print("loss:", loss)
-        # print("logits:", logits)
-        # print("past_key_values:", outputs.past_key_values)
-        # print("hidden_states:", outputs.hidden_states)
-        # print("attentions:", outputs.attentions)
+
         return CausalLMOutputWithPast(
             loss=loss,
             logits=logits,
