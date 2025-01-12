@@ -198,7 +198,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         with torch.no_grad():
             # 获取旧模型输出(only on pure text)
-            # import pdb;pdb.set_trace()
+            import pdb;pdb.set_trace()
             # attention_mask_t = attention_mask[pure_text_index].contiguous()
             # inputs_embeds_t = inputs_embeds[pure_text_index].contiguous()
             attention_mask_t = attention_mask
