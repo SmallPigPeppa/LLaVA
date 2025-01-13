@@ -114,7 +114,7 @@ def load_and_mix_models(model_path_a, model_path_b, mix_ratio=0.5, retain_ratio=
             if name in state_dict_b:
                 delta = state_dict_b[name] - state_dict_a[name]
                 filtered_delta = filter_delta(delta, retain_ratio=retain_ratio)
-                param.data = (state_dict_a[name] + mix_ratio * filtered_delta).to(param.device)
+                param.data = (state_dict_a[name].to(param.device) + mix_ratio * filtered_delta.to(param.device)).to(param.device)
             pbar.update(1)  # Update progress bar after processing each parameter
 
     return tokenizer_a, model_a
