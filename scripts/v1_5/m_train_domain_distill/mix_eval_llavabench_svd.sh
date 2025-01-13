@@ -45,3 +45,4 @@ python -m llava.eval.model_vqa_save_weight_hf_mixv3_svd \
 #
 ## Summarize reviews
 #python llava/eval/summarize_gpt_review.py -f playground/data/eval/llava-bench-in-the-wild/reviews/$MODEL_NAME.jsonl
+
