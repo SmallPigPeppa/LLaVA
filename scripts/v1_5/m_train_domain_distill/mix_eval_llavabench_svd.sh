@@ -9,7 +9,7 @@ MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-
 
 
 MIX_RATIO=0.9
-SVD_RATIO=0.5
+SVD_RATIO=0.2
 SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}-svd${SVD_RATIO}"
 MODEL_NAME=$(basename $SAVE_PATH)
 
