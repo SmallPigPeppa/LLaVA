@@ -3,9 +3,9 @@ export HF_HOME=/ppio_net0/huggingface
 #export HF_HOME=/mnt/disk3/wzliu/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
-#MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 #MODEL_BASE="lmsys/vicuna-7b-v1.5"
-MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
+#MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
 
 # First, evaluate the model without lambda
 #MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix"
