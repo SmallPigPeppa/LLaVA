@@ -6,7 +6,7 @@ MODEL_PATH_A="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco
 MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-merged"
 
 MODEL_PATH_A="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
-MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-merged"
+MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa-merged"
 
 
 # Directory for results
