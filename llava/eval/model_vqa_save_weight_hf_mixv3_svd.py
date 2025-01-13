@@ -17,7 +17,7 @@ def filter_delta(delta, retain_ratio=0.9):
 
     # Perform SVD
     flat_delta = flat_delta.to('cuda')  # 将数据移动到 GPU
-
+    import pdb; pdb.set_trace()
     U, S, Vh = torch.linalg.svd(flat_delta, full_matrices=False)
 
     # Filter singular values to retain 90% variance
