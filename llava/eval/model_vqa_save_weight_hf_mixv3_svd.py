@@ -50,8 +50,8 @@ def filter_delta(delta, retain_ratio=0.9):
 
     # Perform SVD
     flat_delta = flat_delta.to(torch.float32)
-    if torch.cuda.is_available():
-        flat_delta = flat_delta.to('cuda')  # 将数据移动到 GPU
+    # if torch.cuda.is_available():
+    #     flat_delta = flat_delta.to('cuda')  # 将数据移动到 GPU
 
     U, S, Vh = torch.linalg.svd(flat_delta, full_matrices=False)
 
