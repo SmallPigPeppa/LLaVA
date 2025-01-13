@@ -37,7 +37,7 @@ def eval_single(annotation_file, result_file):
     print(experiment_name)
     annotations = json.load(open(annotation_file))['data']
     annotations = {(annotation['image_id'], annotation['question'].lower()): annotation for annotation in annotations}
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     results = [json.loads(line) for line in open(result_file)]
 
     pred_list = []
