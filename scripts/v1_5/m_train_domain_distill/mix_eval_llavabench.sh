@@ -12,7 +12,7 @@ MIX_RATIO=0.5
 SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}"
 MODEL_NAME=$(basename $SAVE_PATH)
 
- Evaluate the model (1st command - saving weights)
+# Evaluate the model (1st command - saving weights)
 python -m llava.eval.model_vqa_save_weight_hf_mixv3 \
   --model-path-a ${MODEL_PATH_A} \
   --model-path-b ${MODEL_PATH_B} \
