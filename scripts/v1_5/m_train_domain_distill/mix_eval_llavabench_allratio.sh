@@ -5,6 +5,10 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL_PATH_A="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
 MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-merged"
 
+MODEL_PATH_A="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-merged"
+
+
 # Directory for results
 RESULTS_DIR="playground/data/eval/llava-bench-in-the-wild/answers"
 REVIEWS_DIR="playground/data/eval/llava-bench-in-the-wild/reviews"
@@ -14,14 +18,14 @@ mkdir -p $REVIEWS_DIR
 
 # List of mix_ratios to evaluate
 MIX_RATIOS=(
-#  0.0
-#  0.1
-#  0.2
-#  0.3
-#  0.4
-#  0.5
-#  0.6
-#  0.7
+  0.0
+  0.1
+  0.2
+  0.3
+  0.4
+  0.5
+  0.6
+  0.7
   0.8
   0.9
   1.0
