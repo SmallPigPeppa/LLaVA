@@ -39,6 +39,53 @@ def filter_delta_old(delta, retain_ratio=0.9):
     # Reshape back to the original shape of delta
     return filtered_delta.view(*original_shape)
 
+# def filter_delta(delta, retain_ratio=0.9):
+#     """
+#     对 delta 参数进行特征值分解，并过滤特征值，仅保留累积贡献达到 retain_ratio 的部分。
+#     如果 total_variance 为 0，则直接返回原始 delta。
+#     """
+#     # Flatten delta to 2D matrix
+#     original_shape = delta.shape
+#     flat_delta = delta.view(-1, delta.size(-1))  # Reshape to (m, n)
+#
+#     # Perform SVD
+#     flat_delta = flat_delta.to(torch.float32)
+#     # if torch.cuda.is_available():
+#     #     flat_delta = flat_delta.to('cuda')  # 将数据移动到 GPU
+#
+#     U, S, Vh = torch.linalg.svd(flat_delta, full_matrices=False)
+#
+#     # Compute total variance
+#     total_variance = S.sum().item()
+#
+#     # If total variance is 0, return original delta
+#     if total_variance == 0:
+#         print("Total variance is 0. Returning original delta.")
+#         return delta
+#
+#     # Filter singular values to retain 90% variance
+#     cumulative_variance = 0
+#     selected_indices = []
+#     for i, singular_value in enumerate(S):
+#         cumulative_variance += singular_value.item()
+#         selected_indices.append(i)
+#         if cumulative_variance / total_variance >= retain_ratio:
+#             break
+#
+#     # Zero out unselected singular values
+#     filtered_S = torch.zeros_like(S)
+#     for i in selected_indices:
+#         filtered_S[i] = S[i]
+#
+#     # Reconstruct filtered delta
+#     filtered_delta = (U @ torch.diag(filtered_S) @ Vh)
+#
+#     # Reshape back to the original shape
+#     return filtered_delta.view(*original_shape)
+
+
+import torch
+
 def filter_delta(delta, retain_ratio=0.9):
     """
     对 delta 参数进行特征值分解，并过滤特征值，仅保留累积贡献达到 retain_ratio 的部分。
@@ -48,11 +95,12 @@ def filter_delta(delta, retain_ratio=0.9):
     original_shape = delta.shape
     flat_delta = delta.view(-1, delta.size(-1))  # Reshape to (m, n)
 
-    # Perform SVD
+    # Move delta to GPU if available
     flat_delta = flat_delta.to(torch.float32)
-    # if torch.cuda.is_available():
-    #     flat_delta = flat_delta.to('cuda')  # 将数据移动到 GPU
+    if torch.cuda.is_available():
+        flat_delta = flat_delta.to('cuda')  # 将数据移动到 GPU
 
+    # Perform SVD
     U, S, Vh = torch.linalg.svd(flat_delta, full_matrices=False)
 
     # Compute total variance
@@ -63,7 +111,7 @@ def filter_delta(delta, retain_ratio=0.9):
         print("Total variance is 0. Returning original delta.")
         return delta
 
-    # Filter singular values to retain 90% variance
+    # Filter singular values to retain specified variance
     cumulative_variance = 0
     selected_indices = []
     for i, singular_value in enumerate(S):
@@ -80,10 +128,13 @@ def filter_delta(delta, retain_ratio=0.9):
     # Reconstruct filtered delta
     filtered_delta = (U @ torch.diag(filtered_S) @ Vh)
 
+    # Move result back to CPU and clear GPU memory
+    filtered_delta = filtered_delta.to('cpu')
+    del U, S, Vh, flat_delta  # 清理中间变量
+    torch.cuda.empty_cache()  # 释放 GPU 显存
+
     # Reshape back to the original shape
     return filtered_delta.view(*original_shape)
-
-
 
 
 def load_and_mix_models(model_path_a, model_path_b, mix_ratio=0.5, retain_ratio=0.9):
