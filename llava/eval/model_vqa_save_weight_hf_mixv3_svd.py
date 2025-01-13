@@ -7,6 +7,38 @@ from transformers import Trainer, TrainingArguments
 from tqdm.auto import tqdm
 
 
+def filter_delta_old(delta, retain_ratio=0.9):
+    """
+    对 delta 参数进行特征值分解，并过滤特征值，仅保留累积贡献达到 retain_ratio 的部分。
+    """
+    # Flatten delta to a 2D matrix for SVD
+    original_shape = delta.shape
+    flat_delta = delta.view(-1, delta.size(-1))
+
+    # Perform SVD (Singular Value Decomposition)
+    U, S, V = torch.svd(flat_delta)
+    total_variance = S.sum().item()
+
+    # Retain the largest singular values until the retain_ratio is met
+    cumulative_variance = 0
+    selected_indices = []
+    for i, singular_value in enumerate(S):
+        cumulative_variance += singular_value.item()
+        selected_indices.append(i)
+        if cumulative_variance / total_variance >= retain_ratio:
+            break
+
+    # Zero out remaining singular values
+    filtered_S = torch.zeros_like(S)
+    for i in selected_indices:
+        filtered_S[i] = S[i]
+
+    # Reconstruct filtered delta using updated singular values
+    filtered_delta = torch.mm(torch.mm(U, torch.diag(filtered_S)), V.T)
+
+    # Reshape back to the original shape of delta
+    return filtered_delta.view(*original_shape)
+
 def filter_delta(delta, retain_ratio=0.9):
     """
     对 delta 参数进行特征值分解，并过滤特征值，仅保留累积贡献达到 retain_ratio 的部分。
