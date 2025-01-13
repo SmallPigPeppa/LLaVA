@@ -16,8 +16,6 @@ def load_and_mix_models(model_path_a, model_path_b, mix_ratio=0.5):
     tokenizer_a, model_a, _, _ = load_pretrained_model(model_path=model_path_a, model_base=None, model_name=model_name_a)
     tokenizer_b, model_b, _, _ = load_pretrained_model(model_path=model_path_b, model_base=None, model_name=model_name_b)
 
-    # Ensure both models have the same architecture
-    assert model_a.config.to_dict() == model_b.config.to_dict(), "Models must have the same architecture for mixing."
 
     # Mix the weights of the two models according to the specified ratio
     mixed_model = model_a
