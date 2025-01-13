@@ -42,6 +42,7 @@ def filter_delta_old(delta, retain_ratio=0.9):
 def filter_delta(delta, retain_ratio=0.9):
     """
     对 delta 参数进行特征值分解，并过滤特征值，仅保留累积贡献达到 retain_ratio 的部分。
+    如果 total_variance 为 0，则直接返回原始 delta。
     """
     # Flatten delta to 2D matrix
     original_shape = delta.shape
@@ -49,12 +50,20 @@ def filter_delta(delta, retain_ratio=0.9):
 
     # Perform SVD
     flat_delta = flat_delta.to(torch.float32)
-    flat_delta = flat_delta.to('cuda')  # 将数据移动到 GPU
-    import pdb; pdb.set_trace()
+    if torch.cuda.is_available():
+        flat_delta = flat_delta.to('cuda')  # 将数据移动到 GPU
+
     U, S, Vh = torch.linalg.svd(flat_delta, full_matrices=False)
 
-    # Filter singular values to retain 90% variance
+    # Compute total variance
     total_variance = S.sum().item()
+
+    # If total variance is 0, return original delta
+    if total_variance == 0:
+        print("Total variance is 0. Returning original delta.")
+        return delta
+
+    # Filter singular values to retain 90% variance
     cumulative_variance = 0
     selected_indices = []
     for i, singular_value in enumerate(S):
