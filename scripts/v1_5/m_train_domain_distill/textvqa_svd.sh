@@ -1,4 +1,6 @@
 #!/bin/bash
+export HF_HOME=/ppio_net0/huggingface
+#export HF_HOME=/mnt/disk3/wzliu/huggingface
 
 MODEL_PATH_A="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
 MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-merged"
