@@ -4,29 +4,29 @@ export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
 #MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
-MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
-MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-merged"
+MODEL_PATH_A="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
+MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-merged"
 
 
 MIX_RATIO=0.5
-SAVE_PATH="${MODEL_PATH}-mix${MIX_RATIO}"
+SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}"
 MODEL_NAME=$(basename $SAVE_PATH)
 
-# Evaluate the model (1st command - saving weights)
-#python -m llava.eval.model_vqa_save_weight_hf_mixv3 \
-#  --model-path-a ${MODEL_PATH} \
-#  --model-path-b ${MODEL_BASE} \
-#  --mix-ratio ${MIX_RATIO} \
-#  --save-path ${SAVE_PATH}
-#
-## Evaluate the model (2nd command - actual evaluation)
-#python -m llava.eval.model_vqa \
-#    --model-path ${SAVE_PATH} \
-#    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
-#    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-#    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/${MODEL_NAME}.jsonl \
-#    --temperature 0 \
-#    --conv-mode vicuna_v1
+ Evaluate the model (1st command - saving weights)
+python -m llava.eval.model_vqa_save_weight_hf_mixv3 \
+  --model-path-a ${MODEL_PATH_A} \
+  --model-path-b ${MODEL_PATH_B} \
+  --mix-ratio ${MIX_RATIO} \
+  --save-path ${SAVE_PATH}
+
+# Evaluate the model (2nd command - actual evaluation)
+python -m llava.eval.model_vqa \
+    --model-path ${SAVE_PATH} \
+    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
+    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
+    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/${MODEL_NAME}.jsonl \
+    --temperature 0 \
+    --conv-mode vicuna_v1
 
 
 # Create the reviews directory
