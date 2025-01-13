@@ -4,6 +4,7 @@ import os
 from llava.model.builder import load_pretrained_model
 from llava.utils import disable_torch_init
 from transformers import Trainer, TrainingArguments
+from tqdm.auto import tqdm
 
 
 def filter_delta(delta, retain_ratio=0.9):
@@ -39,6 +40,9 @@ def filter_delta(delta, retain_ratio=0.9):
     return filtered_delta.view(*original_shape)
 
 
+from tqdm.auto import tqdm
+
+
 def load_and_mix_models(model_path_a, model_path_b, mix_ratio=0.5, retain_ratio=0.9):
     disable_torch_init()
 
@@ -58,14 +62,17 @@ def load_and_mix_models(model_path_a, model_path_b, mix_ratio=0.5, retain_ratio=
     del model_b
     torch.cuda.empty_cache()
 
-    # Rebuild model A and perform parameter fusion
+    # Rebuild model A and perform parameter fusion with progress bar
     tokenizer, model_a, _, _ = load_pretrained_model(model_path=model_path_a, model_base=None, model_name=model_name_a)
-    for name, param in model_a.named_parameters():
-        if name in state_dict_b:
-            delta = state_dict_b[name] - state_dict_a[name]
-            filtered_delta = filter_delta(delta, retain_ratio=retain_ratio)
-            # Update the parameters with filtered delta
-            param.data = (state_dict_a[name] + mix_ratio * filtered_delta).to(param.device)
+
+    param_names = list(model_a.named_parameters())  # Get parameter names for progress tracking
+    with tqdm(total=len(param_names), desc="Parameter Fusion Progress") as pbar:
+        for name, param in param_names:
+            if name in state_dict_b:
+                delta = state_dict_b[name] - state_dict_a[name]
+                filtered_delta = filter_delta(delta, retain_ratio=retain_ratio)
+                param.data = (state_dict_a[name] + mix_ratio * filtered_delta).to(param.device)
+            pbar.update(1)  # Update progress bar after processing each parameter
 
     return tokenizer_a, model_a
 
