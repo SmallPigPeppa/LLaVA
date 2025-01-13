@@ -29,26 +29,33 @@ MIX_RATIOS=(
 
 # Loop through the list of mix_ratios
 for MIX_RATIO in "${MIX_RATIOS[@]}"; do
+    source  /etc/proxy/net_proxy
     SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}"
     MODEL_NAME=$(basename $SAVE_PATH)
+    ANSWERS_FILE="${RESULTS_DIR}/${MODEL_NAME}.jsonl"
 
     echo "Evaluating mix_ratio=${MIX_RATIO}"
 
-    # Step 1: Save mixed model weights
-    python -m llava.eval.model_vqa_save_weight_hf_mixv3 \
-        --model-path-a ${MODEL_PATH_A} \
-        --model-path-b ${MODEL_PATH_B} \
-        --mix-ratio ${MIX_RATIO} \
-        --save-path ${SAVE_PATH}
+    # Check if answers file already exists
+    if [[ -f $ANSWERS_FILE ]]; then
+        echo "Answers file ${ANSWERS_FILE} already exists. Skipping Step 1 and Step 2."
+    else
+        # Step 1: Save mixed model weights
+        python -m llava.eval.model_vqa_save_weight_hf_mixv3 \
+            --model-path-a ${MODEL_PATH_A} \
+            --model-path-b ${MODEL_PATH_B} \
+            --mix-ratio ${MIX_RATIO} \
+            --save-path ${SAVE_PATH}
 
-    # Step 2: Evaluate the model
-    python -m llava.eval.model_vqa \
-        --model-path ${SAVE_PATH} \
-        --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
-        --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-        --answers-file ${RESULTS_DIR}/${MODEL_NAME}.jsonl \
-        --temperature 0 \
-        --conv-mode vicuna_v1
+        # Step 2: Evaluate the model
+        python -m llava.eval.model_vqa \
+            --model-path ${SAVE_PATH} \
+            --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
+            --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
+            --answers-file ${ANSWERS_FILE} \
+            --temperature 0 \
+            --conv-mode vicuna_v1
+    fi
 
     # Step 3: Generate reviews
     python llava/eval/eval_gpt_review_bench.py \
@@ -57,7 +64,7 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
         --rule llava/eval/table/rule.json \
         --answer-list \
             ./playground/data/eval/llava-bench-in-the-wild/answers_gpt4.jsonl \
-            ${RESULTS_DIR}/${MODEL_NAME}.jsonl \
+            ${ANSWERS_FILE} \
         --output ${REVIEWS_DIR}/${MODEL_NAME}.jsonl
 
     # Step 4: Summarize reviews
