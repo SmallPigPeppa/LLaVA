@@ -1,3 +1,5 @@
+LLava
+
 #    Copyright 2023 Haotian Liu
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +27,7 @@ import torch.nn as nn
 # Modified
 from transformers import AutoConfig, AutoModelForCausalLM, \
     LlamaConfig, LlamaModel
-from .my_llama_debug_mse import LlamaForCausalLM
+from .my_llama_debug import LlamaForCausalLM
 from llava.constants import IMAGE_TOKEN_INDEX
 
 ################
