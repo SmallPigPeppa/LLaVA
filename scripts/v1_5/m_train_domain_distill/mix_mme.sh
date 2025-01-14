@@ -8,7 +8,7 @@ MODEL_PATH_A="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco
 MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-merged"
 
 
-MIX_RATIO=0.5
+MIX_RATIO=0.
 MODEL="${MODEL_PATH_B}-mix${MIX_RATIO}"
 
 rm -rf ./playground/data/eval/MME/eval_tool
