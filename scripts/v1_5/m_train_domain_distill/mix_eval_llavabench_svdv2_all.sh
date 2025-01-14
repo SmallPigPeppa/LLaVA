@@ -10,7 +10,7 @@ MODEL_PATH_A2="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 MODEL_PATH_B2="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa-merged"
 
 # 固定的 SVD 保留比例
-SVD_RATIO=0.5
+SVD_RATIO=0.2
 SCALE_RATIO=0.5
 
 # 定义模型组合
