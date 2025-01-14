@@ -4,7 +4,7 @@ export HF_HOME=/ppio_net0/huggingface
 # 模型路径
 MODEL_PATH_A="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
 MODEL_PATH_B1="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-merged"
-MODEL_PATH_B2="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa-merged"
+#MODEL_PATH_B2="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa-merged"
 
 # 问题与答案路径
 QUESTION_FILE="./playground/data/eval/textvqa/llava_textvqa_val_v051_ocr.jsonl"
@@ -31,14 +31,14 @@ for MODEL_PATH_B in "${MODEL_PATH_B_LIST[@]}"; do
 
         echo "Evaluating mix ratio: ${MIX_RATIO}"
 
-        # 调用模型加载和推理脚本
-        python -m llava.eval.model_vqa_loader \
-            --model-path $SAVE_PATH \
-            --question-file $QUESTION_FILE \
-            --image-folder $IMAGE_FOLDER \
-            --answers-file $ANSWERS_FILE \
-            --temperature 0 \
-            --conv-mode vicuna_v1
+#        # 调用模型加载和推理脚本
+#        python -m llava.eval.model_vqa_loader \
+#            --model-path $SAVE_PATH \
+#            --question-file $QUESTION_FILE \
+#            --image-folder $IMAGE_FOLDER \
+#            --answers-file $ANSWERS_FILE \
+#            --temperature 0 \
+#            --conv-mode vicuna_v1
 
         # 调用评估脚本
         python -m llava.eval.eval_textvqa \
