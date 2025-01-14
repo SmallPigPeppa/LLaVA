@@ -37,17 +37,17 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
         --model-path $MODEL \
         --question-file ./playground/data/eval/MME/llava_mme.jsonl \
         --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
-        --answers-file ./playground/data/eval/MME/answers/llava-v1.5-13b-mix${MIX_RATIO}.jsonl \
+        --answers-file ./playground/data/eval/MME/answers/llava-v1.5-13b.jsonl \
         --temperature 0 \
         --conv-mode vicuna_v1
 
     # 转换答案格式
     cd ./playground/data/eval/MME
-    python convert_answer_to_mme.py --experiment llava-v1.5-13b-mix${MIX_RATIO}
+    python convert_answer_to_mme.py --experiment llava-v1.5-13b
     cd eval_tool
 
     # 计算结果
-    python calculation.py --results_dir answers/llava-v1.5-13b-mix${MIX_RATIO}
+    python calculation.py --results_dir answers/llava-v1.5-13b
 
     echo "Evaluation for mix ratio ${MIX_RATIO} completed."
 done
