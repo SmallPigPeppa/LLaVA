@@ -9,7 +9,7 @@ MODEL_PATH_B="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-
 
 # 定义所有的 mix_ratios
 MIX_RATIOS=(
-  0.0
+#  0.0
   0.1
   0.2
   0.3
