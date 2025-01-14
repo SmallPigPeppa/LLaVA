@@ -32,6 +32,8 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
     MODEL="${MODEL_PATH_B}-mix${MIX_RATIO}"
     echo "Evaluating mix ratio: ${MIX_RATIO}"
 
+    cd /ppio_net0/code/LLaVA
+
     # 加载模型并生成答案文件
     python -m llava.eval.model_vqa_loader \
         --model-path $MODEL \
@@ -50,6 +52,8 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
     python calculation.py --results_dir answers/llava-v1.5-13b
 
     echo "Evaluation for mix ratio ${MIX_RATIO} completed."
+
+
 done
 
 echo "All evaluations completed."
