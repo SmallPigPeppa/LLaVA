@@ -28,7 +28,7 @@ for MODEL_PAIR in "${MODELS[@]}"; do
     echo "Processing Model Pair: A=${MODEL_PATH_A}, B=${MODEL_PATH_B}"
 
     # 遍历 MIX_RATIO 从 0 到 1
-    for i in $(seq 0 0.1 1.0); do
+    for i in $(seq 0.1 0.1 1.0); do
         MIX_RATIO=$(printf "%.1f" $i)  # 保留一位小数
         SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}-svdv2${SVD_RATIO}-scale${SCALE_RATIO}"
         MODEL_NAME=$(basename $SAVE_PATH)
