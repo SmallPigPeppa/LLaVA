@@ -22,6 +22,7 @@ MIX_RATIOS=(
   1.0
 )
 
+
 # 解压工具
 rm -rf ./playground/data/eval/MME/eval_tool
 unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
