@@ -42,7 +42,7 @@ for MODEL_PAIR in "${MODELS[@]}"; do
             --mix-ratio ${MIX_RATIO} \
             --save-path ${SAVE_PATH} \
             --retain-ratio ${SVD_RATIO} \
-            ----scale-ratio ${SCALE_RATIO}
+            --scale-ratio ${SCALE_RATIO}
 
         echo "Evaluation for mix ratio ${MIX_RATIO} completed."
     done
