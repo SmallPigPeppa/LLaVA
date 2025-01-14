@@ -29,12 +29,12 @@ for MODEL_PATH_B in "${MODEL_PATH_B_LIST[@]}"; do
 
     # 对 MIX_RATIO 从 0 到 1 进行评估
     for i in $(seq 0 0.1 1.0); do
-        MIX_RATIO=$(printf "%.1f" $i)  # 保留一位小数
-        SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}"
-        MODEL_NAME=$(basename $SAVE_PATH)
-        ANSWERS_FILE="${ANSWERS_DIR}/${MODEL_NAME}.jsonl"
-
-        echo "Evaluating mix ratio: ${MIX_RATIO}"
+#        MIX_RATIO=$(printf "%.1f" $i)  # 保留一位小数
+#        SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}"
+#        MODEL_NAME=$(basename $SAVE_PATH)
+#        ANSWERS_FILE="${ANSWERS_DIR}/${MODEL_NAME}.jsonl"
+#
+#        echo "Evaluating mix ratio: ${MIX_RATIO}"
 
         # 调用模型加载和推理脚本
         python -m llava.eval.model_vqa_loader \
