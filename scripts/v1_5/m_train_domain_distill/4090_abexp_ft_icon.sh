@@ -8,7 +8,7 @@ export HF_HOME=/ppio_net0/huggingface
 # Manually specify model and vision configuration
 
 
-VISION_TOWER="openai/clip-vit-large-patch14-336"
+VISION_TOWER="liuhaotian/llava-v1.5-7b"
 
 #MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 #DATA_PATH="playground/data/domain-incremental/llava_v1_5_mix665k-textvqa.json"
