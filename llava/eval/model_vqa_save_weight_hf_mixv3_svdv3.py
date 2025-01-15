@@ -126,7 +126,10 @@ if __name__ == "__main__":
     parser.add_argument("--model-path-b", type=str, required=True, help="Path to pre-trained model B")
     parser.add_argument("--save-path", type=str, required=True, help="Directory to save the mixed model and tokenizer")
     parser.add_argument("--mix-ratio", type=float, default=0.5, help="Mixing ratio between model A and B (0.0 to 1.0)")
-    parser.add_argument("--retain-ratio", type=float, default=0.9, help="Ratio of variance to retain in filtered delta (0.0 to 1.0)")
+    parser.add_argument("--retain-ratio", type=float, default=0.9,
+                        help="Ratio of variance to retain in filtered delta (0.0 to 1.0)")
+    parser.add_argument("--scale-ratio", type=float, default=0.5,
+                        help="Ratio of variance to retain in filtered delta (0.0 to 1.0)")
     args = parser.parse_args()
 
     save_mixed_model(args, args.mix_ratio, args.retain_ratio)
