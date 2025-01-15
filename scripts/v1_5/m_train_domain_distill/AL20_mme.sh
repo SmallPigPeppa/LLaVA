@@ -2,8 +2,8 @@
 export HF_HOME=/mnt/disk3/wzliu/huggingface
 export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
-MODEL="checkpoints/llava-v1.5-7b-lora-merged"
-#MODEL="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
+#MODEL="checkpoints/llava-v1.5-7b-lora-merged"
+MODEL="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
 #MODEL="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
 #MODEL="continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
