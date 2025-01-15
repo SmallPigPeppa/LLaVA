@@ -37,7 +37,7 @@ for MODEL_PAIR in "${MODELS[@]}"; do
         echo "Evaluating mix ratio: ${MIX_RATIO} with SVD V3"
 
         # 调用模型保存和权重融合脚本
-        python -m llava.eval.model_vqa_save_weight_hf_mixv3_svdv2 \
+        python -m llava.eval.model_vqa_save_weight_hf_mixv3_svdv3 \
             --model-path-a ${MODEL_PATH_A} \
             --model-path-b ${MODEL_PATH_B} \
             --mix-ratio ${MIX_RATIO} \
