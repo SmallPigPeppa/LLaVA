@@ -25,7 +25,7 @@ for MODEL_PATH_B in "${MODEL_PATH_B_LIST[@]}"; do
     echo "Evaluating model path: ${MODEL_PATH_B}"
 
     # 对 MIX_RATIO 从 0 到 1 进行评估
-    for i in $(seq 0 0.1 1.0); do
+    for i in $(seq 0.1 0.1 1.0); do
         MIX_RATIO=$(printf "%.1f" $i)  # 保留一位小数
         SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}-svdv2${SVD_RATIO}-scale${SCALE_RATIO}"
         MODEL_NAME=$(basename $SAVE_PATH)
