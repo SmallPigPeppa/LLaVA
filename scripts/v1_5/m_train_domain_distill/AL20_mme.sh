@@ -5,7 +5,7 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL=checkpoints/llava-v1.5-7b-lora-merged
 MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged
 #MODEL="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
-MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
+#MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged
@@ -13,10 +13,10 @@ MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
 #MODEL="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0-merged"
 #MODEL="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0-merged-mix0.2-svdv3"
 
-#MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0"
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0"
 
-#MODEL="${MODEL_PATH}-merged"
+MODEL="${MODEL_PATH}-merged"
 
 rm -rf ./playground/data/eval/MME/eval_tool
 unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
