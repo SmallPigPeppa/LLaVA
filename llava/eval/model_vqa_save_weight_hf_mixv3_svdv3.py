@@ -9,10 +9,19 @@ from tqdm.auto import tqdm
 
 import torch
 
+import torch
+
 def filter_delta(delta, scale_ratio=0.3):
     """
     对 delta 参数进行特征值分解，动态调整特征值。
-    如果 total_variance 为 0，则直接返回原始 delta。
+    如果 total_variance 为 0 或无法找到满足条件的 K，则直接返回原始 delta。
+
+    Args:
+        delta (torch.Tensor): 输入的张量，形状为 (..., n)。
+        scale_ratio (float): 缩放比率，默认为 0.3。
+
+    Returns:
+        torch.Tensor: 经过特征值调整后的 delta 张量，形状与输入相同。
     """
     # Flatten delta to 2D matrix
     original_shape = delta.shape
@@ -37,7 +46,17 @@ def filter_delta(delta, scale_ratio=0.3):
     # Compute K such that the scaled first singular value equals scale_ratio * original value
     target_value = S[0] * scale_ratio
     cumulative_sum = torch.cumsum(S, dim=0)
-    K = next(i for i in range(1, len(S) + 1) if cumulative_sum[i - 1] / i <= target_value)
+
+    try:
+        # Find the first K where condition is met
+        K = next((i for i in range(1, len(S) + 1) if cumulative_sum[i - 1] / i <= target_value), None)
+    except StopIteration:
+        K = None
+
+    # If no valid K is found, return original delta
+    if K is None:
+        print("No valid K found. Returning original delta.")
+        return delta
 
     # Dynamically adjust singular values
     modified_S = torch.zeros_like(S)
@@ -59,6 +78,7 @@ def filter_delta(delta, scale_ratio=0.3):
 
     # Reshape back to the original shape
     return filtered_delta.view(*original_shape)
+
 
 
 
