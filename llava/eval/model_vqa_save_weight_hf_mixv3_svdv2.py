@@ -92,7 +92,7 @@ def filter_delta(delta, retain_ratio=0.9, scale_factor=0.5):
         selected_indices.append(i)
         if cumulative_variance / total_variance >= retain_ratio:
             break
-
+    import pdb;pdb.set_trace()
     # Adjust selected singular values by scale_factor
     adjusted_S = S.clone()  # Clone to avoid modifying original S
     for i in selected_indices:
