@@ -83,6 +83,7 @@ def filter_delta(delta, retain_ratio=0.9, scale_factor=0.5):
         print("Total variance is 0. Returning original delta.")
         return delta
 
+    import pdb;pdb.set_trace()
     # Filter singular values to retain specified variance
     cumulative_variance = 0
     selected_indices = []

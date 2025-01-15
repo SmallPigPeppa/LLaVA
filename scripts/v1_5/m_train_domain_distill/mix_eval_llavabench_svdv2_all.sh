@@ -13,6 +13,7 @@ MODEL_PATH_B2="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa-merg
 SVD_RATIO=0.2
 SCALE_RATIO=0.5
 
+
 # 定义模型组合
 MODELS=(
     "$MODEL_PATH_A1 $MODEL_PATH_B1"
