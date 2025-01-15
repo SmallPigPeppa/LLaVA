@@ -8,7 +8,7 @@ export HF_HOME=/ppio_net0/huggingface
 # Manually specify model and vision configuration
 
 
-VISION_TOWER="liuhaotian/llava-v1.5-7b"
+VISION_TOWER="openai/clip-vit-large-patch14-336"
 
 #MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 #DATA_PATH="playground/data/domain-incremental/llava_v1_5_mix665k-textvqa.json"
@@ -18,7 +18,7 @@ VISION_TOWER="liuhaotian/llava-v1.5-7b"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
 #DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-others.json"
 
-MODEL_PATH="lmsys/vicuna-7b-v1.5"
+MODEL_PATH="liuhaotian/llava-v1.5-13b"
 DATA_PATH="playground/data/fine-tune/iconqa/train.json"
 OUTPUT_DIR="ablation-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa"
 
