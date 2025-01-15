@@ -8,6 +8,7 @@ MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
 #MODEL="continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
 MODEL="continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged"
+
 #MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged
 #MODEL=continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda0-merged
 #MODEL="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0-merged"
