@@ -13,7 +13,7 @@ import torch
 
 import torch
 
-def filter_delta(delta, scale_ratio=0.3, pre_scaling_ratio=0.5):
+def filter_delta(delta, scale_ratio=0.3, pre_scaling_ratio=0.2):
     """
     对 delta 参数进行特征值分解，动态调整特征值。
     如果 total_variance 为 0 或无法找到满足条件的 K，则直接返回原始 delta。
