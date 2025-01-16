@@ -7,6 +7,7 @@ export CUDA_VISIBLE_DEVICES=0
 #MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
 #MODEL_BASE="lmsys/vicuna-7b-v1.5"
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
+MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0-merged"
 
 # First, evaluate the model without lambda
 #MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix"
@@ -22,6 +23,7 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-co
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v0-oinit-lambda1.0"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0-llama"
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-cocoinit-lambda1.0"
 
 OUT_PATH="${MODEL_PATH}-merged"
 #MODEL="${OUT_PATH##*/}"
