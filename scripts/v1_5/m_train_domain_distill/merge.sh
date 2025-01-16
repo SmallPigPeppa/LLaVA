@@ -4,7 +4,7 @@ export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
 MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
-MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
+#MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
 #MODEL_BASE="lmsys/vicuna-7b-v1.5"
 #MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
 
@@ -18,6 +18,7 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v
 MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa"
 MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-v2"
 MODEL_PATH="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1"
+MODEL_PATH="llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0-llama"
 
