@@ -6,6 +6,7 @@ export HF_HOME=/ppio_net0/huggingface
 #TASKS=("task-task1-merged" "task-task2-merged" "task-task3-merged" "task-task4-merged" "task-task5-merged")
 #TASKS=("task-others-merged" "task-coco-merged" "task-ocr_vqa-merged" "task-textvqa-merged" "task-gqa-merged" "task-vg-merged")
 TASKS=("task-vg-merged")
+TASKS=("task-coco-merged")
 
 
 
