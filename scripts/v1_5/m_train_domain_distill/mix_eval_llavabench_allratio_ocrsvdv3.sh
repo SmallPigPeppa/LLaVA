@@ -65,7 +65,7 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
             --conv-mode vicuna_v1
     fi
 
-     Step 3: Generate reviews
+#     Step 3: Generate reviews
     python llava/eval/eval_gpt_review_bench.py \
         --question ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
         --context ./playground/data/eval/llava-bench-in-the-wild/context.jsonl \
