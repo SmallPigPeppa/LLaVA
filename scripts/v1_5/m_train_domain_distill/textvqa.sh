@@ -13,7 +13,7 @@ SVD_RATIO=0.5
 SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}-svd${SVD_RATIO}"
 SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}"
 SAVE_PATH="${MODEL_PATH_B}"
-MODEL_NAME=$(basename $SAVE_PATH)
+#MODEL_NAME=$(basename $SAVE_PATH)
 
 python -m llava.eval.model_vqa_loader \
     --model-path $SAVE_PATH \

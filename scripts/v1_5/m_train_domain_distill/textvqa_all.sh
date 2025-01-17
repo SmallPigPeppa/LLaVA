@@ -6,6 +6,8 @@ MODEL_PATH_A="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco
 MODEL_PATH_B1="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco2text-lambda1-merged"
 MODEL_PATH_B2="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa-merged"
 
+MODEL_PATH_B1="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-cocoinit-lambda1.0-merged"
+
 # 问题与答案路径
 QUESTION_FILE="./playground/data/eval/textvqa/llava_textvqa_val_v051_ocr.jsonl"
 IMAGE_FOLDER="./playground/data/eval/textvqa/train_images"
@@ -17,14 +19,14 @@ mkdir -p $ANSWERS_DIR
 
 # 定义模型路径列表
 MODEL_PATH_B_LIST=("$MODEL_PATH_B1" "$MODEL_PATH_B2")
-#MODEL_PATH_B_LIST=("$MODEL_PATH_B1")
+MODEL_PATH_B_LIST=("$MODEL_PATH_B1")
 
 # 对每个模型路径进行评估
 for MODEL_PATH_B in "${MODEL_PATH_B_LIST[@]}"; do
     echo "Evaluating model path: ${MODEL_PATH_B}"
 
     # 对 MIX_RATIO 从 0 到 1 进行评估
-    for i in $(seq 0 0.1 1.0); do
+    for i in $(seq 0 0.1 0.3); do
         MIX_RATIO=$(printf "%.1f" $i)  # 保留一位小数
         SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}"
         MODEL_NAME=$(basename $SAVE_PATH)
