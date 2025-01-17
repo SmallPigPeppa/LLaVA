@@ -4,7 +4,6 @@ export HF_HOME=/ppio_net0/huggingface
 #export CUDA_VISIBLE_DEVICES=5
 tmux set-option history-limit 1000000
 
-
 # List of model paths
 MODELS=(
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
