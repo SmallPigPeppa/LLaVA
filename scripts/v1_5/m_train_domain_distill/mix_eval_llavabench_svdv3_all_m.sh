@@ -10,7 +10,7 @@ MODEL_PATH_A2="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 MODEL_PATH_B2="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa-merged"
 
 
-MODEL_PATH_A1="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0-merged"
+MODEL_PATH_A1="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0-merged"
 MODEL_PATH_B1="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-cocoinit-lambda1.0-merged"
 
 # 固定的 SVD 保留比例
