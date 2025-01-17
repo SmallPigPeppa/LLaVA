@@ -6,7 +6,7 @@ export CUDA_VISIBLE_DEVICES=0
 
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0"
 OUT_PATH="${MODEL_PATH}-merged"
-OUT_PATH="${MODEL_PATH}-merged-mix0.1-svdv3"
+OUT_PATH="${MODEL_PATH}-merged-mix0.2-svdv3"
 MODEL=$(basename $OUT_PATH)
 
 # Evaluate the model (2nd command - actual evaluation)
