@@ -11,17 +11,17 @@ MODEL_PATH_B="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-text
 
 # 定义所有的 mix_ratios
 MIX_RATIOS=(
-#  0.0
-  0.1
-  0.2
-  0.3
-#  0.4
-#  0.5
-#  0.6
-#  0.7
-#  0.8
-#  0.9
-#  1.0
+  0.0
+#  0.1
+#  0.2
+#  0.3
+  0.4
+  0.5
+  0.6
+  0.7
+  0.8
+  0.9
+  1.0
 )
 
 
