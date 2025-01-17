@@ -17,6 +17,7 @@ VISION_TOWER="openai/clip-vit-large-patch14-336"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged"
 #MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0-merged"
+#"continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0-merged"
 DATA_PATH="playground/data/domain-incremental-mse/textvqa-with-others.json"
 OUTPUT_DIR="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-cocoinit-lambda1.0"
 
