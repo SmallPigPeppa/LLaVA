@@ -17,7 +17,6 @@ MODEL_PATH_B1="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-tex
 SVD_RATIO=0.2
 SCALE_RATIO=0.5
 
-
 # 定义模型组合
 MODELS=(
     "$MODEL_PATH_A1 $MODEL_PATH_B1"
