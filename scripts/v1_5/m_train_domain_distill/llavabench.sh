@@ -8,7 +8,6 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-co
 OUT_PATH="${MODEL_PATH}-merged"
 MODEL=$(basename $OUT_PATH)
 
-
 # Evaluate the model (2nd command - actual evaluation)
 python -m llava.eval.model_vqa \
     --model-path ${OUT_PATH} \
