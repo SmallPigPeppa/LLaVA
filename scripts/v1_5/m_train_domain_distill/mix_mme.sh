@@ -13,8 +13,8 @@ MODEL_PATH_B="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-text
 MIX_RATIOS=(
   0.0
   0.1
-#  0.2
-#  0.3
+  0.2
+  0.3
 #  0.4
 #  0.5
 #  0.6
