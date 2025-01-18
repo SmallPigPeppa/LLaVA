@@ -18,8 +18,9 @@ MODEL="continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v0-oinit-lambda1.0"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-cocoinit-lambda1.0"
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-svdv3-lambda1.0"
 
-#MODEL="${MODEL_PATH}-merged"
+MODEL="${MODEL_PATH}-merged"
 
 rm -rf ./playground/data/eval/MME/eval_tool
 unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
