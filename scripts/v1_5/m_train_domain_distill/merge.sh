@@ -38,10 +38,10 @@ python -m llava.eval.model_vqa_save_weight_hf \
   --save-path ${OUT_PATH}
 
 # Evaluate the model (2nd command - actual evaluation)
-python -m llava.eval.model_vqa \
-    --model-path $OUT_PATH \
-    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
-    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL_NAME.jsonl \
-    --temperature 0 \
-    --conv-mode vicuna_v1
+#python -m llava.eval.model_vqa \
+#    --model-path $OUT_PATH \
+#    --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
+#    --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
+#    --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/$MODEL_NAME.jsonl \
+#    --temperature 0 \
+#    --conv-mode vicuna_v1
