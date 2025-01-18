@@ -2,7 +2,7 @@
 
 export HF_HOME=/ppio_net0/huggingface
 
-deepspeed llava/train/train_mem.py \
+deepspeed llava/train/train_mem_old.py \
     --deepspeed ./scripts/zero2.json \
     --model_name_or_path lmsys/vicuna-13b-v1.5 \
     --version plain \
