@@ -19,7 +19,7 @@ ANSWERS_DIR="./playground/data/eval/textvqa/answers"
 mkdir -p $ANSWERS_DIR
 
 # 定义模型路径列表
-MODEL_PATH_B_LIST=("$MODEL_PATH_B1" "$MODEL_PATH_B2")
+#MODEL_PATH_B_LIST=("$MODEL_PATH_B1" "$MODEL_PATH_B2")
 MODEL_PATH_B_LIST=("$MODEL_PATH_B1")
 SVD_RATIO=0.5
 # 对每个模型路径进行评估
