@@ -9,13 +9,13 @@ MODEL=$(basename $OUT_PATH)
 
 
 
-python -m llava.eval.model_iconqa \
-    --model-path ${MODEL_PATH} \
-    --question-file ./playground/data/fine-tune/iconqa/val-1000.json \
-    --image-folder ./playground/data \
-    --answers-file ./playground/data/eval/iconvqa/answers/${MODEL}.jsonl \
-    --temperature 0 \
-    --conv-mode vicuna_v1
+#python -m llava.eval.model_iconqa \
+#    --model-path ${MODEL_PATH} \
+#    --question-file ./playground/data/fine-tune/iconqa/val-1000.json \
+#    --image-folder ./playground/data \
+#    --answers-file ./playground/data/eval/iconvqa/answers/${MODEL}.jsonl \
+#    --temperature 0 \
+#    --conv-mode vicuna_v1
 
 
 python -m llava.eval.eval_iconqa \
