@@ -14,6 +14,7 @@ MODEL_PATH_B2="ablation-ckpt/exp1-model-mix/llava-v1.5-7b-lora-coco-textvqa-merg
 MODEL_PATH_A1="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-mix0.2-svdv3-lambda1.0-merged-mix0.1-svdv3"
 MODEL_PATH_B1="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-gqa-svdv3-lambda1.0-merged"
 
+
 # 固定的 SVD 保留比例
 SVD_RATIO=0.2
 SCALE_RATIO=0.5
