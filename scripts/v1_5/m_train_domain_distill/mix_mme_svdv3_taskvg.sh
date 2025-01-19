@@ -25,6 +25,14 @@ MIX_RATIOS=(
 #  1.0
 )
 
+MIX_RATIOS=(
+0.01
+0.02
+0.03
+0.04
+0.05
+)
+
 
 # 解压工具
 rm -rf ./playground/data/eval/MME/eval_tool
