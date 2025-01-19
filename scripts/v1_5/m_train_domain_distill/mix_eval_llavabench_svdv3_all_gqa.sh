@@ -36,7 +36,7 @@ for MODEL_PAIR in "${MODELS[@]}"; do
 
     # 遍历 MIX_RATIO 从 0 到 1
     for i in $(seq 0.05 0.1 0.05); do
-#        MIX_RATIO=$(printf "%.1f" $i)  # 保留一位小数
+        MIX_RATIO=$(printf "%.2f" $i)  # 保留一位小数
         SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}-svdv3"
         MODEL_NAME=$(basename $SAVE_PATH)
 
