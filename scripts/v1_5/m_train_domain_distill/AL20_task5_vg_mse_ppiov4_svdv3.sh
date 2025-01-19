@@ -10,8 +10,7 @@ export HF_HOME=/ppio_net0/huggingface
 
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 
-#MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0-merged"
-#MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-mix0.2-svdv3-lambda1.0-merged-mix0.1-svdv3"
+
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-gqa-svdv3-lambda1.0-merged-mix0.1-svdv3"
 DATA_PATH="playground/data/domain-incremental-mse/vg-with-others.json"
 OUTPUT_DIR="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-vg-svdv3-lambda1.0"

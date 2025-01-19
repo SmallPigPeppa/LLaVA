@@ -16,6 +16,7 @@ mkdir -p $REVIEWS_DIR
 # List of mix_ratios to evaluate
 MIX_RATIOS=(
 #  0.0
+   0.025
    0.05
 #  0.1
 #  0.2
