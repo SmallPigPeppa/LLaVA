@@ -103,14 +103,16 @@ def eval_model(args):
                 top_p=args.top_p,
                 num_beams=args.num_beams,
                 max_new_tokens=args.max_new_tokens,
-                use_cache=True)
+                use_cache=True
+            )
 
         input_token_len = input_ids.shape[1]
-        import pdb; pdb.set_trace()
-        n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
-        if n_diff_input_output > 0:
-            print(f'[Warning] {n_diff_input_output} output_ids are not the same as the input_ids')
-        outputs = tokenizer.batch_decode(output_ids[:, input_token_len:], skip_special_tokens=True)[0]
+        # import pdb; pdb.set_trace()
+        # n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
+        # if n_diff_input_output > 0:
+        #     print(f'[Warning] {n_diff_input_output} output_ids are not the same as the input_ids')
+        # outputs = tokenizer.batch_decode(output_ids[:, input_token_len:], skip_special_tokens=True)[0]
+        outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0]
         outputs = outputs.strip()
 
         ans_id = shortuuid.uuid()
@@ -136,7 +138,7 @@ if __name__ == "__main__":
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--top_p", type=float, default=None)
     parser.add_argument("--num_beams", type=int, default=1)
-    parser.add_argument("--max_new_tokens", type=int, default=128)
+    parser.add_argument("--max_new_tokens", type=int, default=1024)
     args = parser.parse_args()
 
     eval_model(args)
