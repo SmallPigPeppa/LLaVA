@@ -10,6 +10,7 @@ MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
 MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-oinit-lambda1.0-merged"
 MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0-merged-mix0.1-svdv3"
 MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0-merged-mix0.2-svdv3"
+MODEL_BASE="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-mix0.2-svdv3-lambda1.0-merged-mix0.1-svdv3"
 
 # First, evaluate the model without lambda
 #MODEL_PATH="continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda1.0-nodatamix"
@@ -28,6 +29,7 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-cocoinit-lambda1.0"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-svdv3-lambda1.0"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-mix0.2-svdv3-lambda1.0"
+MODEL_PATH="continual-ckpt/continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-gqa-svdv3-lambda1.0"
 
 OUT_PATH="${MODEL_PATH}-merged"
 #MODEL="${OUT_PATH##*/}"
