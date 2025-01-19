@@ -18,6 +18,7 @@ python -m llava.eval.model_vqa \
     --temperature 0 \
     --conv-mode vicuna_v1
 
+
 python -m llava.eval.eval_iconqa \
     --annotation-file ./playground/data/fine-tune/iconqa/val.json \
     --result-file /playground/data/eval/iconvqa/result/${MODEL}.jsonl \
