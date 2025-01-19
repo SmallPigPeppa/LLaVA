@@ -11,7 +11,7 @@ MODEL=$(basename $OUT_PATH)
 
 python -m llava.eval.model_iconqa \
     --model-path ${MODEL_PATH} \
-    --question-file ./playground/data/fine-tune/iconqa/val.json \
+    --question-file ./playground/data/fine-tune/iconqa/val-1000.json \
     --image-folder ./playground/data \
     --answers-file ./playground/data/eval/iconvqa/answers/${MODEL}.jsonl \
     --temperature 0 \
@@ -19,6 +19,6 @@ python -m llava.eval.model_iconqa \
 
 
 python -m llava.eval.eval_iconqa \
-    --annotation-file ./playground/data/fine-tune/iconqa/val.json \
+    --annotation-file ./playground/data/fine-tune/iconqa/val-1000.json \
     --result-file /playground/data/eval/iconvqa/result/${MODEL}.jsonl \
     --output-dir /playground/data/eval/iconvqa/output/${MODEL} \
