@@ -3,8 +3,8 @@ export HF_HOME=/ppio_net0/huggingface
 #export HF_HOME=/mnt/disk3/wzliu/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
-MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa"
-OUT_PATH="${MODEL_PATH}-merged"
+MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-merged"
+OUT_PATH="${MODEL_PATH}"
 MODEL=$(basename $OUT_PATH)
 
 
