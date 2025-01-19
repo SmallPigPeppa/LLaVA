@@ -106,6 +106,7 @@ def eval_model(args):
                 use_cache=True)
 
         input_token_len = input_ids.shape[1]
+        import pdb; pdb.set_trace()
         n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
         if n_diff_input_output > 0:
             print(f'[Warning] {n_diff_input_output} output_ids are not the same as the input_ids')
