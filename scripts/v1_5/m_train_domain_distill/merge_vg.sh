@@ -16,3 +16,4 @@ python -m llava.eval.model_vqa_save_weight_hf \
   --model-path ${MODEL_PATH} \
   --model-base ${MODEL_BASE} \
   --save-path ${OUT_PATH}
+
