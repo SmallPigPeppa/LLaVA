@@ -29,7 +29,7 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-cocoinit-lambda1.0"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-svdv3-lambda1.0"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-mix0.2-svdv3-lambda1.0"
-MODEL_PATH="continual-ckpt/continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-gqa-svdv3-lambda1.0"
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-gqa-svdv3-lambda1.0"
 
 OUT_PATH="${MODEL_PATH}-merged"
 #MODEL="${OUT_PATH##*/}"
