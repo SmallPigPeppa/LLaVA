@@ -10,6 +10,7 @@ OUT_PATH="${MODEL_PATH}-merged"
 MODEL=$(basename $OUT_PATH)
 
 
+
 # Evaluate the model (2nd command - actual evaluation)
 python -m llava.eval.model_vqa \
     --model-path ${OUT_PATH} \
