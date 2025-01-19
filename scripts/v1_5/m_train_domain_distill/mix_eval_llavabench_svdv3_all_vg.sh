@@ -18,6 +18,8 @@ MIX_RATIOS=(
 0.04
 0.05
 )
+SVD_RATIO=0.2
+SCALE_RATIO=0.5
 
 # 遍历每组模型
 for MODEL_PAIR in "${MODELS[@]}"; do
