@@ -7,6 +7,7 @@ MODEL=continual-ckpt/domain-Amix/llava-v1.5-7b-lora-task-ocr-merged
 MODEL=continual-ckpt/distill/llava-v1.5-7b-lora-task-ocr-distill-lambda100.0-nodatamix-mse-all-mix-merged
 MODEL=continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged
 MODEL=continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-oinit-lambda1.0-merged
+MODEL="continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg-merged"
 #MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-coco-v4-lambda1.0"
 python -m llava.eval.model_vqa_mmbench \
     --model-path $MODEL \
