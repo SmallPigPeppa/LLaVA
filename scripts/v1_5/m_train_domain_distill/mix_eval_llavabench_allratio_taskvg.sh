@@ -17,7 +17,7 @@ mkdir -p $REVIEWS_DIR
 MIX_RATIOS=(
 #  0.0
 #   0.025
-   0.03
+   0.02
 #   0.05
 #  0.1
 #  0.2
