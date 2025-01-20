@@ -6,6 +6,7 @@ export CUDA_VISIBLE_DEVICES=0
 
 MODEL_PATH_A1="liuhaotian/llava-v1.5-7b"
 MODEL_PATH_B1="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-merged"
+MODEL_PATH_B1="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged"
 
 # 固定的 SVD 保留比例
 SVD_RATIO=0.2
@@ -27,7 +28,7 @@ for MODEL_PAIR in "${MODELS[@]}"; do
     echo "Processing Model Pair: A=${MODEL_PATH_A}, B=${MODEL_PATH_B}"
 
     # 遍历 MIX_RATIO 从 0 到 1
-    for i in $(seq 0.1 0.1 1.0); do
+    for i in $(seq 0.1 0.1 0.9); do
         MIX_RATIO=$(printf "%.1f" $i)
         SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}-svdv3"
         MODEL_NAME=$(basename $SAVE_PATH)
