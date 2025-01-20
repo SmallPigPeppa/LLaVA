@@ -26,7 +26,7 @@ MIX_RATIOS=(
 # 遍历每个Mix率
 for MIX_RATIO in "${MIX_RATIOS[@]}"; do
   # 设置带有Mix率的模型路径
-  CURRENT_MODEL_PATH="${MODEL_PATH}-mix${MIX_RATIO}"
+  CURRENT_MODEL_PATH="${MODEL_PATH}-mix${MIX_RATIO}-svdv3"
   OUT_PATH="${CURRENT_MODEL_PATH}"
   MODEL=$(basename $OUT_PATH)
 
