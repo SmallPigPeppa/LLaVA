@@ -3,7 +3,7 @@ export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
 MODEL_PATH_A="liuhaotian/llava-v1.5-7b"
-MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0"
+MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged"
 
 
 # Directory for results
