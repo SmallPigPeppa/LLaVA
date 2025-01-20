@@ -1,7 +1,7 @@
 #!/bin/bash
 export HF_HOME=/ppio_net0/huggingface
 #export HF_HOME=/mnt/disk3/wzliu/huggingface
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=0
 
 # 定义模型路径
 MODEL_PATH="liuhaotian/llava-v1.5-7b"
