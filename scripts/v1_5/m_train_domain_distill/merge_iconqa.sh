@@ -8,6 +8,7 @@ MODEL_BASE="liuhaotian/llava-v1.5-7b"
 
 # First, evaluate the model without lambda
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa"
+MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0"
 
 OUT_PATH="${MODEL_PATH}-merged"
 
