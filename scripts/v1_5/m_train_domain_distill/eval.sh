@@ -7,6 +7,7 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-ocr-cocoinit-lambda1.0"
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvqa-svdv3-lambda1.0"
 MODEL_PATH="continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg"
+MODEL_PATH="checkpoints/llava-v1.5-7b-lora"
 OUT_PATH="${MODEL_PATH}-merged"
 MODEL=$(basename $OUT_PATH)
 
