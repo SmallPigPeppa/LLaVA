@@ -28,6 +28,7 @@ do
     # Modify the model path based on the mix ratio
     MODEL_PATH="${MODEL_PATH_B1}-mix${MIX_RATIO}"
     MODEL=$(basename "${MODEL_PATH}")
+    echo "Processing with MIX_RATIO: $MIX_RATIO"
 
     # Execute model evaluation
     python -m llava.eval.model_vqa_science \
