@@ -28,13 +28,13 @@ for MODEL in "${MODELS[@]}"; do
     mkdir ./playground/data/eval/MME/answers/$(basename $MODEL)
 
     # Run evaluation for the current model
-    python -m llava.eval.model_vqa_loader \
-        --model-path $MODEL \
-        --question-file ./playground/data/eval/MME/llava_mme.jsonl \
-        --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
-        --answers-file ./playground/data/eval/MME/answers/$(basename $MODEL).jsonl \
-        --temperature 0 \
-        --conv-mode vicuna_v1
+#    python -m llava.eval.model_vqa_loader \
+#        --model-path $MODEL \
+#        --question-file ./playground/data/eval/MME/llava_mme.jsonl \
+#        --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
+#        --answers-file ./playground/data/eval/MME/answers/$(basename $MODEL).jsonl \
+#        --temperature 0 \
+#        --conv-mode vicuna_v1
 
     # Navigate to the evaluation directory
     cd ./playground/data/eval/MME
