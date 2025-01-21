@@ -39,6 +39,7 @@ for MODEL in "${MODELS[@]}"; do
     python convert_answer_to_mme.py --experiment llava-v1.5-13b
 
     cd eval_tool
+    python calculation.py --results_dir answers/llava-v1.5-13b
 #    mkdir ./playground/data/eval/MME/answers/$(basename $MODEL)
 
     # Run evaluation for the current model
@@ -59,9 +60,6 @@ for MODEL in "${MODELS[@]}"; do
 #    # Navigate to eval_tool and calculate results
 #    cd eval_tool
 #    python calculation.py --results_dir ../answers/$(basename $MODEL)
-
-
-python calculation.py --results_dir answers/llava-v1.5-13b
 
 
 done
