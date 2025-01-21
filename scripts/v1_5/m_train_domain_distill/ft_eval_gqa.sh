@@ -6,6 +6,8 @@ export HF_HOME=/ppio_net0/huggingface
 
 
 MODEL_PATH="continual-ckpt/SAC/llava-v1.5-7b-lora-task-gqa-lambda1.0-merged"
+MODEL_PATH="continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-gqa-merged"
+MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-gqa-svdv3-lambda1.0-merged-mix0.3-svdv3"
 
 gpu_list="${CUDA_VISIBLE_DEVICES:-0}"
 IFS=',' read -ra GPULIST <<< "$gpu_list"
