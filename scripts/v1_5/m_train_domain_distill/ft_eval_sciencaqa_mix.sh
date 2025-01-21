@@ -4,7 +4,7 @@
 export HF_HOME=/ppio_net0/huggingface
 
 # Set the model base path
-MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-merged"
+MODEL_PATH_B1="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-merged"
 
 # List of mix ratios to iterate over
 MIX_RATIOS=(
@@ -26,7 +26,7 @@ MIX_RATIOS=(
 for MIX_RATIO in "${MIX_RATIOS[@]}"
 do
     # Modify the model path based on the mix ratio
-    MODEL_PATH="${MODEL_PATH}-mix${MIX_RATIO}"
+    MODEL_PATH="${MODEL_PATH_B1}-mix${MIX_RATIO}"
     MODEL=$(basename "${MODEL_PATH}")
 
     # Execute model evaluation
