@@ -10,7 +10,7 @@ with open('playground/data/domain-incremental/llava_v1_5_mix665k-others.json', '
     others_data = json.load(f)
 
 # Randomly select 20,000 samples from others_data
-selected_others_data = random.sample(others_data, 20000)
+selected_others_data = random.sample(others_data, 10000)
 
 # Merge the selected others data with OCR data
 merged_data = ocr_data + selected_others_data
@@ -19,7 +19,7 @@ merged_data = ocr_data + selected_others_data
 random.shuffle(merged_data)
 
 # Save the merged and shuffled data to a new JSON file
-with open('playground/data/fine-tune/ScienceQA/train-with-others-20000.json', 'w') as f:
+with open('playground/data/fine-tune/ScienceQA/train-with-others-1w.json', 'w') as f:
     json.dump(merged_data, f, ensure_ascii=False, indent=4)
 
 print(f"合并成功，共生成 {len(merged_data)} 个样本。")
