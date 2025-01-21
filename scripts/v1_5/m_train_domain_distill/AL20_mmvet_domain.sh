@@ -2,7 +2,7 @@
 
 #export HF_HOME=/mnt/disk3/wzliu/huggingface
 export HF_HOME=/ppio_net0/huggingface
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=0
 
 # 模型路径列表
 MODELS=(
