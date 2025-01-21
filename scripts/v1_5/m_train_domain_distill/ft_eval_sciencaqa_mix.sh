@@ -9,7 +9,7 @@ MODEL_PATH_B1="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-merged"
 # List of mix ratios to iterate over
 MIX_RATIOS=(
 #  0.0
-  0.1
+#  0.1
 #  0.2
   0.3
   0.4
