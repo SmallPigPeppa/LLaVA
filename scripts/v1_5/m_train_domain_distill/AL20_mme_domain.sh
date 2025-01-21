@@ -13,7 +13,6 @@ MODELS=(
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
      "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-ocr-merged"
-     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-ocr-merged"
      "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-textvqa-merged"
      "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-gqa-merged"
 #     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg-merged"
