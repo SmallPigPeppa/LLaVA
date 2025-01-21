@@ -7,8 +7,8 @@ export CUDA_VISIBLE_DEVICES=1
 # 模型路径列表
 MODELS=(
 #    "checkpoints/llava-v1.5-7b-lora-merged"
-#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
-#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+    "continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
+    "continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged"
