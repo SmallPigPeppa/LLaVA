@@ -8,6 +8,7 @@ MODEL_PATH="liuhaotian/llava-v1.5-7b"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-merged"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-lambda1.0-1w-merged"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-lambda1.0-merged"
+MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-mm-merged"
 MODEL=$(basename $OUT_PATH)
 
 python -m llava.eval.model_vqa_science \
