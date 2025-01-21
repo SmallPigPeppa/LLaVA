@@ -25,6 +25,7 @@ for MODEL in "${MODELS[@]}"; do
 
     rm -rf ./playground/data/eval/MME/eval_tool
     unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
+    mkdir ./playground/data/eval/MME/answers/$(basename $MODEL)
 
     # Run evaluation for the current model
     python -m llava.eval.model_vqa_loader \
