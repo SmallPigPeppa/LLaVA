@@ -40,7 +40,6 @@ if __name__ == "__main__":
     args = get_args()
 
     base_dir = args.base_dir
-    import pdb;pdb.set_trace()
     split_indices = json.load(open(os.path.join(base_dir, "pid_splits.json")))[args.split]
     problems = json.load(open(os.path.join(base_dir, "problems.json")))
     predictions = [json.loads(line) for line in open(args.result_file)]
