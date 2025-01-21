@@ -16,7 +16,7 @@ MODELS=(
      "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-ocr-merged"
      "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-textvqa-merged"
      "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-gqa-merged"
-     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg-merged"
+#     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg-merged"
 )
 
 # Iterate over models and run evaluation
