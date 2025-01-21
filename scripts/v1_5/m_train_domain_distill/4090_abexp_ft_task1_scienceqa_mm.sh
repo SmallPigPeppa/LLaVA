@@ -8,7 +8,7 @@ export HF_HOME=/ppio_net0/huggingface
 
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 MODEL_PATH="liuhaotian/llava-v1.5-7b"
-DATA_PATH="playground/data/fine-tune/ScienceQA/train_mm.json"
+DATA_PATH="playground/data/fine-tune/ScienceQA/train-mm.json"
 OUTPUT_DIR="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-mm"
 
 
