@@ -9,7 +9,7 @@ MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-lambda1.0-1w"
 
 MODEL="${MODEL_PATH}-merged"
 
-MODEL="liuhaotian/llava-v1.5-7b"
+#MODEL="liuhaotian/llava-v1.5-7b"
 
 rm -rf ./playground/data/eval/MME/eval_tool
 unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
