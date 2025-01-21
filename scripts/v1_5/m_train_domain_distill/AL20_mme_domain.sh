@@ -21,24 +21,22 @@ MODELS=(
 # Iterate over models and run evaluation
 for MODEL in "${MODELS[@]}"; do
     echo "Evaluating model: $MODEL"
-
+    cd /ppio_net0/code/LLaVA
     # Run evaluation for the current model
     python -m llava.eval.model_vqa_loader \
         --model-path $MODEL \
         --question-file ./playground/data/eval/MME/llava_mme.jsonl \
         --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
-        --answers-file ./playground/data/eval/MME/answers/$(basename $MODEL).jsonl \
+        --answers-file ./playground/data/eval/MME/answers/llava-v1.5-13b-debug.jsonl \
         --temperature 0 \
         --conv-mode vicuna_v1
 
-    # Navigate to the evaluation directory
     cd ./playground/data/eval/MME
 
-    # Convert answers for MME
-    python convert_answer_to_mme.py --experiment $(basename $MODEL)
+    python convert_answer_to_mme.py --experiment llava-v1.5-13b-debug
 
-    # Navigate to eval_tool and calculate results
     cd eval_tool
-    python calculation.py --results_dir ../answers/$(basename $MODEL)
+
+    python calculation.py --results_dir answers/llava-v1.5-13b-debug
 done
 
