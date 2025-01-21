@@ -25,7 +25,21 @@ for MODEL in "${MODELS[@]}"; do
 
     rm -rf ./playground/data/eval/MME/eval_tool
     unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
-    mkdir ./playground/data/eval/MME/answers/$(basename $MODEL)
+
+    python -m llava.eval.model_vqa_loader \
+    --model-path $MODEL \
+    --question-file ./playground/data/eval/MME/llava_mme.jsonl \
+    --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
+    --answers-file ./playground/data/eval/MME/answers/llava-v1.5-13b.jsonl \
+    --temperature 0 \
+    --conv-mode vicuna_v1
+
+    cd ./playground/data/eval/MME
+
+    python convert_answer_to_mme.py --experiment llava-v1.5-13b
+
+    cd eval_tool
+#    mkdir ./playground/data/eval/MME/answers/$(basename $MODEL)
 
     # Run evaluation for the current model
 #    python -m llava.eval.model_vqa_loader \
@@ -35,16 +49,20 @@ for MODEL in "${MODELS[@]}"; do
 #        --answers-file ./playground/data/eval/MME/answers/$(basename $MODEL).jsonl \
 #        --temperature 0 \
 #        --conv-mode vicuna_v1
+#
+#    # Navigate to the evaluation directory
+#    cd ./playground/data/eval/MME
+#
+#    # Convert answers for MME
+#    python convert_answer_to_mme.py --experiment $(basename $MODEL)
+#
+#    # Navigate to eval_tool and calculate results
+#    cd eval_tool
+#    python calculation.py --results_dir ../answers/$(basename $MODEL)
 
-    # Navigate to the evaluation directory
-    cd ./playground/data/eval/MME
 
-    # Convert answers for MME
-    python convert_answer_to_mme.py --experiment $(basename $MODEL)
+python calculation.py --results_dir answers/llava-v1.5-13b
 
-    # Navigate to eval_tool and calculate results
-    cd eval_tool
-    python calculation.py --results_dir ../answers/$(basename $MODEL)
 
 done
 
