@@ -44,5 +44,6 @@ for MODEL in "${MODELS[@]}"; do
     # Navigate to eval_tool and calculate results
     cd eval_tool
     python calculation.py --results_dir ../answers/$(basename $MODEL)
+
 done
 
