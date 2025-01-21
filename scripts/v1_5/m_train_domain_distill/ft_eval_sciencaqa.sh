@@ -5,6 +5,7 @@ export HF_HOME=/ppio_net0/huggingface
 
 MODEL_PATH="continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-gqa-merged"
 MODEL_PATH="liuhaotian/llava-v1.5-7b"
+MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa-merged"
 MODEL=$(basename $OUT_PATH)
 
 python -m llava.eval.model_vqa_science \
