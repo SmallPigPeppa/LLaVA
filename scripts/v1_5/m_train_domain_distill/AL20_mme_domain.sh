@@ -7,11 +7,16 @@ tmux set-option history-limit 1000000
 # List of model paths
 MODELS=(
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
-    "continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged"
 #    "continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
+     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-ocr-merged"
+     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-ocr-merged"
+     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-textvqa-merged"
+     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-gqa-merged"
+     "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg-merged"
 )
 
 # Iterate over models and run evaluation
@@ -37,3 +42,4 @@ for MODEL in "${MODELS[@]}"; do
     cd eval_tool
     python calculation.py --results_dir ../answers/$(basename $MODEL)
 done
+
