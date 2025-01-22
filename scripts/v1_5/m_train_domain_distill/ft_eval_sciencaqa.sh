@@ -25,3 +25,4 @@ python llava/eval/eval_science_qa.py \
     --result-file ./playground/data/eval/scienceqa/answers/${MODEL}.jsonl \
     --output-file ./playground/data/eval/scienceqa/answers/${MODEL}_output.jsonl \
     --output-result ./playground/data/eval/scienceqa/answers/${MODEL}_result.json
+
