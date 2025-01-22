@@ -16,7 +16,7 @@ merged_data = ocr_data + others_data
 # 打乱合并后的数据集顺序
 random.shuffle(merged_data)
 
-with open('playground/data/fine-tune/ScienceQA/train_4w-with-others.json', 'w') as f:
+with open('playground/data/fine-tune/ArxivQA/train_4w-with-others.json', 'w') as f:
     json.dump(merged_data, f, ensure_ascii=False, indent=4)
 
 print(f"合并成功，共生成 {len(merged_data)} 个样本。")
