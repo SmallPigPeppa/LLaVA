@@ -10,6 +10,10 @@ MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
 #    --image-file "demo/020.jpg"
 
 
+#python -m llava.serve.cli \
+#    --model-path  $MODEL_PATH\
+#    --image-file "demo/011341143X.jpg"
+
 python -m llava.serve.cli \
     --model-path  $MODEL_PATH\
-    --image-file "demo/011341143X.jpg"
+    --image-file "demo/001.jpg"
