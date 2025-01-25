@@ -8,15 +8,15 @@ export HF_HOME=/ppio_net0/huggingface
 
 VISION_TOWER="openai/clip-vit-large-patch14-336"
 MODEL_PATH="liuhaotian/llava-v1.5-7b"
-DATA_PATH="playground/data/fine-tune/super-CLEVR/train.json"
-OUTPUT_DIR="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super"
+DATA_PATH="playground/data/fine-tune/super-CLEVR/train-with-others.json"
+OUTPUT_DIR="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0"
 
 
 
 # Training command for OCR task
 deepspeed llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
-    --distill False \
+    --distill True \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path ${MODEL_PATH} \
     --version v1 \
