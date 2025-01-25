@@ -9,13 +9,13 @@ OUT_PATH="${MODEL_PATH}"
 MODEL=$(basename $OUT_PATH)
 
 
-python -m llava.eval.model_arxivqa \
-    --model-path ${MODEL_PATH} \
-    --question-file ./playground/data/fine-tune/ArxivQA/test_2k.json \
-    --image-folder ./playground/data \
-    --answers-file ./playground/data/eval/arxivqa/answers/${MODEL}.jsonl \
-    --temperature 0 \
-    --conv-mode vicuna_v1
+#python -m llava.eval.model_arxivqa \
+#    --model-path ${MODEL_PATH} \
+#    --question-file ./playground/data/fine-tune/ArxivQA/test_2k.json \
+#    --image-folder ./playground/data \
+#    --answers-file ./playground/data/eval/arxivqa/answers/${MODEL}.jsonl \
+#    --temperature 0 \
+#    --conv-mode vicuna_v1
 
 
 python -m llava.eval.eval_arxivqa \
