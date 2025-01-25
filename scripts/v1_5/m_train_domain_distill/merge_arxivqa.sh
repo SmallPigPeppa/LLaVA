@@ -7,7 +7,7 @@ MODEL_BASE="liuhaotian/llava-v1.5-7b"
 
 # List of model paths to evaluate
 MODEL_PATHS=(
-  "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa"
+#  "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa"
   "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0"
 )
 
