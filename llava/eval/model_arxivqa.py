@@ -140,7 +140,7 @@ if __name__ == "__main__":
     parser.add_argument("--top_p", type=float, default=None)
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--max_new_tokens", type=int, default=128)
-    parser.add_argument("--text-tower", type=str)
+    # parser.add_argument("--text-tower", type=str)
     parser.add_argument("--cur-task", type=int, default=0)
     args = parser.parse_args()
 
