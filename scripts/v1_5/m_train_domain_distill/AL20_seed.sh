@@ -11,7 +11,7 @@ MODEL_NAME=$(basename ${MODEL_PATH})
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
     CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_loader \
-        --model-path liuhaotian/llava-v1.5-13b \
+        --model-path ${MODEL_PATH} \
         --question-file ./playground/data/eval/seed_bench/llava-seed-bench-modified.jsonl \
         --image-folder ./playground/data/eval/seed_bench \
         --answers-file ./playground/data/eval/seed_bench/answers/${MODEL_NAME}/${CHUNKS}_${IDX}.jsonl \
