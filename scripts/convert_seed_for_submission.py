@@ -28,6 +28,7 @@ def eval_single(result_file, eval_only_type=None):
         except:
             question_id = question_data['question_id']
         if question_id not in results:
+            print(f"Warning: question_id {question_id} not found in predictions. Skipping this question.")
             correct_counts[data_type] = correct_counts.get(data_type, 0)
             continue
         row = results[question_id]
