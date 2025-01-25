@@ -53,6 +53,8 @@ def eval_single(annotation_file, result_file):
         # if ground_truth.upper() in pred.upper():
         #     right += 1
     ans_gt_file = os.path.join(args.output_dir, 'ans_gt.json')
+    if not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
     with open(ans_gt_file, "w", encoding="utf-8") as f:
         json.dump(answer_gt_file, f, ensure_ascii=False, indent=4)
 
