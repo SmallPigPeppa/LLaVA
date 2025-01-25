@@ -25,10 +25,10 @@ with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
     for line in infile:
         # Parse each line as a JSON object
         entry = json.loads(line.strip())
-        # Check if the question ID contains 'v'
-        if 'v' in entry['question_id']:
+        # Ensure question_id is a string and check if it contains 'v'
+        if 'v' in str(entry['question_id']):
             # Modify the image path
-            entry['image'] = modify_image_path(entry['image'], entry['question_id'])
+            entry['image'] = modify_image_path(entry['image'], str(entry['question_id']))
         # Write the modified entry to the output file
         json.dump(entry, outfile)
         outfile.write('\n')  # Add a newline after each entry
