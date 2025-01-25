@@ -7,7 +7,7 @@ IFS=',' read -ra GPULIST <<< "$gpu_list"
 CHUNKS=${#GPULIST[@]}
 
 MODEL_PATH="continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg-merged"
-MODEL_NAME= $(basename $MODEL_PATH)
+MODEL_NAME=$(basename ${MODEL_PATH})
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
     CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_loader \
