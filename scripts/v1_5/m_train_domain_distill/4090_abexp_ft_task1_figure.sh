@@ -2,7 +2,6 @@
 
 # Set Hugging Face cache directory
 export HF_HOME=/ppio_net0/huggingface
-#export HF_HOME=/mnt/disk3/wzliu/huggingface
 #export CUDA_VISIBLE_DEVICES=0,1,2,3
 
 
