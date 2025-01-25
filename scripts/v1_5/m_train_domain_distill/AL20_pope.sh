@@ -2,16 +2,17 @@
 #export HF_HOME=/mnt/disk3/wzliu/huggingface
 export HF_HOME=/ppio_net0/huggingface
 #export CUDA_VISIBLE_DEVICES=7
-tmux set-option history-limit 1000000
+#tmux set-option history-limit 1000000
 # 模型路径列表
 MODELS=(
 #    "checkpoints/llava-v1.5-7b-lora-merged"
-    "continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
-    "continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
-    "continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged"
-    "continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
-    "continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged"
-    "continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
+#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
+#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-coco-merged"
+#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-ocr_vqa-merged"
+#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-textvqa-merged"
+#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-gqa-merged"
+#    "continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
+    "continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg-merged"
 )
 
 # 循环执行每个模型
