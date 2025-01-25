@@ -11,7 +11,7 @@ MODEL=$(basename $OUT_PATH)
 
 python -m llava.eval.model_arxivqa \
     --model-path ${MODEL_PATH} \
-    --question-file ./playground/data/fine-tune/ArxivQA/test_1w.json \
+    --question-file ./playground/data/fine-tune/ArxivQA/test_2k.json \
     --image-folder ./playground/data \
     --answers-file ./playground/data/eval/arxivqa/answers/${MODEL}.jsonl \
     --temperature 0 \
@@ -19,7 +19,7 @@ python -m llava.eval.model_arxivqa \
 
 
 python -m llava.eval.eval_arxivqa \
-    --annotation-file ./playground/data/fine-tune/ArxivQA/test_1w.json \
+    --annotation-file ./playground/data/fine-tune/ArxivQA/test_2k.json \
     --result-file ./playground/data/eval/arxivqa/answers/${MODEL}.jsonl \
     --output-dir ./playground/data/eval/arxivqa/answers/${MODEL} \
 
