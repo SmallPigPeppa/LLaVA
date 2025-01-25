@@ -13,6 +13,7 @@ OUTPUT_DIR="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0"
 
 
 
+
 # Training command for OCR task
 deepspeed llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
