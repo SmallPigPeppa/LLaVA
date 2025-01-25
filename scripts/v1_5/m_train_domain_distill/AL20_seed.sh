@@ -33,7 +33,7 @@ MODEL_NAME=$(basename ${MODEL_PATH})
 #
 #wait
 #
-#output_file=./playground/data/eval/seed_bench/answers/$CKPT/merge.jsonl
+output_file=./playground/data/eval/seed_bench/answers/$CKPT/merge.jsonl
 #
 ## Clear out the output file if it exists.
 #> "$output_file"
