@@ -15,7 +15,7 @@ echo "Using ${CHUNKS} GPU(s): ${gpu_list}"
 echo "GPU IDs: ${GPULIST[*]}"
 
 MODEL_PATH="continual-ckpt/llava-c/llava-v1.5c-7b-lora-task-vg-merged"
-#MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
+MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
 MODEL_NAME=$(basename ${MODEL_PATH})
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
