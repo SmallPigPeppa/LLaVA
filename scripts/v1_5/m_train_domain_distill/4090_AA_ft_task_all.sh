@@ -22,6 +22,7 @@ MODEL_BASE="liuhaotian/llava-v1.5-7b"
 # Define output directory prefix
 OUTPUT_DIR_PREFIX="finetune-ckpt/continual-ft"
 
+
 # Loop through tasks
 for i in "${!TASKS[@]}"; do
     TASK=${TASKS[i]}
