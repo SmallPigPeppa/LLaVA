@@ -6,19 +6,19 @@ export CUDA_VISIBLE_DEVICES=0
 # 定义模型路径
 
 MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-merged"
-MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0-merged"
+#MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0-merged"
 
 # 定义所有的 mix_ratios
 MIX_RATIOS=(
 #  0.0
-  0.1
-  0.2
-  0.3
-  0.4
-  0.5
-  0.6
-  0.7
-  0.8
+#  0.1
+#  0.2
+#  0.3
+#  0.4
+#  0.5
+#  0.6
+#  0.7
+#  0.8
   0.9
 #  1.0
 )
