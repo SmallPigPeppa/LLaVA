@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export HF_HOME=/ppio_net0/huggingface
+#export CUDA_VISIBLE_DEVICES=0
 
 # Define task names
 TASKS=("Arxiv" "Math" "Super" "IconQA" "Figure" "ScienceQA")
