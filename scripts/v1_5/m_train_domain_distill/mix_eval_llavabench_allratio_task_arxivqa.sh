@@ -4,7 +4,7 @@ export CUDA_VISIBLE_DEVICES=0
 
 MODEL_PATH_A="liuhaotian/llava-v1.5-7b"
 MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-merged"
-MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0-merged"
+#MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0-merged"
 
 
 # Directory for results
