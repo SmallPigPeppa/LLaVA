@@ -9,7 +9,6 @@ OUT_PATH="${MODEL_PATH}"
 MODEL=$(basename $OUT_PATH)
 
 
-
 python -m llava.eval.model_clevr_math \
     --model-path ${MODEL_PATH} \
     --question-file ./playground/data/fine-tune/CLEVR-Math/test_2k.json \
