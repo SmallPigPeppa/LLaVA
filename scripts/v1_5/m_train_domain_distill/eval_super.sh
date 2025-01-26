@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export HF_HOME=/ppio_net0/huggingface
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=2
 
 MODEL_PATH="liuhaotian/llava-v1.5-7b"
 #MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-figureqa-merged"
