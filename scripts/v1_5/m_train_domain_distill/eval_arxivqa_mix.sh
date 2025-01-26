@@ -6,7 +6,7 @@ export CUDA_VISIBLE_DEVICES=0
 
 MODEL_PATH="liuhaotian/llava-v1.5-7b"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-merged"
-MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0-merged"
+#MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0-merged"
 
 
 # 定义Mix率的不同值
