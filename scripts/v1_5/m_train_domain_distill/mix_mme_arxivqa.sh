@@ -5,8 +5,8 @@ export CUDA_VISIBLE_DEVICES=0
 
 # 定义模型路径
 
-MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-merged"
-#MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged"
+#MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-merged"
+MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0-merged"
 
 # 定义所有的 mix_ratios
 MIX_RATIOS=(
@@ -38,20 +38,20 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
 
     # 加载模型并生成答案文件
     python -m llava.eval.model_vqa_loader \
-        --model-path $MODEL \
+        --model-path ${MODEL} \
         --question-file ./playground/data/eval/MME/llava_mme.jsonl \
         --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
-        --answers-file ./playground/data/eval/MME/answers/llava-v1.5-13b.jsonl \
+        --answers-file ./playground/data/eval/MME/answers/${MODEL}.jsonl \
         --temperature 0 \
         --conv-mode vicuna_v1
 
     # 转换答案格式
     cd ./playground/data/eval/MME
-    python convert_answer_to_mme.py --experiment llava-v1.5-13b
+    python convert_answer_to_mme.py --experiment ${MODEL}
     cd eval_tool
 
     # 计算结果
-    python calculation.py --results_dir answers/llava-v1.5-13b
+    python calculation.py --results_dir answers/${MODEL}
 
     echo "Evaluation for mix ratio ${MIX_RATIO} completed."
 

@@ -31,7 +31,7 @@ unzip ./playground/data/eval/MME/eval_tool.zip -d ./playground/data/eval/MME
 
 # 遍历每个 MIX_RATIO
 for MIX_RATIO in "${MIX_RATIOS[@]}"; do
-    MODEL="${MODEL_PATH_B}-mix${MIX_RATIO}"
+    MODEL="${MODEL_PATH_B}-mix${MIX_RATIO}-svdv3"
     echo "Evaluating mix ratio: ${MIX_RATIO}"
 
     cd /ppio_net0/code/LLaVA
