@@ -28,26 +28,25 @@ MIX_RATIOS=(
 for MIX_RATIO in "${MIX_RATIOS[@]}"; do
   # 设置带有Mix率的模型路径
   CURRENT_MODEL_PATH="${MODEL_PATH}-mix${MIX_RATIO}-svdv3"
-  OUT_PATH="${CURRENT_MODEL_PATH}"
-  MODEL=$(basename $OUT_PATH)
+  MODEL=$(basename ${CURRENT_MODEL_PATH})
 
   # 输出当前正在处理的模型路径
   echo "Processing model: ${CURRENT_MODEL_PATH}"
 
   # 运行评估和模型处理命令
-  python -m llava.eval.model_iconqa \
+  python -m llava.eval.model_arxivqa \
     --model-path ${CURRENT_MODEL_PATH} \
-    --question-file ./playground/data/fine-tune/iconqa/val-1000.json \
+    --question-file ./playground/data/fine-tune/ArxivQA/test_2k.json \
     --image-folder ./playground/data \
-    --answers-file ./playground/data/eval/iconvqa/answers/${MODEL}.jsonl \
+    --answers-file ./playground/data/eval/arxivqa/answers/${MODEL}.jsonl \
     --temperature 0 \
     --conv-mode vicuna_v1
 
-  python -m llava.eval.eval_iconqa \
-    --annotation-file ./playground/data/fine-tune/iconqa/val-1000.json \
-    --result-file ./playground/data/eval/iconvqa/answers/${MODEL}.jsonl \
-    --output-dir ./playground/data/eval/iconvqa/output/${MODEL}
-
+    python -m llava.eval.eval_arxivqa \
+    --annotation-file ./playground/data/fine-tune/ArxivQA/test_2k.json \
+    --result-file ./playground/data/eval/arxivqa/answers/${MODEL}.jsonl \
+    --output-dir ./playground/data/eval/arxivqa/answers/${MODEL} \
   # 输出已完成的提示
   echo "Finished processing model: ${CURRENT_MODEL_PATH}"
 done
+
