@@ -13,13 +13,13 @@ MODEL=$(basename $OUT_PATH)
 
 python -m llava.eval.model_figureqa \
     --model-path ${MODEL_PATH} \
-    --question-file ./playground/data/fine-tune/FigureQA/test.json \
+    --question-file ./playground/data/fine-tune/FigureQA/test_2k.json \
     --image-folder ./playground/data \
     --answers-file ./playground/data/eval/figureqa/answers/${MODEL}.jsonl \
     --temperature 0 \
     --conv-mode vicuna_v1
 
 python -m llava.eval.eval_figureqa \
-    --annotation-file ./playground/data/fine-tune/FigureQA/test.json \
+    --annotation-file ./playground/data/fine-tune/FigureQA/test_2k.json \
     --result-file ./playground/data/eval/figureqa/answers/${MODEL}.jsonl \
     --output-dir ./playground/data/eval/figureqa/answers/${MODEL} \
