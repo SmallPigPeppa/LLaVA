@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export HF_HOME=/ppio_net0/huggingface
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=3
 
 MODEL_BASE="liuhaotian/llava-v1.5-7b"
 
