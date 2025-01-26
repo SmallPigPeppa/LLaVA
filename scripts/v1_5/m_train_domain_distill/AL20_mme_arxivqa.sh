@@ -4,7 +4,7 @@ export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 MODEL="checkpoints/llava-v1.5-7b-lora-merged"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa"
-MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0"
+#MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0"
 
 MODEL="${MODEL_PATH}-merged"
 
