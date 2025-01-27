@@ -22,19 +22,19 @@ MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
 MODEL_NAME=$(basename ${MODEL_PATH})
 OUT_FILE="./playground/data/eval/seed_bench/answers/${MODEL_NAME}/merge.jsonl"
 
-for IDX in $(seq 0 $((CHUNKS-1))); do
-    CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_loader \
-        --model-path ${MODEL_PATH} \
-        --question-file ./playground/data/eval/seed_bench/llava-seed-bench-modified.jsonl \
-        --image-folder ./playground/data/eval/seed_bench \
-        --answers-file ./playground/data/eval/seed_bench/answers/${MODEL_NAME}/${CHUNKS}_${IDX}.jsonl \
-        --num-chunks $CHUNKS \
-        --chunk-idx $IDX \
-        --temperature 0 \
-        --conv-mode vicuna_v1 &
-done
-
-wait
+#for IDX in $(seq 0 $((CHUNKS-1))); do
+#    CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_loader \
+#        --model-path ${MODEL_PATH} \
+#        --question-file ./playground/data/eval/seed_bench/llava-seed-bench-modified.jsonl \
+#        --image-folder ./playground/data/eval/seed_bench \
+#        --answers-file ./playground/data/eval/seed_bench/answers/${MODEL_NAME}/${CHUNKS}_${IDX}.jsonl \
+#        --num-chunks $CHUNKS \
+#        --chunk-idx $IDX \
+#        --temperature 0 \
+#        --conv-mode vicuna_v1 &
+#done
+#
+#wait
 
 
 
