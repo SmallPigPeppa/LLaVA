@@ -63,10 +63,13 @@ if __name__ == "__main__":
             for file, prompt, answer in cate_tups:
                 if 'Answer the question using a single word or phrase.' in prompt:
                     prompt = prompt.replace('Answer the question using a single word or phrase.', '').strip()
+                if '\n' in prompt:
+                    prompt = prompt.replace('\n', '').strip()
                 if 'Please answer yes or no.' not in prompt:
                     prompt = prompt + ' Please answer yes or no.'
-                    if (category, file, prompt) not in GT:
-                        prompt = prompt.replace(' Please answer yes or no.', '  Please answer yes or no.')
+                if (category, file, prompt) not in GT:
+                    prompt = prompt.replace(' Please answer yes or no.', '  Please answer yes or no.')
+
                 gt_ans = GT[category, file, prompt]
                 tup = file, prompt, gt_ans, answer
                 fp.write('\t'.join(tup) + '\n')
