@@ -7,6 +7,7 @@ export HF_HOME=/ppio_net0/huggingface
 gpu_list="0,1,2,3,4,5,6,7"  # Define your GPU sequence here
 IFS=',' read -ra GPULIST <<< "$gpu_list"
 
+
 # Number of GPUs
 CHUNKS=${#GPULIST[@]}
 
