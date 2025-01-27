@@ -2,7 +2,7 @@
 
 export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
-source /etc/proxy/net_proxy
+
 
 # Define the list of model paths
 MODEL_PATHS=(
@@ -16,6 +16,7 @@ MODEL_PATHS=(
 
 # Iterate through each model path
 for MODEL_PATH in "${MODEL_PATHS[@]}"; do
+    source /etc/proxy/net_proxy
     MODEL=$(basename ${MODEL_PATH})  # Extract model name
 
     echo "Starting evaluation for model: ${MODEL}"
