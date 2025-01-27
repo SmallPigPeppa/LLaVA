@@ -39,7 +39,7 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
     # 加载模型并生成答案文件
     python -m llava.eval.model_vqa_loader \
         --model-path ${MODEL} \
-        --question-file ./playground/data/eval/MME/llava_mme_refined.jsonl \
+        --question-file ./playground/data/eval/MME/llava_mme_new.jsonl \
         --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
         --answers-file ./playground/data/eval/MME/answers/${MODEL}.jsonl \
         --temperature 0 \
