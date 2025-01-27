@@ -48,9 +48,10 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
     # 转换答案格式
     cd ./playground/data/eval/MME
     python convert_answer_to_mme_new.py --experiment ${MODEL}
-    cd eval_tool
+
 
 #     计算结果
+    cd eval_tool
     python calculation.py --results_dir answers/${MODEL}
 
     echo "Evaluation for mix ratio ${MIX_RATIO} completed."
