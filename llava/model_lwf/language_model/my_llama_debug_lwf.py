@@ -212,9 +212,9 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         probs_old = F.softmax(logits_old[..., :-1, :], dim=-1)  # 旧模型的 softmax
 
         # 仅对非 padding 部分计算损失
-        # valid_mask = labels[..., 1:] != -100 # 排除无效标签
-        # log_probs_new = log_probs_new[valid_mask]
-        # probs_old = probs_old[valid_mask]
+        valid_mask = labels[..., 1:] != -100 # 排除无效标签
+        log_probs_new = log_probs_new[valid_mask]
+        probs_old = probs_old[valid_mask]
         kd_loss = kd_loss_fct(log_probs_new, probs_old)
 
         # 计算最终 loss
