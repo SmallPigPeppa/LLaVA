@@ -20,6 +20,7 @@ MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-vg-merged"
 MODEL_PATH="checkpoints/llava-v1.5-7b-lora-merged"
 MODEL_PATH="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
 MODEL_NAME=$(basename ${MODEL_PATH})
+OUT_FILE="./playground/data/eval/seed_bench/answers/${MODEL_NAME}/merge.jsonl"
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
     CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_loader \
@@ -35,19 +36,19 @@ done
 
 wait
 
-output_file=./playground/data/eval/seed_bench/answers/$CKPT/merge.jsonl
+
 
 # Clear out the output file if it exists.
 > "$output_file"
 
 # Loop through the indices and concatenate each file.
 for IDX in $(seq 0 $((CHUNKS-1))); do
-    cat ./playground/data/eval/seed_bench/answers/${MODEL_NAME}/${CHUNKS}_${IDX}.jsonl >> "$output_file"
+    cat ./playground/data/eval/seed_bench/answers/${MODEL_NAME}/${CHUNKS}_${IDX}.jsonl >> ${OUT_FILE}
 done
 
 # Evaluate
 python scripts/convert_seed_for_submission.py \
     --annotation-file ./playground/data/eval/seed_bench/SEED-Bench.json \
-    --result-file $output_file \
+    --result-file ${OUT_FILE} \
     --result-upload-file ./playground/data/eval/seed_bench/answers_upload/${MODEL_NAME}.jsonl
 
