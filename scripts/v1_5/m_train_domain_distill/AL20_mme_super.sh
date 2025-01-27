@@ -30,7 +30,7 @@ cd eval_tool
 
 #python calculation.py --results_dir answers/${MODEL_NAME}
 cp /ppio_net0/code/LLaVA/sssssssMME-cal.py ./calculation_new.py
-python calculation_new.py --results_dir answers/${MODEL}
+python calculation_new.py --results_dir answers/${MODEL_NAME}
 
 
 
