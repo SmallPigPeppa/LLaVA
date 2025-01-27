@@ -17,6 +17,7 @@ MODEL_PATHS=(
 )
 
 
+
 # Iterate through each model path
 for MODEL_PATH in "${MODEL_PATHS[@]}"; do
     source /etc/proxy/net_proxy
