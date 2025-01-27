@@ -39,7 +39,7 @@ OUT_FILE="./playground/data/eval/seed_bench/answers/${MODEL_NAME}/merge.jsonl"
 
 
 # Clear out the output file if it exists.
-> "$output_file"
+> ${OUT_FILE}
 
 # Loop through the indices and concatenate each file.
 for IDX in $(seq 0 $((CHUNKS-1))); do
