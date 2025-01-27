@@ -7,6 +7,7 @@ MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0"
 
 MODEL="${MODEL_PATH}-merged"
+MODEL="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task1-iconqa-task2-super-merged"
 
 MODEL_NAME=$(basename ${MODEL_PATH})
 
