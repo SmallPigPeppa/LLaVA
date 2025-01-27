@@ -46,13 +46,13 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
 #        --conv-mode vicuna_v1
 
     # 转换答案格式
-#    cd ./playground/data/eval/MME
-#    python convert_answer_to_mme_new.py --experiment ${MODEL}
+    cd ./playground/data/eval/MME
+    python convert_answer_to_mme_new.py --experiment ${MODEL}
 
 
 #     计算结果
     cd eval_tool
-    cp /ppio_net0/code/LLaVA/sssssssMME-cal.py /ppio_net0/code/LLaVA/playground/data/eval/MME/eval_tool/calculation_new.py
+    cp /ppio_net0/code/LLaVA/sssssssMME-cal.py ./calculation_new.py
 #    python calculation.py --results_dir answers/${MODEL}
     python calculation_new.py --results_dir answers/${MODEL}
 
