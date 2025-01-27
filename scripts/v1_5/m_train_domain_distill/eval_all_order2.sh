@@ -4,7 +4,7 @@ export HF_HOME=/ppio_net0/huggingface
 export CUDA_VISIBLE_DEVICES=0
 
 MODEL_PATH="finetune-ckpt/continual-ft/llava-v1.5-7b-lora-task6-scienceqa-merged"
-MODEL_PATH="finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task5-figureqa-merged"
+MODEL_PATH="finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task5-figure-merged"
 MODEL=$(basename "${MODEL_PATH}")
 
 
