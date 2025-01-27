@@ -31,7 +31,7 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
     CURRENT_MODEL_PATH="${MODEL_PATH}-mix${MIX_RATIO}-svdv3"
     MODEL=$(basename "${MODEL_PATH}")  # Extract the model name
 
-    echo "Evaluating model: ${MODEL_PATH}"
+#    echo "Evaluating model: ${MODEL_PATH}"
     echo "Processing model: ${CURRENT_MODEL_PATH}"
 
     # Step 1: Run model evaluation for super-CLEVR
@@ -49,7 +49,7 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
         --result-file ./playground/data/eval/super-CLEVR/answers/${MODEL}.jsonl \
         --output-dir ./playground/data/eval/super-CLEVR/answers/${MODEL}
 
-    echo "Finished evaluating model: ${MODEL_PATH}"
+    echo "Finished evaluating model: ${CURRENT_MODEL_PATH}"
   done
 done
 
