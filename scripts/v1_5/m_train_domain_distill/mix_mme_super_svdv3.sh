@@ -11,12 +11,12 @@ MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
 # 定义所有的 mix_ratios
 MIX_RATIOS=(
 #  0.0
-#  0.1
+  0.1
   0.2
-#  0.3
-#  0.4
-#  0.5
-#  0.6
+  0.3
+  0.4
+  0.5
+  0.6
 #  0.7
 #  0.8
 #  0.9
@@ -37,18 +37,17 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
     cd /ppio_net0/code/LLaVA
 
     # 加载模型并生成答案文件
-#    python -m llava.eval.model_vqa_loader \
-#        --model-path ${MODEL} \
-#        --question-file ./playground/data/eval/MME/llava_mme_new.jsonl \
-#        --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
-#        --answers-file ./playground/data/eval/MME/answers/${MODEL}.jsonl \
-#        --temperature 0 \
-#        --conv-mode vicuna_v1
+    python -m llava.eval.model_vqa_loader \
+        --model-path ${MODEL} \
+        --question-file ./playground/data/eval/MME/llava_mme.jsonl \
+        --image-folder ./playground/data/eval/MME/MME_Benchmark_release_version \
+        --answers-file ./playground/data/eval/MME/answers/${MODEL}.jsonl \
+        --temperature 0 \
+        --conv-mode vicuna_v1
 
     # 转换答案格式
     cd ./playground/data/eval/MME
-    python convert_answer_to_mme_new.py --experiment ${MODEL}
-
+    python convert_answer_to_mme.py --experiment ${MODEL}
 
 #     计算结果
     cd eval_tool
