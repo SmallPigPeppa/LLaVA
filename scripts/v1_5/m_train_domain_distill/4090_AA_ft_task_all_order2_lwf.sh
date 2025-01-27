@@ -33,7 +33,7 @@ OUTPUT_DIR_PREFIX="finetune-ckpt/lwf-ft-order2"
 for i in "${!TASKS[@]}"; do
     TASK=${TASKS[i]}
     DATA_PATH=${DATA_PATHS[i]}
-    OUTPUT_DIR="${OUTPUT_DIR_PREFIX}/llava-v1.5-7b-lora-task$((i+1))-${TASK,,}"  # Lowercase task name
+    OUTPUT_DIR="${OUTPUT_DIR_PREFIX}/llava-v1.5-7b-lora-task$((i+2))-${TASK,,}"  # Lowercase task name
     OUTPUT_DIR_MERGED="${OUTPUT_DIR}-merged"
 
     echo "Training task: ${TASK}"
