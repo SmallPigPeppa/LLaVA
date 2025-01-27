@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export HF_HOME=/ppio_net0/huggingface
-export CUDA_VISIBLE_DEVICES=0
+#export CUDA_VISIBLE_DEVICES=0
 
 # Define task names in the new order
 TASKS=(
