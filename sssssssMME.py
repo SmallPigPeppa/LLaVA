@@ -2,7 +2,7 @@ import json
 
 # 文件路径
 input_file = './playground/data/eval/MME/llava_mme.jsonl'
-output_file = './playground/data/eval/MME/llava_mme_refined.jsonl'
+output_file = './playground/data/eval/MME/llava_mme_new.jsonl'
 
 # 打开输入文件，逐行处理
 with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
