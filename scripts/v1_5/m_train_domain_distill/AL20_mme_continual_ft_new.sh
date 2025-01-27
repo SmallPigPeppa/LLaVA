@@ -15,12 +15,12 @@ MODEL_PATHS=(
 
 # Define the updated list of model paths
 MODEL_PATHS=(
-    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task1-iconqa-merged"
-    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task2-super-merged"
-    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task3-math-merged"
-    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task4-arxiv-merged"
+#    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task1-iconqa-merged"
+#    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task2-super-merged"
+#    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task3-math-merged"
+#    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task4-arxiv-merged"
     "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task5-figure-merged"
-    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task6-scienceqa-merged"
+#    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task6-scienceqa-merged"
 )
 
 # Prepare the MME evaluation tool
