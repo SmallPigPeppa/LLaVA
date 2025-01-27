@@ -32,7 +32,9 @@ def eval_single(result_file, eval_only_type=None):
             correct_counts[data_type] = correct_counts.get(data_type, 0)
             continue
         row = results[question_id]
-        if row['text'] == question_data['answer']:
+        # if row['text'] == question_data['answer']:
+        #     correct_counts[data_type] = correct_counts.get(data_type, 0) + 1
+        if row['text'][0] == question_data['answer']:
             correct_counts[data_type] = correct_counts.get(data_type, 0) + 1
 
     total_count = 0
