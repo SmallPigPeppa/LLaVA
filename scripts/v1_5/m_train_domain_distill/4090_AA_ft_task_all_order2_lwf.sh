@@ -42,7 +42,7 @@ for i in "${!TASKS[@]}"; do
     echo "Output directory: ${OUTPUT_DIR}"
 
     # Step 1: Train the model
-    deepspeed llava/train/train_mem.py \
+    deepspeed llava/train/train_mem_lwf.py \
         --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
         --distill False \
         --deepspeed ./scripts/zero3.json \
