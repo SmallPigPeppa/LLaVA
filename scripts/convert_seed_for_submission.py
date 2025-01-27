@@ -40,7 +40,7 @@ def eval_single(result_file, eval_only_type=None):
     total_count = 0
     total_correct = 0
     for data_type in sorted(type_counts.keys()):
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         accuracy = correct_counts[data_type] / type_counts[data_type] * 100
         if eval_only_type is None:
             print(f"{ques_type_id_to_name[data_type]}: {accuracy:.2f}%")
