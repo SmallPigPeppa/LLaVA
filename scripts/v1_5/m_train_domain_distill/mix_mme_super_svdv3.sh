@@ -47,7 +47,7 @@ for MIX_RATIO in "${MIX_RATIOS[@]}"; do
 
     # 转换答案格式
     cd ./playground/data/eval/MME
-    python convert_answer_to_mme.py --experiment ${MODEL}
+    python convert_answer_to_mme_new.py --experiment ${MODEL}
 #    cd eval_tool
 
     # 计算结果
