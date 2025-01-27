@@ -36,7 +36,7 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
 
     # Step 1: Run model evaluation for super-CLEVR
     python -m llava.eval.model_super_clevr \
-        --model-path "${MODEL_PATH}" \
+        --model-path "${CURRENT_MODEL_PATH}" \
         --question-file ./playground/data/fine-tune/super-CLEVR/test_2k.json \
         --image-folder ./playground/data \
         --answers-file ./playground/data/eval/super-CLEVR/answers/${MODEL}.jsonl \
