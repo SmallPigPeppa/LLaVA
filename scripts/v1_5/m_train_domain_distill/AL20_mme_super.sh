@@ -28,8 +28,9 @@ python convert_answer_to_mme.py --experiment ${MODEL_NAME}
 
 cd eval_tool
 
-python calculation.py --results_dir answers/${MODEL_NAME}
-
+#python calculation.py --results_dir answers/${MODEL_NAME}
+cp /ppio_net0/code/LLaVA/sssssssMME-cal.py ./calculation_new.py
+python calculation_new.py --results_dir answers/${MODEL}
 
 
 
