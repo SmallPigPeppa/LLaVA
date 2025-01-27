@@ -7,7 +7,7 @@ export HF_HOME=/ppio_net0/huggingface
 
 
 VISION_TOWER="openai/clip-vit-large-patch14-336"
-MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged-mix0.6-svdv3"
+MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged-mix0.3-svdv3"
 DATA_PATH="playground/data/fine-tune/super-CLEVR/train-with-others.json"
 OUTPUT_DIR="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0"
 
