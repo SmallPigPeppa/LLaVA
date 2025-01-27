@@ -23,13 +23,13 @@ evaluate_task() {
     echo "Starting evaluation for ${task_name}"
 
     # Step 1: Generate answers
-#    python -m ${model_script} \
-#        --model-path "${model_path}" \
-#        --question-file "${question_file}" \
-#        --image-folder ./playground/data \
-#        --answers-file "${answers_dir}/${MODEL}.jsonl" \
-#        --temperature 0 \
-#        --conv-mode vicuna_v1
+    python -m ${model_script} \
+        --model-path "${model_path}" \
+        --question-file "${question_file}" \
+        --image-folder ./playground/data \
+        --answers-file "${answers_dir}/${MODEL}.jsonl" \
+        --temperature 0 \
+        --conv-mode vicuna_v1
 
     # Step 2: Evaluate results
     python -m ${eval_script} \

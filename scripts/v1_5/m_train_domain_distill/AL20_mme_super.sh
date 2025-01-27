@@ -5,7 +5,6 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL_PATH="checkpoints/llava-v1.5-7b-lora-merged"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-merged"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
-
 MODEL_PATH="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task1-iconqa-task2-super-merged"
 
 MODEL_NAME=$(basename ${MODEL_PATH})
