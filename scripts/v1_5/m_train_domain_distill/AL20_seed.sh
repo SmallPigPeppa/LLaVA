@@ -33,7 +33,7 @@ for IDX in $(seq 0 $((CHUNKS-1))); do
         --conv-mode vicuna_v1 &
 done
 
-#wait
+wait
 
 output_file=./playground/data/eval/seed_bench/answers/$CKPT/merge.jsonl
 
