@@ -14,7 +14,7 @@ with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
 
         # 修改 text 字段
         if 'text' in data:
-            data['text'] += '\n Please answer yes or no.'
+            data['text'] += '\n Please answer Yes or No.'
 
         # 将修改后的数据写入输出文件
         json.dump(data, outfile)
