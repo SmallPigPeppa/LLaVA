@@ -207,12 +207,12 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # 计算 LwF (Learning without Forgetting) 损失
         kd_loss_fct = torch.nn.KLDivLoss(reduction="batchmean")  # 使用 KL 散度作为蒸馏损失
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         log_probs_new = F.log_softmax(logits[..., :-1, :], dim=-1)  # 新模型的 log softmax
         probs_old = F.softmax(logits_old[..., :-1, :], dim=-1)  # 旧模型的 softmax
 
         # 仅对非 padding 部分计算损失
-        valid_mask = (shift_labels != -100).view(-1, shift_logits.shape[-1])  # 排除无效标签
+        valid_mask = labels[..., 1:] != -100 # 排除无效标签
         log_probs_new = log_probs_new[valid_mask]
         probs_old = probs_old[valid_mask]
         kd_loss = kd_loss_fct(log_probs_new, probs_old)
