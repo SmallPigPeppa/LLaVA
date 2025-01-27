@@ -19,6 +19,20 @@ MODELS=(
 #    "$MODEL_PATH_A2 $MODEL_PATH_B2"
 )
 
+MIX_RATIOS=(
+#  0.0
+  0.6
+  0.1
+  0.2
+  0.3
+  0.4
+  0.5
+  0.7
+  0.8
+  0.9
+#  1.0
+)
+
 # 遍历每组模型
 for MODEL_PAIR in "${MODELS[@]}"; do
     # 解析 MODEL_PATH_A 和 MODEL_PATH_B
@@ -28,8 +42,7 @@ for MODEL_PAIR in "${MODELS[@]}"; do
     echo "Processing Model Pair: A=${MODEL_PATH_A}, B=${MODEL_PATH_B}"
 
     # 遍历 MIX_RATIO 从 0 到 1
-    for i in $(seq 0.1 0.1 0.9); do
-        MIX_RATIO=$(printf "%.1f" $i)
+    for i in "${MIX_RATIOS[@]}" ; do
         SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}-svdv3"
         MODEL_NAME=$(basename $SAVE_PATH)
 
