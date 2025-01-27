@@ -38,7 +38,6 @@ OUT_FILE="./playground/data/eval/seed_bench/answers/${MODEL_NAME}/merge.jsonl"
 
 
 
-
 # Clear out the output file if it exists.
 > ${OUT_FILE}
 
