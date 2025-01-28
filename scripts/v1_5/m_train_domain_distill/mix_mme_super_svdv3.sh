@@ -13,7 +13,7 @@ MODEL_PATH_B="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-mer
 MIX_RATIOS=(
 #  0.0
 #  0.1
-  0.125
+#  0.125
   0.12
 #  0.2
 #  0.3
