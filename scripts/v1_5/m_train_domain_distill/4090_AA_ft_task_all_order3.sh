@@ -151,4 +151,4 @@ python -m llava.eval.model_vqa_save_weight_hf \
   --save-path ${OUTPUT_DIR}-merged
 
 
-/ppio_net0/code/openapi.sh stop a63cc4ad4ec4c1d3
+#/ppio_net0/code/openapi.sh stop a63cc4ad4ec4c1d3
