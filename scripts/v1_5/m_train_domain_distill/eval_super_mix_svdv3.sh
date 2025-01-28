@@ -8,19 +8,20 @@ MODEL_PATHS=(
 #    "liuhaotian/llava-v1.5-7b"
 #    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-merged"
 #    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
-    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged"
+#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged"
+    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged"
 )
 
   MIX_RATIOS=(
 #  0.0
-#  0.1
+  0.1
 #  0.125
-  0.11
-  0.12
-  0.13
-#  0.2
-#  0.3
-#  0.4
+#  0.11
+#  0.12
+#  0.13
+  0.2
+  0.3
+  0.4
 #  0.5
 #  0.6
 #  0.7
