@@ -10,6 +10,7 @@ MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
 MODEL_PATH_B="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged"
 MODEL_PATH_B="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged"
 
+
 # 定义所有的 mix_ratios
 MIX_RATIOS=(
 #  0.0
