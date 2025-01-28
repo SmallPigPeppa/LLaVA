@@ -10,6 +10,20 @@ MODEL_PATH_B1="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-me
 # 固定的 SVD 保留比例
 SVD_RATIO=0.2
 SCALE_RATIO=0.5
+MIX_RATIOS=(
+#  0.0
+#  0.1
+  0.15
+#  0.2
+#  0.3
+#  0.4
+#  0.5
+#  0.6
+#  0.7
+#  0.8
+#  0.9
+#  1.0
+)
 
 
 # 定义模型组合
@@ -27,8 +41,7 @@ for MODEL_PAIR in "${MODELS[@]}"; do
     echo "Processing Model Pair: A=${MODEL_PATH_A}, B=${MODEL_PATH_B}"
 
     # 遍历 MIX_RATIO 从 0 到 1
-    for i in $(seq 0.1 0.1 0.6); do
-        MIX_RATIO=$(printf "%.1f" $i)
+    for MIX_RATIO in "${MIX_RATIOS[@]}"; do
         SAVE_PATH="${MODEL_PATH_B}-mix${MIX_RATIO}-svdv3"
         MODEL_NAME=$(basename $SAVE_PATH)
 
