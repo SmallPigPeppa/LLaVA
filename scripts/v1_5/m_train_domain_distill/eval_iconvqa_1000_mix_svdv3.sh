@@ -7,19 +7,20 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL_PATH="liuhaotian/llava-v1.5-7b"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-merged"
 #MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged"
+MODEL_PATH="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged"
 
 # 定义Mix率的不同值
 MIX_RATIOS=(
 #  0.0
-#  0.1
-#  0.2
-#  0.3
-#  0.4
+  0.1
+  0.2
+  0.3
+  0.4
   0.5
   0.6
-  0.7
-  0.8
-  0.9
+#  0.7
+#  0.8
+#  0.9
 #  1.0
 )
 
