@@ -14,6 +14,7 @@ MODEL_PATHS=(
 #    "finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task6-scienceqa-merged"
 #    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged-mix0.3-svdv3"
     "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged-mix0.12-svdv3"
+    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged-mix0.25-svdv3"
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task1-iconqa-task2-super-merged"
 )
 
@@ -27,13 +28,13 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
     echo "Starting evaluation for model: ${MODEL}"
 
     # Step 1: Evaluate the model
-#    python -m llava.eval.model_vqa \
-#        --model-path "${MODEL_PATH}" \
-#        --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
-#        --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-#        --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/${MODEL}.jsonl \
-#        --temperature 0 \
-#        --conv-mode vicuna_v1
+    python -m llava.eval.model_vqa \
+        --model-path "${MODEL_PATH}" \
+        --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
+        --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
+        --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/${MODEL}.jsonl \
+        --temperature 0 \
+        --conv-mode vicuna_v1
 
     # Step 2: Create the reviews directory
     mkdir -p playground/data/eval/llava-bench-in-the-wild/reviews
