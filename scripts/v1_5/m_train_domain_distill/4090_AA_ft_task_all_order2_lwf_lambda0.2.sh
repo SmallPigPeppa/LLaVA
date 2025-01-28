@@ -6,8 +6,8 @@ export HF_HOME=/ppio_net0/huggingface
 # Define task names in the new order
 TASKS=(
 #"IconQA"
-"Super"
-#"Math"
+#"Super"
+"Math"
 #"Arxiv"
 #"Figure"
 #"ScienceQA"
@@ -16,15 +16,16 @@ TASKS=(
 # Define data paths for each task
 DATA_PATHS=(
 #    "playground/data/fine-tune/iconqa/train.json"
-    "playground/data/fine-tune/super-CLEVR/train.json"
-#    "playground/data/fine-tune/CLEVR-Math/train_4w.json"
+#    "playground/data/fine-tune/super-CLEVR/train.json"
+    "playground/data/fine-tune/CLEVR-Math/train_4w.json"
 #    "playground/data/fine-tune/ArxivQA/train_4w.json"
 #    "playground/data/fine-tune/FigureQA/train.json"
 #    "playground/data/fine-tune/ScienceQA/train.json"
 )
 
 # Define initial model base
-MODEL_BASE="finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task1-iconqa-merged"
+#MODEL_BASE="finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task1-iconqa-merged"
+MODEL_BASE="finetune-ckpt/lwf-ft-order2-lambda0.2/llava-v1.5-7b-lora-task2-super-merged"
 
 # Define output directory prefix
 OUTPUT_DIR_PREFIX="finetune-ckpt/lwf-ft-order2-lambda0.2"
@@ -33,7 +34,7 @@ OUTPUT_DIR_PREFIX="finetune-ckpt/lwf-ft-order2-lambda0.2"
 for i in "${!TASKS[@]}"; do
     TASK=${TASKS[i]}
     DATA_PATH=${DATA_PATHS[i]}
-    OUTPUT_DIR="${OUTPUT_DIR_PREFIX}/llava-v1.5-7b-lora-task$((i+2))-${TASK,,}"  # Lowercase task name
+    OUTPUT_DIR="${OUTPUT_DIR_PREFIX}/llava-v1.5-7b-lora-task$((i+3))-${TASK,,}"  # Lowercase task name
     OUTPUT_DIR_MERGED="${OUTPUT_DIR}-merged"
 
     echo "Training task: ${TASK}"
