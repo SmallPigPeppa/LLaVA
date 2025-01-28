@@ -48,7 +48,7 @@ done
 echo "Running evaluations on each GPU..."
 for i in $(seq 0 $((NUM_GPUS - 1)))
 do
-    CUDA_VISIBLE_DEVICES=$i python -m llava.eval.model_vqa_generate_Aold \
+    CUDA_VISIBLE_DEVICES=$i python -m llava.eval.model_vqa_generate_Aold_1qa \
         --model-path ${MODEL_PATH} \
         --image-folder ./playground/data \
         --dataset-file "$tmp_dir/part_$((i + 1)).json" \
