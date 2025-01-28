@@ -6,8 +6,9 @@ export CUDA_VISIBLE_DEVICES=1
 # List of model paths
 MODEL_PATHS=(
 #    "liuhaotian/llava-v1.5-7b"
-    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-math-merged"
-    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-math-lambda1.0-merged"
+#    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-math-merged"
+#    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-math-lambda1.0-merged"
+    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged"
 )
 
 # Iterate through each model path
