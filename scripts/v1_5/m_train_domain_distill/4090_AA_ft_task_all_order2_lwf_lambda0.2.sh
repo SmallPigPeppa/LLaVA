@@ -7,9 +7,9 @@ export HF_HOME=/ppio_net0/huggingface
 TASKS=(
 #"IconQA"
 #"Super"
-"Math"
-#"Arxiv"
-#"Figure"
+#"Math"
+"Arxiv"
+"Figure"
 #"ScienceQA"
 )
 
@@ -17,9 +17,9 @@ TASKS=(
 DATA_PATHS=(
 #    "playground/data/fine-tune/iconqa/train.json"
 #    "playground/data/fine-tune/super-CLEVR/train.json"
-    "playground/data/fine-tune/CLEVR-Math/train_4w.json"
-#    "playground/data/fine-tune/ArxivQA/train_4w.json"
-#    "playground/data/fine-tune/FigureQA/train.json"
+#    "playground/data/fine-tune/CLEVR-Math/train_4w.json"
+    "playground/data/fine-tune/ArxivQA/train_4w.json"
+    "playground/data/fine-tune/FigureQA/train.json"
 #    "playground/data/fine-tune/ScienceQA/train.json"
 )
 
@@ -34,7 +34,7 @@ OUTPUT_DIR_PREFIX="finetune-ckpt/lwf-ft-order2-lambda0.2"
 for i in "${!TASKS[@]}"; do
     TASK=${TASKS[i]}
     DATA_PATH=${DATA_PATHS[i]}
-    OUTPUT_DIR="${OUTPUT_DIR_PREFIX}/llava-v1.5-7b-lora-task$((i+3))-${TASK,,}"  # Lowercase task name
+    OUTPUT_DIR="${OUTPUT_DIR_PREFIX}/llava-v1.5-7b-lora-task$((i+4))-${TASK,,}"  # Lowercase task name
     OUTPUT_DIR_MERGED="${OUTPUT_DIR}-merged"
 
     echo "Training task: ${TASK}"
