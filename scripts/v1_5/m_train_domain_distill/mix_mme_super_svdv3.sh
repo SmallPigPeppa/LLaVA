@@ -12,12 +12,13 @@ MODEL_PATH_B="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-mer
 # 定义所有的 mix_ratios
 MIX_RATIOS=(
 #  0.0
-  0.1
-  0.2
-  0.3
-  0.4
-  0.5
-  0.6
+#  0.1
+  0.15
+#  0.2
+#  0.3
+#  0.4
+#  0.5
+#  0.6
 #  0.7
 #  0.8
 #  0.9
