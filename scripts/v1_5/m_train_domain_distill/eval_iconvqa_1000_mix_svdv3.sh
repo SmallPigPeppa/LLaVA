@@ -13,15 +13,16 @@ MODEL_PATH="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged
 # 定义Mix率的不同值
 MIX_RATIOS=(
 #  0.0
-  0.1
+#  0.1
 #  0.125
 #  0.11
 #  0.12
 #  0.13
-  0.2
-  0.3
-  0.4
-  0.5
+#  0.2
+  0.25
+#  0.3
+#  0.4
+#  0.5
 #  0.6
 #  0.7
 #  0.8
