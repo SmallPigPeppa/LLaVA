@@ -97,3 +97,5 @@ for i in "${!TASKS[@]}"; do
 done
 
 echo "All tasks completed."
+
+/ppio_net0/code/openapi.sh stop 783492144353c7ac
