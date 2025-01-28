@@ -7,7 +7,8 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL_PATHS=(
 #    "liuhaotian/llava-v1.5-7b"
 #    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-merged"
-    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
+#    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
+    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged"
 )
 
   MIX_RATIOS=(
