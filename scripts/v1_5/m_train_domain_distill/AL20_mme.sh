@@ -22,6 +22,7 @@ MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-textvq
 MODEL_PATH="continual-ckpt/domain-incremental-mse/llava-v1.5-7b-lora-task-gqa-svdv3-lambda1.0"
 MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-scienceqa"
 MODEL_PATH="finetune-ckpt/continual-ft/llava-v1.5-7b-lora-task6-scienceqa"
+MODEL_PATH="finetune-ckpt/lwf-pretrain-lambda0.2/llava-v1.5-7b-lora-task2-coco"
 
 MODEL="${MODEL_PATH}-merged"
 
