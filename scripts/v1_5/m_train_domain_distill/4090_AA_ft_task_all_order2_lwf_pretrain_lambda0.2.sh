@@ -26,25 +26,26 @@ export HF_HOME=/ppio_net0/huggingface
 
 TASKS=(
 #"others"
-"coco"
-#"ocr_vqa"
-#"textvqa"
-#"gqa"
-#"vg"
+#"coco"
+"ocr_vqa"
+"textvqa"
+"gqa"
+"vg"
 )
 DATA_PATHS=(
 #    "playground/data/domain-incremental/llava_v1_5_mix665k-others.json"
-    "playground/data/domain-incremental/llava_v1_5_mix665k-coco.json"
-#    "playground/data/domain-incremental/llava_v1_5_mix665k-ocr_vqa.json"
-#    "playground/data/domain-incremental/llava_v1_5_mix665k-textvqa.json"
-#    "playground/data/domain-incremental/llava_v1_5_mix665k-gqa.json"
-#    "playground/data/domain-incremental/llava_v1_5_mix665k-vg.json"
+#    "playground/data/domain-incremental/llava_v1_5_mix665k-coco.json"
+    "playground/data/domain-incremental/llava_v1_5_mix665k-ocr_vqa.json"
+    "playground/data/domain-incremental/llava_v1_5_mix665k-textvqa.json"
+    "playground/data/domain-incremental/llava_v1_5_mix665k-gqa.json"
+    "playground/data/domain-incremental/llava_v1_5_mix665k-vg.json"
 )
 
 
 # Define initial model base
 #MODEL_BASE="finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task1-iconqa-merged"
-MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
+#MODEL_BASE="continual-ckpt/domain/llava-v1.5-7b-lora-task-others-merged"
+MODEL_BASE="finetune-ckpt/lwf-pretrain-lambda0.2/llava-v1.5-7b-lora-task2-coco-merged"
 # Define output directory prefix
 OUTPUT_DIR_PREFIX="finetune-ckpt/lwf-pretrain-lambda0.2"
 
@@ -52,7 +53,7 @@ OUTPUT_DIR_PREFIX="finetune-ckpt/lwf-pretrain-lambda0.2"
 for i in "${!TASKS[@]}"; do
     TASK=${TASKS[i]}
     DATA_PATH=${DATA_PATHS[i]}
-    OUTPUT_DIR="${OUTPUT_DIR_PREFIX}/llava-v1.5-7b-lora-task$((i+2))-${TASK,,}"  # Lowercase task name
+    OUTPUT_DIR="${OUTPUT_DIR_PREFIX}/llava-v1.5-7b-lora-task$((i+3))-${TASK,,}"  # Lowercase task name
     OUTPUT_DIR_MERGED="${OUTPUT_DIR}-merged"
 
     echo "Training task: ${TASK}"
@@ -115,5 +116,5 @@ done
 
 echo "All tasks completed."
 
-/ppio_net0/code/openapi.sh stop c1c4b5df00dbee4d
+#/ppio_net0/code/openapi.sh stop c1c4b5df00dbee4d
 
