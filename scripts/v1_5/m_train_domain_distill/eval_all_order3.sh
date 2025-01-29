@@ -9,6 +9,7 @@ MODEL_PATH="finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task5-figure-me
 #MODEL_PATH="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged"
 #MODEL_PATH="finetune-ckpt/lwf-ft-order2-lambda0.2/llava-v1.5-7b-lora-task5-figure-merged"
 MODEL_PATH="finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
+MODEL_PATH="finetune-ckpt/continual-ft-order3/llava-v1.5-7b-lora-task5-arxiv-merged"
 MODEL=$(basename "${MODEL_PATH}")
 
 
