@@ -172,6 +172,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         # LLaVA 损失和蒸馏损失计算
         loss_fct = CrossEntropyLoss()
         loss_mse = MSELoss()
+        kd_loss_fct = torch.nn.KLDivLoss(reduction="batchmean")
 
         llava_loss = None
         kd_loss = None
@@ -225,8 +226,24 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         if len(pure_text_index) > 0:
             hidden_states_text = hidden_states[pure_text_index].contiguous()
             hidden_states_text_old = hidden_states_old[pure_text_index].contiguous()
+            logits_old = self.lm_head_old(hidden_states_text_old)
+            logits_old = logits_old.float()
+
+            logits_new = logits[pure_text_index]
+
             # import pdb;pdb.set_trace()
-            kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
+            # kd_loss = loss_mse(hidden_states_text, hidden_states_text_old)
+
+             # 使用 KL 散度作为蒸馏损失
+            log_probs_new = F.log_softmax(logits_new[..., :-1, :], dim=-1)  # 新模型的 log softmax
+            probs_old = F.softmax(logits_old[..., :-1, :], dim=-1)  # 旧模型的 softmax
+
+            # 仅对非 padding 部分计算损失
+            # valid_mask = labels[..., 1:] != -100  # 排除无效标签
+            # log_probs_new = log_probs_new[valid_mask]
+            # probs_old = probs_old[valid_mask]
+            kd_loss = kd_loss_fct(log_probs_new, probs_old)
+
         else:
             hidden_states_text = hidden_states.contiguous()
             hidden_states_text_old = hidden_states_old.contiguous()
