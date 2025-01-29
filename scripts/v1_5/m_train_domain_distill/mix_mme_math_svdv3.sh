@@ -9,6 +9,7 @@ export CUDA_VISIBLE_DEVICES=0
 MODEL_PATH_B="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
 MODEL_PATH_B="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged"
 MODEL_PATH_B="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged"
+MODEL_PATH_B="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-filter-merged"
 
 
 # 定义所有的 mix_ratios
@@ -19,8 +20,8 @@ MIX_RATIOS=(
 #  0.11
 #  0.12
 #  0.13
-0.25
-#  0.2
+#0.25
+  0.2
 #  0.3
 #  0.4
 #  0.5
