@@ -10,7 +10,8 @@ MODEL_PATH="finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task5-figure-me
 #MODEL_PATH="finetune-ckpt/lwf-ft-order2-lambda0.2/llava-v1.5-7b-lora-task5-figure-merged"
 #MODEL_PATH="finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
 #MODEL_PATH="finetune-ckpt/continual-ft-order3/llava-v1.5-7b-lora-task5-arxiv-merged"
-MODEL_PATH="finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
+#MODEL_PATH="finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
+MODEL_PATH='finetune-ckpt/llava-c/llava-v1.5-7b-lora-task4-figureqa-lambda1.0-merged-mix0.1-svdv3'
 
 MODEL=$(basename "${MODEL_PATH}")
 
@@ -53,7 +54,7 @@ tasks=(
     "Super-CLEVR playground/data/fine-tune/super-CLEVR/test_2k.json playground/data/fine-tune/super-CLEVR/test_2k.json playground/data/eval/super-CLEVR/answers playground/data/eval/super-CLEVR/answers llava.eval.eval_clevr_math llava.eval.model_super_clevr"
     "CLEVR-Math playground/data/fine-tune/CLEVR-Math/test_2k.json playground/data/fine-tune/CLEVR-Math/test_2k.json playground/data/eval/clevr-math/answers playground/data/eval/clevr-math/answers llava.eval.eval_clevr_math llava.eval.model_clevr_math"
     "FigureQA playground/data/fine-tune/FigureQA/test_2k.json playground/data/fine-tune/FigureQA/test_2k.json playground/data/eval/figureqa/answers playground/data/eval/figureqa/answers llava.eval.eval_figureqa llava.eval.model_figureqa"
-    "ArxivQA playground/data/fine-tune/ArxivQA/test_2k.json playground/data/fine-tune/ArxivQA/test_2k.json playground/data/eval/arxivqa/answers playground/data/eval/arxivqa/answers llava.eval.eval_arxivqa llava.eval.model_arxivqa"
+#    "ArxivQA playground/data/fine-tune/ArxivQA/test_2k.json playground/data/fine-tune/ArxivQA/test_2k.json playground/data/eval/arxivqa/answers playground/data/eval/arxivqa/answers llava.eval.eval_arxivqa llava.eval.model_arxivqa"
 )
 
 # Iterate over tasks and evaluate sequentially
