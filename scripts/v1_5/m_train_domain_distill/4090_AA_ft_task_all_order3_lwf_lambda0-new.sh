@@ -5,8 +5,8 @@ export HF_HOME=/ppio_net0/huggingface
 
 # Define task names in the new order
 TASKS=(
-"IconQA"
-"Super"
+#"IconQA"
+#"Super"
 "Math"
 "Figure"
 "Arxiv"
@@ -16,7 +16,7 @@ TASKS=(
 # Define data paths for each task
 DATA_PATHS=(
 #    "playground/data/fine-tune/iconqa/train.json"
-    "playground/data/fine-tune/super-CLEVR/train.json"
+#    "playground/data/fine-tune/super-CLEVR/train.json"
     "playground/data/fine-tune/CLEVR-Math/train_4w.json"
     "playground/data/fine-tune/FigureQA/train.json"
     "playground/data/fine-tune/ArxivQA/train_4w.json"
@@ -25,7 +25,7 @@ DATA_PATHS=(
 
 # Define initial model base
 MODEL_BASE="finetune-ckpt/continual-ft-order2/llava-v1.5-7b-lora-task1-iconqa-merged"
-#MODEL_BASE="finetune-ckpt/lwf-ft-order2-lambda0.2/llava-v1.5-7b-lora-task2-super-merged"
+MODEL_BASE="finetune-ckpt/lwf-ft-order2-lambda0.2/llava-v1.5-7b-lora-task2-super-merged"
 #MODEL_BASE="finetune-ckpt/lwf-ft-order2-lambda0.2/llava-v1.5-7b-lora-task3-math-merged"
 
 # Define output directory prefix
@@ -98,4 +98,4 @@ done
 
 echo "All tasks completed."
 
-/ppio_net0/code/openapi.sh stop 783492144353c7ac
+#/ppio_net0/code/openapi.sh stop 783492144353c7ac
