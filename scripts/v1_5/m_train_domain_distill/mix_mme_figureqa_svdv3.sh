@@ -13,8 +13,8 @@ MODEL_PATH_B="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task4-figureqa-lambda1.0-
 MIX_RATIOS=(
 #  0.0
 #  0.1
-#  0.125
-  0.13
+  0.125
+#  0.13
 #  0.11
 #  0.12
 #  0.13
