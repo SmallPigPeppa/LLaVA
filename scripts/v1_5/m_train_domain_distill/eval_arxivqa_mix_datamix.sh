@@ -8,7 +8,6 @@ MODEL_PATH="liuhaotian/llava-v1.5-7b"
 MODEL_PATH="finetune-ckpt/fine-tune-1task/llava-v1.5-7b-lora-arxivqa-datamix-merged"
 #MODEL_PATH="finetune-ckpt/fine-tune/llava-v1.5-7b-lora-arxivqa-lambda1.0-merged"
 
-
 # 定义Mix率的不同值
 MIX_RATIOS=(
   0.0
