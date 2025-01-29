@@ -62,3 +62,4 @@ for task in "${tasks[@]}"; do
 done
 
 echo "All tasks have been evaluated."
+
