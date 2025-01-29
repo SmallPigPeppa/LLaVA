@@ -14,6 +14,7 @@ REVIEWS_DIR="playground/data/eval/llava-bench-in-the-wild/reviews"
 mkdir -p $RESULTS_DIR
 mkdir -p $REVIEWS_DIR
 
+
 # List of mix_ratios to evaluate
 MIX_RATIOS=(
   0.0
