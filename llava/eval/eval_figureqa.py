@@ -55,6 +55,7 @@ def eval_single(annotation_file, result_file):
         # 判断是否是布尔型答案
         if pred in boolean_true_set | boolean_false_set and ground_truth in boolean_true_set | boolean_false_set:
             # 归一化为 True/False
+            import pdb; pdb.set_trace()
             pred_normalized = pred in boolean_true_set
             ground_truth_normalized = ground_truth in boolean_true_set
         else:
