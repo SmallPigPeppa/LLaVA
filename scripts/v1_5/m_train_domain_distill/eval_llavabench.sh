@@ -18,8 +18,9 @@ MODEL_PATHS=(
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task1-iconqa-task2-super-merged"
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task5-arxiv-lambda1.0-merged-mix0.15-svdv3"
 #    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
-    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
-    "finetune-ckpt/lwf-ft-order3-lambda1.0/llava-v1.5-7b-lora-task5-arxiv-merged"
+#    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
+#    "finetune-ckpt/lwf-ft-order3-lambda1.0/llava-v1.5-7b-lora-task5-arxiv-merged"
+    "finetune-ckpt/continual-ft-order3/llava-v1.5-7b-lora-task5-arxiv-merged"
 )
 
 
