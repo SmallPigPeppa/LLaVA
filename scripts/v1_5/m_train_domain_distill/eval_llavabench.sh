@@ -28,7 +28,12 @@ MODEL_PATHS=(
 # Iterate through each model path
 for MODEL_PATH in "${MODEL_PATHS[@]}"; do
     source /etc/proxy/net_proxy
-    MODEL=$(basename ${MODEL_PATH})  # Extract model name
+#    MODEL=$(basename ${MODEL_PATH})  # Extract model name
+    # 生成随机数
+    RAND_NUM=$RANDOM
+
+    # 获取模型名称并附加随机数
+    MODEL=$(basename ${MODEL_PATH})_${RAND_NUM}
 
     echo "Starting evaluation for model: ${MODEL}"
 
