@@ -19,13 +19,13 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
     echo "Evaluating model: ${MODEL_PATH}"
 
     # Step 1: Run model evaluation for super-CLEVR
-#    python -m llava.eval.model_super_clevr \
-#        --model-path "${MODEL_PATH}" \
-#        --question-file ./playground/data/fine-tune/super-CLEVR/test_2k.json \
-#        --image-folder ./playground/data \
-#        --answers-file ./playground/data/eval/super-CLEVR/answers/${MODEL}.jsonl \
-#        --temperature 0 \
-#        --conv-mode vicuna_v1
+    python -m llava.eval.model_super_clevr \
+        --model-path "${MODEL_PATH}" \
+        --question-file ./playground/data/fine-tune/super-CLEVR/test_2k.json \
+        --image-folder ./playground/data \
+        --answers-file ./playground/data/eval/super-CLEVR/answers/${MODEL}.jsonl \
+        --temperature 0 \
+        --conv-mode vicuna_v1
 
     # Step 2: Evaluate results
     python -m llava.eval.eval_super_clever \
