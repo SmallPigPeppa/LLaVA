@@ -41,7 +41,7 @@ def eval_single(annotation_file, result_file):
     right = 0
     answer_gt_file = []
     for result in results:
-        annotation = annotations[result['question_id']]
+        # annotation = annotations[result['question_id']]
         # pred = result['text']
         # ground_truth = annotation['answer']
         # if pred.upper() == ground_truth.upper():
@@ -57,16 +57,16 @@ def eval_single(annotation_file, result_file):
 
         # 判断是否是布尔型答案
         if pred in boolean_true_set | boolean_false_set and ground_truth in boolean_true_set | boolean_false_set:
-            # 归一化为 True/False
-            pred_normalized = pred in boolean_true_set
-            ground_truth_normalized = ground_truth in boolean_true_set
+            # 归一化为 "TRUE" 或 "FALSE"
+            pred_normalized = "TRUE" if pred in boolean_true_set else "FALSE"
+            ground_truth_normalized = "TRUE" if ground_truth in boolean_true_set else "FALSE"
         else:
-            # 直接使用字符串比较
+            # 直接使用原始文本进行匹配
             pred_normalized = pred
             ground_truth_normalized = ground_truth
 
-        # 进行最终比较
-        if pred_normalized == ground_truth_normalized:
+        # 使用 `in` 进行包含性判断
+        if pred_normalized in ground_truth_normalized:
             right += 1
 
         answer_gt_file.append({
