@@ -42,10 +42,33 @@ def eval_single(annotation_file, result_file):
     answer_gt_file = []
     for result in results:
         annotation = annotations[result['question_id']]
-        pred = result['text']
-        ground_truth = annotation['answer']
-        if pred.upper() == ground_truth.upper():
+        # pred = result['text']
+        # ground_truth = annotation['answer']
+        # if pred.upper() == ground_truth.upper():
+        #     right += 1
+
+        # 定义布尔型答案的标准映射
+        boolean_true_set = {"YES", "TRUE"}
+        boolean_false_set = {"NO", "FALSE"}
+
+        annotation = annotations[result['question_id']]
+        pred = result['text'].strip().upper()
+        ground_truth = annotation['answer'].strip().upper()
+
+        # 判断是否是布尔型答案
+        if pred in boolean_true_set | boolean_false_set and ground_truth in boolean_true_set | boolean_false_set:
+            # 归一化为 True/False
+            pred_normalized = pred in boolean_true_set
+            ground_truth_normalized = ground_truth in boolean_true_set
+        else:
+            # 直接使用字符串比较
+            pred_normalized = pred
+            ground_truth_normalized = ground_truth
+
+        # 进行最终比较
+        if pred_normalized == ground_truth_normalized:
             right += 1
+
         answer_gt_file.append({
         "pred": pred,
         "ground_truth": ground_truth

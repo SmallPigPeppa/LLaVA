@@ -27,7 +27,7 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
         --conv-mode vicuna_v1
 
     # Step 2: Evaluate results
-    python -m llava.eval.eval_clevr_math \
+    python -m llava.eval.eval_super_clever \
         --annotation-file ./playground/data/fine-tune/super-CLEVR/test_2k.json \
         --result-file ./playground/data/eval/super-CLEVR/answers/${MODEL}.jsonl \
         --output-dir ./playground/data/eval/super-CLEVR/answers/${MODEL}
