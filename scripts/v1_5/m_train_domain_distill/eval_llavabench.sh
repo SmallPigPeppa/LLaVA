@@ -16,7 +16,10 @@ MODEL_PATHS=(
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged-mix0.12-svdv3"
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged-mix0.2-svdv3"
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task1-iconqa-task2-super-merged"
-    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task5-arxiv-lambda1.0-merged-mix0.15-svdv3"
+#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task5-arxiv-lambda1.0-merged-mix0.15-svdv3"
+#    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
+    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
+    "finetune-ckpt/lwf-ft-order3-lambda1.0/llava-v1.5-7b-lora-task5-arxiv-merged"
 )
 
 
