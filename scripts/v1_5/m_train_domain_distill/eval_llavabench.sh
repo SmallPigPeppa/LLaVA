@@ -18,8 +18,8 @@ MODEL_PATHS=(
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task1-iconqa-task2-super-merged"
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task5-arxiv-lambda1.0-merged-mix0.15-svdv3"
 #    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
-#    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
-#    "finetune-ckpt/lwf-ft-order3-lambda1.0/llava-v1.5-7b-lora-task5-arxiv-merged"
+    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
+    "finetune-ckpt/lwf-ft-order3-lambda1.0/llava-v1.5-7b-lora-task5-arxiv-merged"
     "finetune-ckpt/continual-ft-order3/llava-v1.5-7b-lora-task5-arxiv-merged"
 )
 
@@ -37,7 +37,7 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
         --model-path "${MODEL_PATH}" \
         --question-file ./playground/data/eval/llava-bench-in-the-wild/questions.jsonl \
         --image-folder ./playground/data/eval/llava-bench-in-the-wild/images \
-        --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/${MODEL}.jsonl \
+        --answers-file ./playground/data/eval/llava-bench-in-the-wild/answers/${MODEL_PATH}.jsonl \
         --temperature 0 \
         --conv-mode vicuna_v1
 
@@ -51,13 +51,13 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
         --rule llava/eval/table/rule.json \
         --answer-list \
             playground/data/eval/llava-bench-in-the-wild/answers_gpt4.jsonl \
-            playground/data/eval/llava-bench-in-the-wild/answers/${MODEL}.jsonl \
+            playground/data/eval/llava-bench-in-the-wild/answers/${MODEL_PATH}.jsonl \
         --output \
-            playground/data/eval/llava-bench-in-the-wild/reviews/${MODEL}.jsonl
+            playground/data/eval/llava-bench-in-the-wild/reviews/${MODEL_PATH}.jsonl
 
     # Step 4: Summarize reviews
     python llava/eval/summarize_gpt_review.py \
-        -f playground/data/eval/llava-bench-in-the-wild/reviews/${MODEL}.jsonl
+        -f playground/data/eval/llava-bench-in-the-wild/reviews/${MODEL_PATH}.jsonl
 
     echo "Finished evaluation for model: ${MODEL}"
     echo "---------------------------------------------"
