@@ -51,9 +51,9 @@ evaluate_task() {
 # Task configurations
 tasks=(
 #    "IconQA playground/data/fine-tune/iconqa/val-1000.json playground/data/fine-tune/iconqa/val-1000.json playground/data/eval/iconvqa/answers playground/data/eval/iconvqa/output llava.eval.eval_iconqa llava.eval.model_iconqa"
-    "Super-CLEVR playground/data/fine-tune/super-CLEVR/test_2k.json playground/data/fine-tune/super-CLEVR/test_2k.json playground/data/eval/super-CLEVR/answers playground/data/eval/super-CLEVR/answers llava.eval.eval_super_clevr llava.eval.model_super_clevr"
+#    "Super-CLEVR playground/data/fine-tune/super-CLEVR/test_2k.json playground/data/fine-tune/super-CLEVR/test_2k.json playground/data/eval/super-CLEVR/answers playground/data/eval/super-CLEVR/answers llava.eval.eval_super_clevr llava.eval.model_super_clevr"
 #    "CLEVR-Math playground/data/fine-tune/CLEVR-Math/test_2k.json playground/data/fine-tune/CLEVR-Math/test_2k.json playground/data/eval/clevr-math/answers playground/data/eval/clevr-math/answers llava.eval.eval_clevr_math llava.eval.model_clevr_math"
-#    "FigureQA playground/data/fine-tune/FigureQA/test_2k.json playground/data/fine-tune/FigureQA/test_2k.json playground/data/eval/figureqa/answers playground/data/eval/figureqa/answers llava.eval.eval_figureqa llava.eval.model_figureqa"
+    "FigureQA playground/data/fine-tune/FigureQA/test_2k.json playground/data/fine-tune/FigureQA/test_2k.json playground/data/eval/figureqa/answers playground/data/eval/figureqa/answers llava.eval.eval_figureqa llava.eval.model_figureqa"
 #    "ArxivQA playground/data/fine-tune/ArxivQA/test_2k.json playground/data/fine-tune/ArxivQA/test_2k.json playground/data/eval/arxivqa/answers playground/data/eval/arxivqa/answers llava.eval.eval_arxivqa llava.eval.model_arxivqa"
 )
 
