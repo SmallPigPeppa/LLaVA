@@ -49,8 +49,8 @@ def eval_single(annotation_file, result_file):
         boolean_false_set = {"NO", "FALSE"}
 
         annotation = annotations[result['question_id']]
-        pred = result['text'].strip().upper()
-        ground_truth = annotation['answer'].strip().upper()
+        pred = result['text'].upper()
+        ground_truth = annotation['answer'].upper()
 
         # 判断是否是布尔型答案
         if pred in boolean_true_set | boolean_false_set and ground_truth in boolean_true_set | boolean_false_set:
