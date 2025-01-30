@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export HF_HOME=/ppio_net0/huggingface
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES=0
 
 # List of model paths
 MODEL_PATHS=(
