@@ -8,8 +8,8 @@ MODEL_PATHS=(
 #    "liuhaotian/llava-v1.5-7b"
 #    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-merged"
 #    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
-#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged-mix0.12-svdv3"
-    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged-mix0.25-svdv3"
+    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged-mix0.12-svdv3"
+#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged-mix0.25-svdv3"
 #    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task4-figureqa-lambda1.0-merged-mix0.13-svdv3"
 
 )
@@ -22,13 +22,13 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
     echo "Evaluating model: ${MODEL_PATH}"
 
     # Step 1: Run model evaluation for super-CLEVR
-    python -m llava.eval.model_super_clevr \
-        --model-path "${MODEL_PATH}" \
-        --question-file ./playground/data/fine-tune/super-CLEVR/test_2k.json \
-        --image-folder ./playground/data \
-        --answers-file ./playground/data/eval/super-CLEVR/answers/${MODEL}.jsonl \
-        --temperature 0 \
-        --conv-mode vicuna_v1
+#    python -m llava.eval.model_super_clevr \
+#        --model-path "${MODEL_PATH}" \
+#        --question-file ./playground/data/fine-tune/super-CLEVR/test_2k.json \
+#        --image-folder ./playground/data \
+#        --answers-file ./playground/data/eval/super-CLEVR/answers/${MODEL}.jsonl \
+#        --temperature 0 \
+#        --conv-mode vicuna_v1
 
     # Step 2: Evaluate results
     python -m llava.eval.eval_super_clevr \
