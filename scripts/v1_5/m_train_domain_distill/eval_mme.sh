@@ -4,11 +4,14 @@ export CUDA_VISIBLE_DEVICES=0
 
 # 定义模型路径列表
 MODEL_PATHS=(
-    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged-mix0.3-svdv3"
-    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged-mix0.12-svdv3"
-    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged-mix0.25-svdv3"
-    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task4-figureqa-lambda1.0-merged-mix0.13-svdv3"
-    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task5-arxiv-lambda1.0-merged-mix0.15-svdv3"
+#    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-iconqa-lambda1.0-merged-mix0.3-svdv3"
+#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged-mix0.12-svdv3"
+#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged-mix0.25-svdv3"
+#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task4-figureqa-lambda1.0-merged-mix0.13-svdv3"
+#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task5-arxiv-lambda1.0-merged-mix0.15-svdv3"
+    "finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
+    "finetune-ckpt/lwf-ft-order3-lambda1.0/llava-v1.5-7b-lora-task5-arxiv-merged"
+    "finetune-ckpt/continual-ft-order3/llava-v1.5-7b-lora-task5-arxiv-merged"
 )
 
 
