@@ -8,7 +8,10 @@ MODEL_PATHS=(
 #    "liuhaotian/llava-v1.5-7b"
 #    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-merged"
 #    "finetune-ckpt/fine-tune/llava-v1.5-7b-lora-super-lambda1.0-merged"
+#    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task2-super-lambda1.0-merged-mix0.12-svdv3"
+    "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-math-lambda1.0-merged-mix0.25-svdv3"
     "finetune-ckpt/llava-c/llava-v1.5-7b-lora-task4-figureqa-lambda1.0-merged-mix0.13-svdv3"
+
 )
 
 # Iterate through each model path
