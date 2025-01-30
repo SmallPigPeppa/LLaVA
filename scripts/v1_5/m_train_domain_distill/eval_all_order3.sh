@@ -20,7 +20,7 @@ export CUDA_VISIBLE_DEVICES=0
 
 MODEL_PATH="finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv-merged"
 MODEL_PATH="finetune-ckpt/lwf-ft-order3-lambda1.0/llava-v1.5-7b-lora-task5-arxiv-merged"
-MODEL_PATH="finetune-ckpt/continual-ft-order3/llava-v1.5-7b-lora-task5-arxiv-merged"
+#MODEL_PATH="finetune-ckpt/continual-ft-order3/llava-v1.5-7b-lora-task5-arxiv-merged"
 
 MODEL=$(basename "${MODEL_PATH}")
 
