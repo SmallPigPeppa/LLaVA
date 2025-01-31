@@ -22,6 +22,7 @@ MODEL_PATH="finetune-ckpt/lwf-ft-order3-lambda0.2/llava-v1.5-7b-lora-task5-arxiv
 #MODEL_PATH="finetune-ckpt/lwf-ft-order3-lambda1.0/llava-v1.5-7b-lora-task5-arxiv-merged"
 #MODEL_PATH="finetune-ckpt/continual-ft-order3/llava-v1.5-7b-lora-task5-arxiv-merged"
 MODEL_PATH="finetune-ckpt/llava-c/llava-v1.5-7b-lora-task3-arxiv-lambda1.0-ablation-merged-mix0.15-svdv3"
+MODEL_PATH="finetune-ckpt/continual-ft-order3-ablation/llava-v1.5-7b-lora-task3-arxiv-merged"
 
 MODEL=$(basename "${MODEL_PATH}")
 
