@@ -36,7 +36,7 @@ for MODEL_PATH in "${MODEL_PATHS[@]}"; do
     RAND_NUM=$RANDOM
 
     # 获取模型名称并附加随机数
-    MODEL=$(basename ${MODEL_PATH})_${RAND_NUM}
+    MODEL=$(basename ${MODEL_PATH})_22636
 
     echo "Starting evaluation for model: ${MODEL}"
 
