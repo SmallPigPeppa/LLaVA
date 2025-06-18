@@ -213,7 +213,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
 
         # 仅对非 padding 部分计算损失
         valid_mask = labels[..., 1:] != -100 # 排除无效标签
-        log_probs_new = log_probs_new[valid_mask]
+        log_probs_new = log_probs_fnew[valid_mask]
         probs_old = probs_old[valid_mask]
         kd_loss = kd_loss_fct(log_probs_new, probs_old)
 
