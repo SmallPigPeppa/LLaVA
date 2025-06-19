@@ -1,5 +1,5 @@
 #!/bin/bash
-MASTER_ADDR=127.0.0.1 MASTER_PORT=29501 \
+
 deepspeed llava/train/train_mem.py \
     --deepspeed ./scripts/zero2.json \
     --model_name_or_path lmsys/vicuna-7b-v1.5 \
@@ -32,5 +32,6 @@ deepspeed llava/train/train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 4 \
     --lazy_preprocess True \
-    --report_to wandb
+    --report_to wandb \
+    --master_port=25678
 
