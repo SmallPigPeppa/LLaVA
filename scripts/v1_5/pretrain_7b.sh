@@ -32,6 +32,5 @@ deepspeed llava/train/train_mem.py \
     --gradient_checkpointing True \
     --dataloader_num_workers 4 \
     --lazy_preprocess True \
-    --report_to wandb \
-    --main_process_port 25678
+    --report_to wandb
 
