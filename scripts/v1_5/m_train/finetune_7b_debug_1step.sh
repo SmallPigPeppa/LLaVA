@@ -3,7 +3,7 @@ deepspeed llava/train/train_mem.py \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path lmsys/vicuna-7b-v1.5 \
     --version v1 \
-    --data_path /mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava558k/llava_v1_5_mix665k.json \
+    --data_path /mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava665k/llava_v1_5_mix665k.json \
     --image_folder /mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava665k \
     --vision_tower openai/clip-vit-large-patch14-336 \
     --pretrain_mm_mlp_adapter /mnt/bn/liuwenzhuo-lf/ckpt/llava-v1.5-7b-pretrain-ppio/mm_projector.bin \
