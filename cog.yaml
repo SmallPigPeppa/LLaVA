@@ -23,7 +23,7 @@ build:
     - "sentencepiece==0.1.99"
     - "shortuuid==1.0.11"
     - "timm==0.6.13"
-    - "tokenizers==0.13.3"
+    - "tokenizers==0.15.1"
     - "torch==2.0.1"
     - "torchvision==0.15.2"
     - "transformers==4.37.2"
