@@ -1,6 +1,4 @@
 #!/bin/bash
-source ~/miniconda3/bin/activate
-conda activate llava
 deepspeed llava/train/train_mem.py \
     --deepspeed ./scripts/zero2.json \
     --model_name_or_path lmsys/vicuna-13b-v1.5 \
