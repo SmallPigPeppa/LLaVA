@@ -10,7 +10,7 @@ data = load_dataset(
     split="train"
 )
 
-image_folder = "/mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava779k/images"
+image_folder = "/mnt/bn/liuwenzhuo-hl-data/datasets/llava779k/images"
 
 converted_data = []
 
