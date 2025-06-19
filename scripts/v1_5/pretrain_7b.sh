@@ -33,5 +33,5 @@ deepspeed llava/train/train_mem.py \
     --dataloader_num_workers 4 \
     --lazy_preprocess True \
     --report_to wandb \
-    --master_port=25678
+    --master_port 25678
 
