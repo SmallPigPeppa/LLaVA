@@ -30,7 +30,7 @@ for da in tqdm(data, desc="Converting images"):
                 img = img.convert("RGB")
 
             filename = f"{da['id']}.jpg"
-            img.save(os.path.join(image_folder, filename), format="JPEG", quality=95)
+            img.save(os.path.join(image_folder, filename))
             entry["image"] = filename
 
         except (OSError, UnidentifiedImageError) as e:
