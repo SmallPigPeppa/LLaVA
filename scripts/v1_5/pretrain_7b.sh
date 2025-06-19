@@ -1,11 +1,5 @@
 #!/bin/bash
-export MASTER_ADDR=127.0.0.1
-export MASTER_PORT=29501
-export WORLD_SIZE=1
-export RANK=0
-deepspeed llava/train/train_mem.py --num_gpus=1 \
-    --master_port $MASTER_PORT \
-    --master_addr $MASTER_ADDR \
+deepspeed llava/train/train_mem.py \
     --deepspeed ./scripts/zero2.json \
     --model_name_or_path lmsys/vicuna-7b-v1.5 \
     --version plain \
