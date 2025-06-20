@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import os
 import json
 from PIL import Image
@@ -13,7 +14,7 @@ with open(input_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 validated = []
-for item in data:
+for item in tqdm(data, desc="Validating entries"):
     original_image = item['image']
     image_path = os.path.join(base_dir, original_image)
 
@@ -35,7 +36,7 @@ for item in data:
                 validated.append(item)
                 found = True
                 break
-            except Exception as e:
+            except Exception:
                 # Failed to open; try next extension
                 continue
 
