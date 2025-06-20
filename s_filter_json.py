@@ -9,7 +9,7 @@ base_dir = '/mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava665k'
 input_path = os.path.join(base_dir, 'llava_v1_5_mix665k.json')
 output_path = os.path.expanduser('~/llava665k_validated.json')
 possible_extensions = ['.jpg', '.png', '.gif']
-num_workers=32
+num_workers=128
 
 def validate_item(item):
     original_image = item['image']
