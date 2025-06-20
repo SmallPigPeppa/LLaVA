@@ -1,7 +1,7 @@
+from tqdm import tqdm
 import os
 import json
 from PIL import Image
-from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Define base directory and file paths
@@ -9,9 +9,14 @@ base_dir = '/mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava665k'
 input_path = os.path.join(base_dir, 'llava_v1_5_mix665k.json')
 output_path = os.path.expanduser('~/llava665k_validated.json')
 possible_extensions = ['.jpg', '.png', '.gif']
-num_workers=1024
+max_workers=1024
+
 
 def validate_item(item):
+    # If there's no 'image' key, keep the item unchanged
+    if 'image' not in item:
+        return item
+
     original_image = item['image']
     image_path = os.path.join(base_dir, original_image)
 
@@ -31,22 +36,24 @@ def validate_item(item):
                 return item
             except Exception:
                 continue
-    # Return None if not found or unreadable
+    # If image key existed but file not found or unreadable, remove item
     return None
+
 
 # Load original JSON
 with open(input_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 validated = []
-with ThreadPoolExecutor(max_workers=num_workers) as executor:
-    futures = {executor.submit(validate_item, item): item['id'] for item in data}
+with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    futures = {executor.submit(validate_item, item): item for item in data}
     for future in tqdm(as_completed(futures), total=len(futures), desc="Validating entries"):
         result = future.result()
+        orig_item = futures[future]
         if result is not None:
             validated.append(result)
         else:
-            print(f"Entry {futures[future]} removed: file not found or unreadable.")
+            print(f"Entry {orig_item.get('id', '<no id>')} removed: file not found or unreadable.")
 
 # Save validated JSON
 with open(output_path, 'w', encoding='utf-8') as f:
