@@ -1,7 +1,6 @@
 import os
 import json
 from PIL import Image
-from lightning.app.storage.copier import num_workers
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
