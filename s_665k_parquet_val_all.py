@@ -4,7 +4,7 @@ from glob import glob
 
 # Directory containing the parquet parts
 PARQUET_DIR = '/mnt/bn/liuwenzhuo-hl-data/datasets/parquet/llava665k'
-PATTERN     = os.path.join(PARQUET_DIR, 'llava665k_part*.parquet')
+PATTERN     = os.path.join(PARQUET_DIR, 'part*.parquet')
 
 def read_and_print_first_row(path):
     try:
