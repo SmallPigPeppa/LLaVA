@@ -28,7 +28,7 @@ def process_record(item):
             pass
 
     return {
-        'id': item.get('id'),
+        'id': str(item.get('id', '')),
         'images': [img_bytes] if img_bytes else None,
         'conversations': item.get('conversations', [])
     }
