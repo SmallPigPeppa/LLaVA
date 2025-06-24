@@ -7,7 +7,7 @@ def read_and_print_one(path):
     df = pd.read_parquet(path, engine='pyarrow')
     print(f"=== File: {path} ===")
     print("Columns:", df.columns.tolist())
-    print("First record:\n", df.iloc[0])
+    print("First record:\n", df.iloc[100])
 
 if __name__ == '__main__':
     read_and_print_one(file_debug)
