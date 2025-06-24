@@ -1,5 +1,6 @@
 import os
 import json
+import random
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
@@ -11,6 +12,7 @@ OUTPUT_FILE = '/mnt/bn/liuwenzhuo-hl-data/datasets/parquet/llava665k/debug.parqu
 COMPRESSION = 'snappy'
 MAX_WORKERS = 128
 DEBUG_LIMIT = 200000
+RANDOM_SEED = 42
 
 def process_record(item):
     """
@@ -34,9 +36,14 @@ def process_record(item):
 def main():
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 
-    # Load first DEBUG_LIMIT entries
+    # Load full JSON
     with open(JSON_PATH, 'r', encoding='utf-8') as f:
-        entries = json.load(f)[:DEBUG_LIMIT]
+        entries = json.load(f)
+
+    # Shuffle with fixed seed, then take first DEBUG_LIMIT
+    random.seed(RANDOM_SEED)
+    random.shuffle(entries)
+    entries = entries[:DEBUG_LIMIT]
 
     # Parallel processing
     with ThreadPoolExecutor(MAX_WORKERS) as pool:
