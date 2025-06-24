@@ -10,7 +10,7 @@ IMAGE_DIR     = '/mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava6
 OUTPUT_FILE   = '/mnt/bn/liuwenzhuo-hl-data/datasets/parquet/llava665k/debug.parquet'
 COMPRESSION   = 'snappy'
 MAX_WORKERS   = 128
-DEBUG_LIMIT   = 200  # only process first 100 entries
+DEBUG_LIMIT   = 2000  # only process first 100 entries
 
 def process_record(item):
     """Convert a JSON entry to a dict, embedding any image bytes."""
