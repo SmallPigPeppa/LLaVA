@@ -29,8 +29,8 @@ def process_record(item):
 
     return {
         'id': str(item.get('id', '')),
-        'images': [img_bytes] if img_bytes else None,
-        'conversations': json.dumps(item.get('conversations', []))
+        'images': [img_bytes] if img_bytes else [None],
+        'conversations': item.get('conversations', [])
     }
 
 def main():
