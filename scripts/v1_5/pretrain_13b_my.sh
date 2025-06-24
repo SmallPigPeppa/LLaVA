@@ -1,5 +1,4 @@
 #!/bin/bash
-MASTER_ADDR=127.0.0.1 MASTER_PORT=12345 \
 deepspeed --master_addr=localhost --master_port=12345 \
 llava/train/train_mem.py \
     --deepspeed ./scripts/zero2.json \
