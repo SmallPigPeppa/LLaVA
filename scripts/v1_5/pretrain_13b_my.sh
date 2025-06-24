@@ -1,6 +1,5 @@
 #!/bin/bash
 deepspeed llava/train/train_mem.py \
-    --include localhost:0,1 \
     --deepspeed \
     --deepspeed_config ./scripts/zero2.json \
     --model_name_or_path lmsys/vicuna-13b-v1.5 \
