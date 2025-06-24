@@ -1,6 +1,6 @@
 #!/bin/bash
 deepspeed llava/train/train_mem.py \
-    --include localhost:0,1 \
+    --master_addr=localhost --master_port=12345 \
     --deepspeed    --deepspeed_config ./scripts/zero2.json \
     --model_name_or_path lmsys/vicuna-13b-v1.5 \
     --version plain \
