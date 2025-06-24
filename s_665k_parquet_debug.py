@@ -10,7 +10,7 @@ IMAGE_DIR   = '/mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava665
 OUTPUT_FILE = '/mnt/bn/liuwenzhuo-hl-data/datasets/parquet/llava665k/debug.parquet'
 COMPRESSION = 'snappy'
 MAX_WORKERS = 128
-DEBUG_LIMIT = 2000
+DEBUG_LIMIT = 200000
 
 def process_record(item):
     """
