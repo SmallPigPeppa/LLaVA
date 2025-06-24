@@ -9,7 +9,7 @@ JSON_PATH = '/mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava665k/
 IMAGE_DIR = '/mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava665k'
 OUTPUT_DIR = '/mnt/bn/liuwenzhuo-hl-data/datasets/parquet/llava665k'
 COMPRESSION = 'snappy'
-CHUNK_SIZE = 200000  # approx rows per file
+CHUNK_SIZE = 100000  # approx rows per file
 MAX_WORKERS = 128
 
 
