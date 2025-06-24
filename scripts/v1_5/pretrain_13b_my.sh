@@ -2,7 +2,7 @@
 MASTER_ADDR=127.0.0.1 MASTER_PORT=12345 \
 deepspeed llava/train/train_mem.py \
     --master_addr=localhost --master_port=12345 \
-    --deepspeed ./scripts/zero2.json \
+    --deepspeed ./scripts/zero2_debug.json \
     --model_name_or_path lmsys/vicuna-13b-v1.5 \
     --version plain \
     --data_path /mnt/hdfs/byte_content_security/user/liuwenzhuo/datasets/llava558k/blip_laion_cc_sbu_558k.json \
