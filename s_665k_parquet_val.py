@@ -8,7 +8,6 @@ def read_and_print_one(path):
     print(f"=== File: {path} ===")
     print("Columns:", df.columns.tolist())
     print("First record:\n", df.iloc[0])
-    import pdb; pdb.set_trace()
 
 if __name__ == '__main__':
     read_and_print_one(file_debug)
