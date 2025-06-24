@@ -66,7 +66,7 @@ def main():
             df = pd.DataFrame(records)
             out_path = os.path.join(
                 OUTPUT_DIR,
-                f'llava665k_part{part_idx:03d}.parquet'
+                f'part{part_idx:03d}.parquet'
             )
             df.to_parquet(
                 out_path,
