@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUDA_VISIBLE_DEVICES=0  \
+CUDA_VISIBLE_DEVICES=0,1  \
 deepspeed --master_addr=localhost --master_port=12345 \
 llava/train/train_mem_mspe.py \
     --deepspeed ./scripts/zero3.json \
