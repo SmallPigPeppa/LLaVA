@@ -71,7 +71,8 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         return_dict: Optional[bool] = None,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
 
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
+        print(inputs_embeds)
         if inputs_embeds is None:
             (
                 input_ids,
