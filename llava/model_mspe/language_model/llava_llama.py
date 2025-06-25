@@ -73,12 +73,12 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
 
         # import pdb;pdb.set_trace()
         print("inputs_embeds:",inputs_embeds)
-        print("input_ids:", input_ids)
-        print("position_ids:", position_ids)
-        print("attention_mask:", attention_mask)
-        print("past_key_values:", past_key_values)
-        print("labels:", labels)
-        print("images:", images)
+        # print("input_ids:", input_ids)
+        # print("position_ids:", position_ids)
+        # print("attention_mask:", attention_mask)
+        # print("past_key_values:", past_key_values)
+        # print("labels:", labels)
+        # print("images:", images)
         print("image_sizes:", image_sizes)
         if inputs_embeds is None:
             (
