@@ -1,6 +1,7 @@
 #!/bin/bash
 
-CUDA_VISIBLE_DEVICES=0  deepspeed --master_addr=localhost --master_port=12345 \
+#CUDA_VISIBLE_DEVICES=0  \
+deepspeed --master_addr=localhost --master_port=12345 \
 llava/train/train_mem_mspe.py \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path lmsys/vicuna-7b-v1.5 \
