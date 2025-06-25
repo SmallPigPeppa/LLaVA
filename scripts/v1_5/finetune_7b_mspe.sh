@@ -18,7 +18,7 @@ llava/train/train_mem_mspe.py \
     --bf16 True \
     --output_dir  /mnt/bn/liuwenzhuo-lf/ckpt/llava-v1.5-7b-finetune \
     --num_train_epochs 1 \
-    --per_device_train_batch_size 2 \
+    --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 1 \
     --evaluation_strategy "no" \
